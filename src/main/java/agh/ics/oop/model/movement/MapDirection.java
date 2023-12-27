@@ -25,11 +25,7 @@ public enum MapDirection {
         return value;
     }
 
-    public MapDirection next() {
-        return valuesList.get((this.ordinal() + 1) % valuesList.size());
-    }
-
-    public MapDirection previous() {
-        return valuesList.get((this.ordinal() - 1 + valuesList.size()) % valuesList.size());
+    public MapDirection turnRight(int step) {
+        return valuesList.get((this.ordinal() + step) % valuesList.size());
     }
 }
