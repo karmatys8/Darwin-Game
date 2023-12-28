@@ -14,6 +14,11 @@ public enum MapDirection {
 
     private final String value; // we can change it later if necessary
     private final Vector2d unitVector;
+
+    public Vector2d getUnitVector() {
+        return unitVector;
+    }
+
     private static final List<MapDirection> valuesList = List.of(values());
 
     MapDirection(String value, Vector2d unitVector) {
