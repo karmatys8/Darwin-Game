@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class GlobeTests {
     @Test
-    public void constructorTests() {
+    public void testGlobe() {
         Globe globe1 = new Globe(20, 30, 2, 5, 18, 1,
                 3, 2, 0, 4, 2);
         Assertions.assertInstanceOf(Globe.class, globe1);
@@ -42,7 +42,7 @@ public class GlobeTests {
     }
 
     @Test
-    public void canMoveToTests() {
+    public void testCanMoveTo() {
         Globe globe = new Globe(36, 200, 22, 51, 8, 9,
                 93, 0, 0, 0, 2);
 
