@@ -1,13 +1,13 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.animal;
 
+import agh.ics.oop.model.Genotype;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.AnimalTree;
 import agh.ics.oop.model.util.RandomInteger;
-import agh.ics.oop.model.worldMaps.Globe;
+import agh.ics.oop.model.worldMaps.AnimalConfig;
 
 public class Animal {
-    private final Globe globe;
     private Vector2d position;
     private MapDirection direction;
     private Genotype genotype;
@@ -17,28 +17,29 @@ public class Animal {
     private int dayOfDeath;
     private int currentGeneIndex;
     private AnimalTree animalTree;
+    private int minEnergyToReproduce;
 
 
-    public Animal(Globe globe) {
-        this.globe=globe;
-        this.position=new Vector2d(RandomInteger.getRandomInt(globe.getWidth()) + 1, RandomInteger.getRandomInt(globe.getHeight()) + 1);
+    public Animal(Vector2d position, AnimalConfig animalConfig) {
+        this.position=position;
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(8)];
-        this.energy=globe.getAnimalsStartingEnergy();
-        this.genotype=new Genotype(globe.getGenotypeLength());
-        this.currentGeneIndex=RandomInteger.getRandomInt(globe.getGenotypeLength());
+        this.energy=animalConfig.startingEnergy();
+        this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
+        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
         this.animalTree=new AnimalTree(this);
+        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
     }
 
-    public Animal(Animal mother, Animal father) {
-        this.globe=mother.getGlobe();
+    public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
         this.position=mother.getPosition();
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(8)];
-        this.energy=globe.getEnergyUsedToReproduce()*2;
+        this.energy= animalConfig.energyUsedToReproduce()*2;
         this.genotype=new Genotype(mother,father);
-        this.currentGeneIndex=RandomInteger.getRandomInt(globe.getGenotypeLength());
-        mother.useEnergy(globe.getEnergyUsedToReproduce());
+        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
+        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
+        mother.useEnergy(animalConfig.energyUsedToReproduce());
         mother.animalTree.addChild(this.animalTree);
-        father.useEnergy(globe.getEnergyUsedToReproduce());
+        father.useEnergy(animalConfig.energyUsedToReproduce());
         father.animalTree.addChild(this.animalTree);
     }
 
@@ -46,11 +47,11 @@ public class Animal {
         this.energy-=energyUsedToReproduce;
     }
     public void nextGene(){
-        this.currentGeneIndex=(this.currentGeneIndex+1)%globe.getGenotypeLength();
+        this.currentGeneIndex=(this.currentGeneIndex+1)%genotype.getGenes().size();
     }
 
     public boolean canReproduce(){
-        return this.energy>=globe.getMinEnergyToReproduce();
+        return this.energy>=this.minEnergyToReproduce;
     }
 
     public int getNumberOfChildren(){
@@ -71,10 +72,5 @@ public class Animal {
     public Genotype getGenotype() {
         return genotype;
     }
-
-    public Globe getGlobe() {
-        return globe;
-    }
-
 
 }

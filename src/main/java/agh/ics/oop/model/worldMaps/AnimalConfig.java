@@ -1,7 +1,7 @@
 package agh.ics.oop.model.worldMaps;
 
-import static agh.ics.oop.model.utils.CommonMethods.checkIfNotNegative;
-import static agh.ics.oop.model.utils.CommonMethods.checkIfPositive;
+import static agh.ics.oop.model.util.CommonMethods.checkIfNotNegative;
+import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
 public record AnimalConfig(int startingCount, int startingEnergy, int minEnergyToReproduce, int energyUsedToReproduce,
                            int minNumberOfMutations, int maxNumberOfMutations, int genomeLength) {

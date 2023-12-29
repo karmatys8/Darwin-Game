@@ -1,14 +1,21 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Genotype {
-    private List<Integer> genes = new ArrayList<>();
+    private final List<Integer> genes = new ArrayList<>();
+    private int minNumberOfMutations;
+    private int maxNumberOfMutations;
 
-    public Genotype(int genotypeLength) {
+    public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
+        this.minNumberOfMutations=minNumberOfMutations;
+        this.maxNumberOfMutations=maxNumberOfMutations;
         for (int i = 0; i < genotypeLength; i++) {
             this.genes.add(RandomInteger.getRandomInt(8));
         }
@@ -16,11 +23,12 @@ public class Genotype {
 
     public Genotype(Animal mother, Animal father) {
         validateParents(mother, father);
-
+        this.minNumberOfMutations=mother.getGenotype().minNumberOfMutations;
+        this.maxNumberOfMutations=mother.getGenotype().maxNumberOfMutations;
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mother.getGenotype().genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        for (int i = 0; i < mother.getGlobe().getGenotypeLength(); i++) {
+        for (int i = 0; i < mother.getGenotype().genes.size(); i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mother.getGenotype().genes.get(i));
             } else {
@@ -28,7 +36,7 @@ public class Genotype {
             }
         }
 
-        mutate(mother.getGlobe().getMinNumberOfMutations(), mother.getGlobe().getMaxNumberOfMutations());
+        mutate();
     }
 
     private void validateParents(Animal mother, Animal father) {
@@ -37,19 +45,17 @@ public class Genotype {
         }
     }
 
-    private void mutate(int minNumberOfMutation, int maxNumberOfMutation) {
-        int numberOfMutations = RandomInteger.getRandomInt(minNumberOfMutation, maxNumberOfMutation);
+    private void mutate() {
+        int numberOfMutations = RandomInteger.getRandomInt(minNumberOfMutations, maxNumberOfMutations);
 
         for (int i = 0; i < numberOfMutations; i++) {
-            switchGenes(RandomInteger.getRandomInt(genes.size()), RandomInteger.getRandomInt(genes.size())); //opcja symulacji z podmianką
-            randomGene(RandomInteger.getRandomInt(genes.size())); //opcja symulacji pełna losowość
+            switchGenes(RandomInteger.getRandomInt(genes.size()-1), RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji z podmianką
+            randomGene(RandomInteger.getRandomInt(genes.size())-1); //opcja symulacji pełna losowość
         }
     }
 
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
-        int temp = this.genes.get(firstGeneIndex);
-        this.genes.set(firstGeneIndex, this.genes.get(secondGeneIndex));
-        this.genes.set(secondGeneIndex, temp);
+        Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
     public void randomGene(int geneIndex) {
         genes.set(geneIndex, RandomInteger.getRandomInt(8));
@@ -63,7 +69,22 @@ public class Genotype {
         return genotypeToString.toString();
     }
 
-    public Integer getCurrentGene(int currentGeneIndex) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype = (Genotype) o;
+        return Objects.equals(genes, genotype.genes);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(genes);
+    }
+    public int getCurrentGene(int currentGeneIndex) {
         return genes.get(currentGeneIndex);
+    }
+
+    public List<Integer> getGenes() {
+        return new ArrayList<>(genes);
     }
 }
