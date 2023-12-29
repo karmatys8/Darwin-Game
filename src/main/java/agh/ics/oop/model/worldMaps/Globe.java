@@ -2,78 +2,39 @@ package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.movement.Vector2d;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import static agh.ics.oop.model.utils.CommonMethods.checkIfPositive;
 
 public class Globe {
     private final int width;
     private final int height;
     private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
-    private final Vector2d upperRightBoundary;;
-    private int plantCount;
-    private final int energyPerPlant;
-    private final int plantsPerDay;
+    private final Vector2d upperRightBoundary;
+    private int plantCount = 0;
     private int numberOfAnimals = 0;
-    private final int animalsStartingEnergy;
-    private final int minimalEnergyToReproduce;
-    private final int energyUsedToReproduce;
-    private final int minNumberOfMutations;
-    private final int maxNumberOfMutations;
-    private final int genomeLength;
 
     private Map<Vector2d, List<Animal>> animals = new HashMap<Vector2d, ArrayList<Animal>>();
     private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
 
-    private void checkIfNotNegative(int value) throws IllegalArgumentException{
-        if (value < 0) {
-            throw new IllegalArgumentException();
-        };
-    }
 
-    public Globe(int width, int height, int energyPerPlant, int plantsPerDay, int numberOfStartingAnimals,
-                 int animalsStartingEnergy,int minEnergyToReproduce, int energyUsedToReproduce,
-                 int minNumberOfMutations, int maxNumberOfMutations, int genomeLength) throws IllegalArgumentException {
+    private final PlantConfig plantConfig;
+    private final AnimalConfig animalConfig;
 
-        if (width < 1) throw new IllegalArgumentException("Map's width must be positive");
+    public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
+        checkIfPositive(width);
         this.width = width;
 
-        if (height < 1) throw new IllegalArgumentException("Map's height must be positive");
+        checkIfPositive(height);
         this.height = height;
 
         upperRightBoundary = new Vector2d(width, height);
 
 
-        checkIfNotNegative(energyPerPlant);
-        this.energyPerPlant = energyPerPlant;
+        this.plantConfig = plantConfig;
+        this.animalConfig = animalConfig;
 
-        checkIfNotNegative(plantsPerDay);
-        this.plantsPerDay = plantsPerDay;
-
-        checkIfNotNegative(numberOfStartingAnimals);
-        Random random = new Random();
-        for (int i = 0; i < numberOfStartingAnimals; i++) {
-            place(new Animal(new Vector2d(random.nextInt(width) + 1, random.nextInt(height) + 1)));
+        for (int i = 0; i < animalConfig.startingCount(); i++) {
+            place(new Animal());
         }
-
-        checkIfNotNegative(animalsStartingEnergy);
-        this.animalsStartingEnergy = animalsStartingEnergy;
-
-        checkIfNotNegative(minEnergyToReproduce);
-        this.minimalEnergyToReproduce = minEnergyToReproduce;
-        checkIfNotNegative(energyUsedToReproduce);
-        this.energyUsedToReproduce = energyUsedToReproduce;
-
-
-        checkIfNotNegative(minNumberOfMutations);
-        this.minNumberOfMutations = minNumberOfMutations;
-        if (maxNumberOfMutations < minNumberOfMutations) {
-            throw new IllegalArgumentException("Maximum number of mutations must be greater than minimal");
-        }
-        this.maxNumberOfMutations = maxNumberOfMutations;
-        if (genomeLength < 1) throw new IllegalArgumentException("Genome length must be positive");
-        this.genomeLength = genomeLength;
     }
 
     public boolean canMoveTo(Vector2d position) {
