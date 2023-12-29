@@ -48,16 +48,16 @@ public class GlobeTests {
 
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 1)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 200)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(36, 200)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(36, 1)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 0)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 199)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 199)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 0)));
 
-        Assertions.assertFalse(globe.canMoveTo(new Vector2d(0 ,0)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(-1 ,-1)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,-1)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,Integer.MAX_VALUE)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,Integer.MIN_VALUE)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(Integer.MAX_VALUE ,Integer.MIN_VALUE)));
-        Assertions.assertFalse(globe.canMoveTo(new Vector2d(201 ,36)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(200 ,36)));
     }
 }

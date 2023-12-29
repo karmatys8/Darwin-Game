@@ -10,7 +10,8 @@ public class Globe {
     private final int width;
     private final int height;
 
-    private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
+    private static final Vector2d lowerLeftBoundary = new Vector2d(0, 0);
+
     private final Vector2d upperRightBoundary;;
     private int plantCount;
     private final int energyPerPlant;
@@ -44,7 +45,7 @@ public class Globe {
         if (height < 1) throw new IllegalArgumentException("Map's height must be positive");
         this.height = height;
 
-        upperRightBoundary = new Vector2d(width, height);
+        upperRightBoundary = new Vector2d(width - 1, height - 1);
 
 
         checkIfNotNegative(energyPerPlant);
@@ -52,7 +53,6 @@ public class Globe {
 
         checkIfNotNegative(plantsPerDay);
         this.plantsPerDay = plantsPerDay;
-
 
         checkIfNotNegative(animalsStartingEnergy);
         this.animalsStartingEnergy = animalsStartingEnergy;
