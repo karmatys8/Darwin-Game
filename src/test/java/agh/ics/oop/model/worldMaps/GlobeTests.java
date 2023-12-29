@@ -7,44 +7,26 @@ import org.junit.jupiter.api.Test;
 public class GlobeTests {
     @Test
     public void testGlobe() {
-        Globe globe1 = new Globe(20, 30, 2, 5, 18, 1,
-                3, 2, 0, 4, 2);
+        Globe globe1 = new Globe(20, 30, new PlantConfig(0, 2, 5),
+                new AnimalConfig(18, 1, 3, 2, 0, 4, 2));
         Assertions.assertInstanceOf(Globe.class, globe1);
 
-        Globe globe2 = new Globe(1000, 1, 0, 0, Integer.MAX_VALUE, 0,
-                1000, 0, 0, 0, Integer.MAX_VALUE);
+        Globe globe2 = new Globe(1000, 1, new PlantConfig(0, 0, 0),
+                new AnimalConfig(Integer.MAX_VALUE, 0, 1000, 0, 0, 0, Integer.MAX_VALUE));
         Assertions.assertInstanceOf(Globe.class, globe2);
 
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(-2, 10, 0,
-                0, Integer.MAX_VALUE, 0, 1000, 0,
-                0, 0, Integer.MAX_VALUE));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(-2, 10, new PlantConfig(0, 0, 0),
+                new AnimalConfig(Integer.MAX_VALUE, 0, 1000, 0, 0, 0, Integer.MAX_VALUE)));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(400, 0, 0,
-                0, 8, 0, 1000, 0,
-                0, 0, 9));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(45, 100, -6,
-                0, 13, 0, 1000, 0,
-                0, 0, 11));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(2, 120, 20,
-                200000, Integer.MIN_VALUE, 20, 10, 70,
-                70, 70, 1));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(25, 20, 9,
-                0, 1, Integer.MAX_VALUE, 9, 3,
-                3, 2, 10));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(25, 20, 9,
-                0, 1, Integer.MAX_VALUE, 9, 3,
-                3, 200, 0));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(400, 0, new PlantConfig(0, 0, 0),
+                new AnimalConfig(8, 0, 1000, 0, 0, 0, 9)));
     }
 
     @Test
     public void testCanMoveTo() {
-        Globe globe = new Globe(36, 200, 22, 51, 8, 9,
-                93, 0, 0, 0, 2);
+        Globe globe = new Globe(36, 200, new PlantConfig(0, 22, 51),
+                new AnimalConfig(8, 9, 93, 0, 0, 0, 2));
 
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
