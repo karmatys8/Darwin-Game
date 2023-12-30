@@ -68,7 +68,7 @@ public class Animal {
     }
 
     public Genotype getGenotype() {
-        return genotype;
+        return new Genotype(genotype);
     }
 
 }

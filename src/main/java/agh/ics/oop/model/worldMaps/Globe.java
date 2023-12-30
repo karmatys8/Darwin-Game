@@ -89,10 +89,16 @@ public class Globe {
     }
     private void removeGenotype(Genotype genotype) {
         int count=genotypeCount.get(genotype)-1;
-        genotypeCount.put(genotype, count);
-
         maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
-        maxHeap.add(Map.entry(genotype, count));
+
+        if(count>0){
+            maxHeap.add(Map.entry(genotype, count));
+            genotypeCount.put(genotype, count);
+        }
+        else {
+            genotypeCount.remove(genotype);
+        }
+
     }
     public Genotype findMostCommonGenotype() {
         return maxHeap.isEmpty() ? null : maxHeap.peek().getKey();

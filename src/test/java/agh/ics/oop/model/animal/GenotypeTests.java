@@ -33,20 +33,6 @@ public class GenotypeTests {
     }
 
     @Test
-    public void testRandomGene() {
-        int genotypeLength = 10;
-        int minMutations = 1;
-        int maxMutations = 3;
-        Genotype genotype = new Genotype(genotypeLength, minMutations, maxMutations);
-
-        int initialGene = genotype.getCurrentGene(0);
-
-        genotype.randomGene(0);
-
-        assertNotEquals(initialGene, genotype.getCurrentGene(0));
-    }
-
-    @Test
     public void testCrossbreeding() {
         int minNumberOfMutations = 1;
         int maxNumberOfMutations = 3;

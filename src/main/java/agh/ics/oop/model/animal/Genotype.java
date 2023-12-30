@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Genotype {
-    private final List<Integer> genes = new ArrayList<>();
-    private int minNumberOfMutations;
-    private int maxNumberOfMutations;
+    private List<Integer> genes = new ArrayList<>();
+    private final int minNumberOfMutations;
+    private final int maxNumberOfMutations;
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         this.minNumberOfMutations=minNumberOfMutations;
@@ -18,6 +18,11 @@ public class Genotype {
         for (int i = 0; i < genotypeLength; i++) {
             this.genes.add(RandomInteger.getRandomInt(8));
         }
+    }
+    public Genotype(Genotype other) { //copying method
+        this.genes = new ArrayList<>(other.genes);
+        this.minNumberOfMutations = other.minNumberOfMutations;
+        this.maxNumberOfMutations = other.maxNumberOfMutations;
     }
 
     public Genotype(Animal mother, Animal father) {
