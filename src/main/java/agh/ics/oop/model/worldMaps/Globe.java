@@ -3,13 +3,10 @@ package agh.ics.oop.model.worldMaps;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
@@ -18,7 +15,7 @@ public class Globe {
     private final int width;
     private final int height;
 
-    private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
+    private static final Vector2d lowerLeftBoundary = new Vector2d(0, 0);
     private final Vector2d upperRightBoundary;
     private int plantCount = 0;
     private int numberOfAnimals = 0;
@@ -29,6 +26,7 @@ public class Globe {
     private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
     private final PlantConfig plantConfig;
     private final AnimalConfig animalConfig;
+    MapVisualizer map = new MapVisualizer(this);
 
     public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
         checkIfPositive(width);
@@ -59,6 +57,7 @@ public class Globe {
         numberOfAnimals++;
 
         List<Animal> animalsAtThisPosition = animals.remove(position);
+        if(animalsAtThisPosition==null) animalsAtThisPosition = new ArrayList<>();
         animalsAtThisPosition.add(animal);
 
         animals.put(position, animalsAtThisPosition);
@@ -110,6 +109,15 @@ public class Globe {
 
     public int getHeight() {
         return height;
+    }
+    public String toString(){
+        return map.draw(this.lowerLeftBoundary, this.upperRightBoundary);
+    }
+
+    public Object objectAt(Vector2d position) {
+        List<Animal> animalsAtThisPosition = animals.get(position);
+        if (animalsAtThisPosition!=null) return animalsAtThisPosition;
+        return plants.get(position);
     }
 }
 

@@ -20,7 +20,7 @@ public class Animal {
 
     public Animal(Vector2d position, AnimalConfig animalConfig) {
         this.position=position;
-        this.direction=MapDirection.values()[RandomInteger.getRandomInt(8)];
+        this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy=animalConfig.startingEnergy();
         this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
@@ -30,7 +30,7 @@ public class Animal {
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
         this.position=mother.getPosition();
-        this.direction=MapDirection.values()[RandomInteger.getRandomInt(8)];
+        this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy= animalConfig.energyUsedToReproduce()*2;
         this.genotype=new Genotype(mother,father);
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
@@ -71,4 +71,7 @@ public class Animal {
         return new Genotype(genotype);
     }
 
+    public String toShortString() {
+        return (direction.toString());
+    }
 }
