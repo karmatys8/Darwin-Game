@@ -5,11 +5,7 @@ import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
@@ -37,7 +33,7 @@ public class Globe {
         checkIfPositive(height);
         this.height = height;
 
-        upperRightBoundary = new Vector2d(width - 1, height - 1);
+        upperRightBoundary = new Vector2d(width, height);
 
         this.plantConfig = plantConfig;
         this.animalConfig = animalConfig;
@@ -59,6 +55,7 @@ public class Globe {
         numberOfAnimals++;
 
         List<Animal> animalsAtThisPosition = animals.remove(position);
+        if (animalsAtThisPosition == null) animalsAtThisPosition = new ArrayList<>();
         animalsAtThisPosition.add(animal);
 
         animals.put(position, animalsAtThisPosition);

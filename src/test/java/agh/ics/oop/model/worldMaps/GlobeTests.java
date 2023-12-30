@@ -12,12 +12,12 @@ public class GlobeTests {
         Assertions.assertInstanceOf(Globe.class, globe1);
 
         Globe globe2 = new Globe(1000, 1, new PlantConfig(0, 0, 0),
-                new AnimalConfig(Integer.MAX_VALUE, 0, 1000, 0, 0, 0, Integer.MAX_VALUE));
+                new AnimalConfig(2000, 0, 1000, 0, 0, 0, 1000));
         Assertions.assertInstanceOf(Globe.class, globe2);
 
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(-2, 10, new PlantConfig(0, 0, 0),
-                new AnimalConfig(Integer.MAX_VALUE, 0, 1000, 0, 0, 0, Integer.MAX_VALUE)));
+                new AnimalConfig(100, 0, 1000, 0, 0, 0, Integer.MAX_VALUE)));
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(400, 0, new PlantConfig(0, 0, 0),
                 new AnimalConfig(8, 0, 1000, 0, 0, 0, 9)));
@@ -30,12 +30,12 @@ public class GlobeTests {
 
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 0)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 199)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 199)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 0)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 1)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 200)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(36, 200)));
+        Assertions.assertTrue(globe.canMoveTo(new Vector2d(36, 1)));
 
-        Assertions.assertFalse(globe.canMoveTo(new Vector2d(-1 ,-1)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(0 ,0)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,-1)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,Integer.MAX_VALUE)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,Integer.MIN_VALUE)));

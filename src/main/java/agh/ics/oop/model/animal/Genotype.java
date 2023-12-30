@@ -8,15 +8,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class Genotype {
-    private List<Integer> genes = new ArrayList<>();
+    private final List<Integer> genes;
     private final int minNumberOfMutations;
     private final int maxNumberOfMutations;
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         this.minNumberOfMutations=minNumberOfMutations;
         this.maxNumberOfMutations=maxNumberOfMutations;
+
+        genes = new ArrayList<>();
         for (int i = 0; i < genotypeLength; i++) {
-            this.genes.add(RandomInteger.getRandomInt(8));
+            this.genes.add(RandomInteger.getRandomInt(7));
         }
     }
     public Genotype(Genotype other) { //copying method
@@ -27,12 +29,16 @@ public class Genotype {
 
     public Genotype(Animal mother, Animal father) {
         validateParents(mother, father);
+
         this.minNumberOfMutations=mother.getGenotype().minNumberOfMutations;
         this.maxNumberOfMutations=mother.getGenotype().maxNumberOfMutations;
+
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mother.getGenotype().genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        for (int i = 0; i < mother.getGenotype().genes.size(); i++) {
+        int genotypeLength = mother.getGenotype().genes.size();
+        genes = new ArrayList<>(genotypeLength);
+        for (int i = 0; i < genotypeLength; i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mother.getGenotype().genes.get(i));
             } else {
@@ -54,7 +60,7 @@ public class Genotype {
 
         for (int i = 0; i < numberOfMutations; i++) {
             switchGenes(RandomInteger.getRandomInt(genes.size()-1), RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji z podmianką
-            randomGene(RandomInteger.getRandomInt(genes.size())-1); //opcja symulacji pełna losowość
+            randomGene(RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji pełna losowość
         }
     }
 
@@ -62,7 +68,7 @@ public class Genotype {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
     public void randomGene(int geneIndex) {
-        genes.set(geneIndex, RandomInteger.getRandomInt(8));
+        genes.set(geneIndex, RandomInteger.getRandomInt(7));
     }
 
     public String toString() {
