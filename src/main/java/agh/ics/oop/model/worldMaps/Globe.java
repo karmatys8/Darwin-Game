@@ -1,7 +1,7 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.Genotype;
+import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 

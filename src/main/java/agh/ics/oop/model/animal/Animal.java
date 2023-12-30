@@ -1,9 +1,7 @@
 package agh.ics.oop.model.animal;
 
-import agh.ics.oop.model.Genotype;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.AnimalTree;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.worldMaps.AnimalConfig;
 

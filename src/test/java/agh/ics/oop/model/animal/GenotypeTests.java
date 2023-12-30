@@ -1,6 +1,4 @@
 package agh.ics.oop.model.animal;
-import agh.ics.oop.model.Genotype;
-import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.worldMaps.AnimalConfig;
 import org.junit.jupiter.api.Test;
