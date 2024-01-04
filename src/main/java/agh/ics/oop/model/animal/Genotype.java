@@ -2,10 +2,7 @@ package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.util.RandomInteger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Genotype {
     private final List<Integer> genes;
@@ -80,16 +77,19 @@ public class Genotype {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Genotype genotype = (Genotype) o;
-        return Objects.equals(genes, genotype.genes);
+    public boolean equals(Object obj) {
+        if (obj instanceof Genotype) {
+            Genotype other = (Genotype) obj;
+            return this.genes.equals(other.genes);
+        }
+        return false;
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(genes);
+        return this.genes.hashCode();
     }
+
     public int getCurrentGene(int currentGeneIndex) {
         return genes.get(currentGeneIndex);
     }
