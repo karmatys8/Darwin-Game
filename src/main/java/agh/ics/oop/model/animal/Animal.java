@@ -49,7 +49,29 @@ public class Animal {
         father.updateChildren();
         father.updateDescendants();
     }
+    public Vector2d getPosition() {
+        return position;
+    }
 
+    public int getEnergy() {
+        return energy;
+    }
+
+    public Genotype getGenotype() {
+        return new Genotype(genotype);
+    }
+    public int getCurrentGeneIndex(){ return currentGeneIndex;}
+
+    private void useEnergy(int energyUsedToReproduce) {
+        this.energy-=energyUsedToReproduce;
+    }
+    public void nextGene(){
+        this.currentGeneIndex=(this.currentGeneIndex+1)%genotype.getGenes().size();
+    }
+
+    public boolean canReproduce(){
+        return this.energy>=this.minEnergyToReproduce;
+    }
     private void updateDescendants() {
         this.descendants ++;
         if (this.father != null) {
@@ -63,35 +85,11 @@ public class Animal {
     private void updateChildren() {
         this.children++;
     }
-
-    private void useEnergy(int energyUsedToReproduce) {
-        this.energy-=energyUsedToReproduce;
-    }
-    public void nextGene(){
-        this.currentGeneIndex=(this.currentGeneIndex+1)%genotype.getGenes().size();
-    }
-
-    public boolean canReproduce(){
-        return this.energy>=this.minEnergyToReproduce;
-    }
-
     public int getNumberOfChildren(){
         return children;
     }
     public int getNumberOfDescendants(){
         return descendants;
-    }
-
-    public Vector2d getPosition() {
-        return position;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public Genotype getGenotype() {
-        return new Genotype(genotype);
     }
 
 }
