@@ -3,7 +3,7 @@ package agh.ics.oop.presenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloPresenter {
+public class SimulationPresenter {
     @FXML
     private Label welcomeText;
 
