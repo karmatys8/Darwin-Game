@@ -61,9 +61,12 @@ public class Genotype {
         }
     }
 
+    //przekazujemy mutator
+
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
+    //losowy inny
     public void randomGene(int geneIndex) {
         genes.set(geneIndex, RandomInteger.getRandomInt(7));
     }

@@ -15,10 +15,8 @@ public class Animal {
     private int dayOfDeath;
     private int currentGeneIndex;
     //private AnimalTree animalTree;
-    private final Animal mother;
-    private final Animal father;
-    private int descendants=0;
-    private int children=0;
+    private Animal mother;
+    private Animal father;
     private final int minEnergyToReproduce;
 
 
@@ -28,9 +26,9 @@ public class Animal {
         this.energy=animalConfig.startingEnergy();
         this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
+        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         this.mother=null;
         this.father=null;
-        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
     }
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
@@ -44,10 +42,6 @@ public class Animal {
         father.useEnergy(animalConfig.energyUsedToReproduce());
         this.mother=mother;
         this.father=father;
-        mother.updateChildren();
-        mother.updateDescendants();
-        father.updateChildren();
-        father.updateDescendants();
     }
     public Vector2d getPosition() {
         return position;
@@ -71,25 +65,6 @@ public class Animal {
 
     public boolean canReproduce(){
         return this.energy>=this.minEnergyToReproduce;
-    }
-    private void updateDescendants() {
-        this.descendants ++;
-        if (this.father != null) {
-            this.father.updateDescendants();
-        }
-        if (this.mother != null) {
-            this.mother.updateDescendants();
-        }
-    }
-
-    private void updateChildren() {
-        this.children++;
-    }
-    public int getNumberOfChildren(){
-        return children;
-    }
-    public int getNumberOfDescendants(){
-        return descendants;
     }
 
 }

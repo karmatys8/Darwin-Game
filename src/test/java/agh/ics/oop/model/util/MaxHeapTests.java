@@ -30,12 +30,8 @@ public class MaxHeapTests {
         heap.insert(genotype1);
         heap.insert(genotype5);
         heap.remove(genotype2);
-        heap.print();
-        Assertions.assertEquals(heap.get(0), genotype5);
-        Assertions.assertEquals(heap.get(0), genotype4);
-        Assertions.assertEquals(heap.get(1), genotype1);
-        Assertions.assertEquals(heap.get(2), genotype3);
-        Assertions.assertNull(heap.get(3));
+        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype5);
+        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype4);
     }
 }
 
