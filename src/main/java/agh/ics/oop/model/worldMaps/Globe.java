@@ -100,6 +100,10 @@ public class Globe {
         return maxHeap.isEmpty() ? null : maxHeap.peek().getKey();
     }
 
+    public String toString(){
+        return map.draw(this.lowerLeftBoundary, this.upperRightBoundary);
+    }
+
     public int getWidth() {
         return width;
     }
