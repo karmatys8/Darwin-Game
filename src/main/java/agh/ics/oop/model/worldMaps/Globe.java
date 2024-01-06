@@ -42,7 +42,7 @@ public class Globe {
 
 
         for (int i = 0; i < animalConfig.startingCount(); i++) {
-            place(new Animal(new Vector2d(RandomInteger.getRandomInt(width), RandomInteger.getRandomInt(height)), animalConfig));
+            place(new Animal(new Vector2d(RandomInteger.getRandomInt(width)+1, RandomInteger.getRandomInt(height)+1), animalConfig));
         }
     }
 

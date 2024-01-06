@@ -27,14 +27,15 @@ public class Genotype {
 
     public Genotype(Animal mother, Animal father) {
         validateParents(mother, father);
-        this.minNumberOfMutations=mother.getGenotype().minNumberOfMutations;
-        this.maxNumberOfMutations=mother.getGenotype().maxNumberOfMutations;
-        int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mother.getGenotype().genes.size());
+        Genotype mothersGenotype=mother.getGenotype();
+        this.minNumberOfMutations=mothersGenotype.minNumberOfMutations;
+        this.maxNumberOfMutations=mothersGenotype.maxNumberOfMutations;
+        int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        for (int i = 0; i < mother.getGenotype().genes.size(); i++) {
+        for (int i = 0; i < mothersGenotype.genes.size(); i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
-                genes.add(mother.getGenotype().genes.get(i));
+                genes.add(mothersGenotype.genes.get(i));
             } else {
                 genes.add(father.getGenotype().genes.get(i));
             }

@@ -74,11 +74,8 @@ public class MapVisualizer {
     private String drawObject(Vector2d currentPosition) {
         Object object = this.globe.objectAt(currentPosition);
         if (object instanceof List<?>) {
-            StringBuilder result = new StringBuilder();
-            for (Object item : (List<?>) object) {
-                result.append(((Animal) item).toShortString()); //many animals in the same position will cause problems with display
-            }
-            return result.toString();
+            List<Animal> animalList = (List<Animal>) object;
+            return animalList.get(0).toShortString();
         } else if (object instanceof Plant) {
             return object.toString();
         }
