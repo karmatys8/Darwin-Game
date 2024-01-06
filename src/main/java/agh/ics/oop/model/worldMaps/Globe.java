@@ -1,9 +1,8 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.MaxHeap;
+import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.*;
@@ -24,7 +23,7 @@ public class Globe {
     private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
     private final PlantConfig plantConfig;
     private final AnimalConfig animalConfig;
-    private MaxHeap genotypeHeapCounter;
+    private final MostCommonGenotype genotypeHeapCounter = new MostCommonGenotype();
 
     public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
         checkIfPositive(width);
@@ -37,9 +36,6 @@ public class Globe {
 
         this.plantConfig = plantConfig;
         this.animalConfig = animalConfig;
-
-        this.genotypeHeapCounter=new MaxHeap();
-
 
         for (int i = 0; i < animalConfig.startingCount(); i++) {
             place(new Animal(new Vector2d(RandomInteger.getRandomInt(width), RandomInteger.getRandomInt(height)), animalConfig));
