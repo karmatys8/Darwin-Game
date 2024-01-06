@@ -27,9 +27,9 @@ public class GlobeTests {
     public void testCanMoveTo() {
         Globe globe = new Globe(36, 200, new PlantConfig(0, 22, 51),
                 new AnimalConfig(8, 9, 93, 0, 0, 0, 2));
-
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
+
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 1)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(1, 200)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(36, 200)));

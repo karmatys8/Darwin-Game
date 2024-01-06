@@ -3,6 +3,7 @@ package agh.ics.oop.model.worldMaps;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
+import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class Globe {
     private final Vector2d upperRightBoundary;
     private int plantCount = 0;
     private int numberOfAnimals = 0;
-
+    MapVisualizer map = new MapVisualizer(this);
     private Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
     private final PlantConfig plantConfig;
@@ -38,8 +39,7 @@ public class Globe {
         this.animalConfig = animalConfig;
 
         for (int i = 0; i < animalConfig.startingCount(); i++) {
-            place(new Animal(new Vector2d(RandomInteger.getRandomInt(width), RandomInteger.getRandomInt(height)), animalConfig));
-        }
+            place(new Animal(new Vector2d(RandomInteger.getRandomInt(1, width), RandomInteger.getRandomInt(1, height)), animalConfig));        }
     }
 
     public boolean canMoveTo(Vector2d position) {
@@ -73,6 +73,17 @@ public class Globe {
             System.err.println("NullPointerException: Position in animal is not kept correctly.");
         }
     }
+
+    public String toString(){
+        return map.draw(this.lowerLeftBoundary, this.upperRightBoundary);
+    }
+
+    public Object objectAt(Vector2d position) {
+        List<Animal> animalsAtThisPosition = animals.get(position);
+        if (animalsAtThisPosition!=null) return animalsAtThisPosition;
+        return plants.get(position);
+    }
+  
     public int getWidth() {
         return width;
     }
