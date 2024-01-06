@@ -16,32 +16,22 @@ public class Globe {
 
     private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
     private final Vector2d upperRightBoundary;
-    private int plantCount = 0;
-    private int numberOfAnimals = 0;
 
-    private Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    private Map<Vector2d, List<Animal>> animals;
     private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
     private Map<Genotype, Integer> genotypeCount = new HashMap<>();
     private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
-    private final PlantConfig plantConfig;
-    private final AnimalConfig animalConfig;
 
-    public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
+    public Globe(int width, int height, Map<Vector2d, List<Animal>> animals) {
         checkIfPositive(width);
         this.width = width;
 
         checkIfPositive(height);
         this.height = height;
 
+        this.animals = animals;
+
         upperRightBoundary = new Vector2d(width, height);
-
-        this.plantConfig = plantConfig;
-        this.animalConfig = animalConfig;
-
-
-        for (int i = 0; i < animalConfig.startingCount(); i++) {
-            place(new Animal(new Vector2d(RandomInteger.getRandomInt(width), RandomInteger.getRandomInt(height)), animalConfig));
-        }
     }
 
     public boolean canMoveTo(Vector2d position) {
@@ -52,7 +42,6 @@ public class Globe {
 
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        numberOfAnimals++;
 
         List<Animal> animalsAtThisPosition = animals.remove(position);
         if (animalsAtThisPosition == null) animalsAtThisPosition = new ArrayList<>();
@@ -107,6 +96,36 @@ public class Globe {
 
     public int getHeight() {
         return height;
+    }
+
+    public void moveAnimal(Animal animal) {
+        Vector2d oldPosition = animal.getPosition();
+        animal.move(this);
+
+        Vector2d newPosition = animal.getPosition();
+        if (oldPosition != newPosition) {
+            List<Animal> prevAnimals = animals.remove(oldPosition);
+            prevAnimals.remove(animal);
+
+            if (!prevAnimals.isEmpty()) animals.put(oldPosition, prevAnimals);
+
+            List<Animal> currAnimals = animals.getOrDefault(newPosition, new ArrayList<>(1));
+            currAnimals.add(animal);
+
+            animals.put(newPosition, currAnimals);
+        }
+    }
+
+    public void killAnimal(Animal animal, int currentDay) {
+        Vector2d position = animal.getPosition();
+        animal.kill(currentDay);
+
+        List<Animal> prevAnimals = animals.remove(position);
+        prevAnimals.remove(animal);
+
+        if (!prevAnimals.isEmpty()) animals.put(position, prevAnimals);
+
+        // change genotype Heap here
     }
 }
 

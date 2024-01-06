@@ -13,7 +13,7 @@ public class EquatorPositionsGenerator implements Iterable<Vector2d> {
 
     public EquatorPositionsGenerator(int numberOfPlantsToAdd, int mapWidth, int mapHeight) {
         this.numberOfPlantsToAdd = numberOfPlantsToAdd;
-        this.mapWidth = mapWidth; // not sure whether to check if width and height are positive
+        this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
     }
 

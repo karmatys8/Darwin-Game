@@ -4,6 +4,11 @@ import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.worldMaps.Globe;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Animal {
     private Vector2d position;
@@ -11,7 +16,7 @@ public class Animal {
     private Genotype genotype;
     private int energy;
     private int daysLived=0;
-    private int eatenPlants=0;
+    private int plantsEaten=0;
     private int dayOfDeath;
     private int currentGeneIndex;
     private AnimalTree animalTree;
@@ -39,6 +44,19 @@ public class Animal {
         mother.animalTree.addChild(this.animalTree);
         father.useEnergy(animalConfig.energyUsedToReproduce());
         father.animalTree.addChild(this.animalTree);
+    }
+
+    public Animal(Animal animal) {
+        this.position = animal.position;
+        this.direction = animal.direction;
+        this.energy = animal.energy;
+        this.genotype = animal.getGenotype();
+        this.currentGeneIndex = animal.currentGeneIndex;
+        this.animalTree = animal.animalTree;
+        this.minEnergyToReproduce = animal.minEnergyToReproduce;
+        this.daysLived = animal.daysLived;
+        this.plantsEaten = animal.plantsEaten;
+        this.dayOfDeath = animal.dayOfDeath;
     }
 
     private void useEnergy(int energyUsedToReproduce) {
@@ -71,4 +89,23 @@ public class Animal {
         return new Genotype(genotype);
     }
 
+    public void move(Globe globe) {
+        energy--;
+        daysLived++;
+
+        direction = direction.turnRight(genotype.getCurrentGene(this.currentGeneIndex));
+        this.nextGene();
+
+        Vector2d newPosition = position.add(direction.getUnitVector());
+        if (globe.canMoveTo(newPosition)) {
+            position = newPosition;
+        }
+    }
+
+    public void kill(int dayOfDeath) {
+        this.dayOfDeath = dayOfDeath;
+        this.position = null;
+        this.direction = null;
+        this.genotype = null;
+    }
 }
