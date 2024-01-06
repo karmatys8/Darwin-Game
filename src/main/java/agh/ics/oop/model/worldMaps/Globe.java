@@ -3,7 +3,6 @@ package agh.ics.oop.model.worldMaps;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.*;
@@ -15,7 +14,7 @@ public class Globe {
     private final int width;
     private final int height;
 
-    private static final Vector2d lowerLeftBoundary = new Vector2d(0, 0);
+    private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
     private final Vector2d upperRightBoundary;
     private int plantCount = 0;
     private int numberOfAnimals = 0;
@@ -26,7 +25,6 @@ public class Globe {
     private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
     private final PlantConfig plantConfig;
     private final AnimalConfig animalConfig;
-    MapVisualizer map = new MapVisualizer(this);
 
     public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
         checkIfPositive(width);
@@ -35,15 +33,14 @@ public class Globe {
         checkIfPositive(height);
         this.height = height;
 
-        upperRightBoundary = new Vector2d(width - 1, height - 1);
+        upperRightBoundary = new Vector2d(width, height);
 
         this.plantConfig = plantConfig;
         this.animalConfig = animalConfig;
 
 
         for (int i = 0; i < animalConfig.startingCount(); i++) {
-            place(new Animal(new Vector2d(RandomInteger.getRandomInt(width), RandomInteger.getRandomInt(height)), animalConfig));
-        }
+            place(new Animal(new Vector2d(RandomInteger.getRandomInt(1, width), RandomInteger.getRandomInt(1, height)), animalConfig));        }
     }
 
     public boolean canMoveTo(Vector2d position) {
@@ -57,7 +54,7 @@ public class Globe {
         numberOfAnimals++;
 
         List<Animal> animalsAtThisPosition = animals.remove(position);
-        if(animalsAtThisPosition==null) animalsAtThisPosition = new ArrayList<>();
+        if (animalsAtThisPosition == null) animalsAtThisPosition = new ArrayList<>();
         animalsAtThisPosition.add(animal);
 
         animals.put(position, animalsAtThisPosition);
@@ -109,15 +106,6 @@ public class Globe {
 
     public int getHeight() {
         return height;
-    }
-    public String toString(){
-        return map.draw(this.lowerLeftBoundary, this.upperRightBoundary);
-    }
-
-    public Object objectAt(Vector2d position) {
-        List<Animal> animalsAtThisPosition = animals.get(position);
-        if (animalsAtThisPosition!=null) return animalsAtThisPosition;
-        return plants.get(position);
     }
 }
 
