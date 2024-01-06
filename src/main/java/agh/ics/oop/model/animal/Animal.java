@@ -23,7 +23,7 @@ public class Animal {
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy=animalConfig.startingEnergy();
         this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
-        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
+        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
         this.animalTree=new AnimalTree(this);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
     }
@@ -33,7 +33,7 @@ public class Animal {
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy= animalConfig.energyUsedToReproduce()*2;
         this.genotype=new Genotype(mother,father);
-        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength());
+        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         mother.useEnergy(animalConfig.energyUsedToReproduce());
         mother.animalTree.addChild(this.animalTree);

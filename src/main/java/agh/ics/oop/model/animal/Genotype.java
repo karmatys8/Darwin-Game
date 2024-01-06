@@ -8,15 +8,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class Genotype {
-    private List<Integer> genes = new ArrayList<>();
+    private final List<Integer> genes;
     private final int minNumberOfMutations;
     private final int maxNumberOfMutations;
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         this.minNumberOfMutations=minNumberOfMutations;
         this.maxNumberOfMutations=maxNumberOfMutations;
+
+        genes = new ArrayList<>();
         for (int i = 0; i < genotypeLength; i++) {
-            this.genes.add(RandomInteger.getRandomInt(8));
+            this.genes.add(RandomInteger.getRandomInt(7));
         }
     }
     public Genotype(Genotype other) { //copying method
@@ -27,12 +29,15 @@ public class Genotype {
 
     public Genotype(Animal mother, Animal father) {
         validateParents(mother, father);
+      
         Genotype mothersGenotype=mother.getGenotype();
         this.minNumberOfMutations=mothersGenotype.minNumberOfMutations;
         this.maxNumberOfMutations=mothersGenotype.maxNumberOfMutations;
+      
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
+        genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < mothersGenotype.genes.size(); i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mothersGenotype.genes.get(i));
@@ -40,7 +45,6 @@ public class Genotype {
                 genes.add(father.getGenotype().genes.get(i));
             }
         }
-
         mutate();
     }
 
