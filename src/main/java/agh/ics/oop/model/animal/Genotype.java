@@ -6,11 +6,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Genotype {
-    private final List<Integer> genes;
-    private final int minNumberOfMutations;
-    private final int maxNumberOfMutations;
+abstract public class Genotype {
+    protected final List<Integer> genes;
+    protected final int minNumberOfMutations;
+    protected final int maxNumberOfMutations;
+
+    private final List<Integer> randomGenes = IntStream.range(0, 8)
+                                                        .boxed()
+                                                        .collect(Collectors.toList());
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         this.minNumberOfMutations=minNumberOfMutations;
@@ -37,8 +43,9 @@ public class Genotype {
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
+        int genotypeLength = mothersGenotype.genes.size();
         genes = new ArrayList<>(genotypeLength);
-        for (int i = 0; i < mothersGenotype.genes.size(); i++) {
+        for (int i = 0; i < genotypeLength; i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mothersGenotype.genes.get(i));
             } else {
@@ -54,20 +61,20 @@ public class Genotype {
         }
     }
 
-    private void mutate() {
-        int numberOfMutations = RandomInteger.getRandomInt(minNumberOfMutations, maxNumberOfMutations);
-
-        for (int i = 0; i < numberOfMutations; i++) {
-            switchGenes(RandomInteger.getRandomInt(genes.size()-1), RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji z podmianką
-            randomGene(RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji pełna losowość
-        }
-    }
+    protected abstract void mutate();
 
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
     public void randomGene(int geneIndex) {
-        genes.set(geneIndex, RandomInteger.getRandomInt(7));
+        Collections.shuffle(randomGenes);
+        int randomGene = randomGenes.get(0);
+
+        if (randomGene != genes.get(geneIndex)) {
+            genes.set(geneIndex, randomGene);
+        }
+
+        genes.set(geneIndex, randomGenes.get(1));
     }
 
     public String toString() {
