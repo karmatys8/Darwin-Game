@@ -80,17 +80,16 @@ public class Genotype {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Genotype) {
-            Genotype other = (Genotype) obj;
-            return this.genes.equals(other.genes);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype = (Genotype) o;
+        return Objects.equals(genes, genotype.genes);
     }
 
     @Override
     public int hashCode() {
-        return this.genes.hashCode();
+        return Objects.hash(genes);
     }
 
     public int getCurrentGene(int currentGeneIndex) {

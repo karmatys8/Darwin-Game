@@ -14,7 +14,6 @@ public class Animal {
     private int eatenPlants=0;
     private int dayOfDeath;
     private int currentGeneIndex;
-    //private AnimalTree animalTree;
     private Animal mother;
     private Animal father;
     private final int minEnergyToReproduce;
