@@ -71,4 +71,7 @@ public class Animal {
         return new Genotype(genotype);
     }
 
+    public String toShortString() {
+        return (direction.toString());
+    }
 }
