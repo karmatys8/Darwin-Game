@@ -14,8 +14,10 @@ public class Animal {
     private int eatenPlants=0;
     private int dayOfDeath;
     private int currentGeneIndex;
-    private Animal mother;
-    private Animal father;
+    private final Animal mother;
+    private final Animal father;
+    private int descendants=0;
+    private int children=0;
     private final int minEnergyToReproduce;
 
 
@@ -41,6 +43,24 @@ public class Animal {
         father.useEnergy(animalConfig.energyUsedToReproduce());
         this.mother=mother;
         this.father=father;
+        mother.updateChildren();
+        mother.updateDescendants();
+        father.updateChildren();
+        father.updateDescendants();
+    }
+
+    private void updateDescendants() {
+        this.descendants ++;
+        if (this.father != null) {
+            this.father.updateDescendants();
+        }
+        if (this.mother != null) {
+            this.mother.updateDescendants();
+        }
+    }
+
+    private void updateChildren() {
+        this.children++;
     }
     public Vector2d getPosition() {
         return position;
@@ -66,4 +86,11 @@ public class Animal {
         return this.energy>=this.minEnergyToReproduce;
     }
 
+    public int getNumberOfDescendants() {
+        return descendants;
+    }
+
+    public int getNumberOfChildren() {
+        return children;
+    }
 }

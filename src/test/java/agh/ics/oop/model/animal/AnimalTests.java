@@ -44,5 +44,63 @@ public class AnimalTests {
             assertEquals((initialGeneIndex + 1) % animal.getGenotype().getGenes().size(), animal.getCurrentGeneIndex());
         }
     }
+    @Test
+    void testAnimalReproduction() {
+        int startingEnergy = 50;
+        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, 1, 1, 0 ,10, 6);
+        Vector2d position = new Vector2d(2, 2);
+        Animal mother = new Animal(position, animalConfig);
+        Animal father = new Animal(position, animalConfig);
 
+        for (int i = 1; i <= startingEnergy; i++) {
+            Animal child = new Animal(mother, father, animalConfig);
+
+            assertEquals(i, mother.getNumberOfChildren());
+            assertEquals(i, father.getNumberOfChildren());
+
+            assertEquals(0, child.getNumberOfDescendants());
+            assertEquals(position, child.getPosition());
+
+            assertEquals(50 - i * animalConfig.energyUsedToReproduce(), mother.getEnergy());
+            assertEquals(50 - i * animalConfig.energyUsedToReproduce(), father.getEnergy());
+        }
+
+        Animal child = new Animal(mother, father, animalConfig);
+
+        assertEquals(startingEnergy, mother.getNumberOfChildren());
+        assertEquals(startingEnergy, father.getNumberOfChildren());
+
+        assertEquals(0, mother.getEnergy());
+        assertEquals(0, father.getEnergy());
+    }
+    @Test
+    void testCountingDescendants() {
+        AnimalConfig animalConfig = new AnimalConfig(4, 100, 10, 2, 0, 0, 8);
+        Animal motherA = new Animal(new Vector2d(2, 2), animalConfig);
+        Animal fatherA = new Animal(new Vector2d(3, 3), animalConfig);
+        Animal motherB = new Animal(new Vector2d(12, 12), animalConfig);
+        Animal fatherB = new Animal(new Vector2d(31, 31), animalConfig);
+        Animal childAA = new Animal(motherA, fatherA, animalConfig);
+        Animal childBB = new Animal(motherB, fatherB, animalConfig);
+        Animal childAB = new Animal(motherA, fatherB, animalConfig);
+        Animal childAABB = new Animal(childAA, childBB, animalConfig);
+        Animal childAABBAB = new Animal(childAABB, childAB, animalConfig);
+        Animal child = new Animal(fatherA, fatherB, animalConfig);
+
+        assertEquals(4, motherA.getNumberOfDescendants());
+        assertEquals(3, motherB.getNumberOfDescendants());
+        assertEquals(4, fatherA.getNumberOfDescendants());
+        assertEquals(5, fatherB.getNumberOfDescendants());
+
+        assertEquals(2, motherA.getNumberOfChildren());
+        assertEquals(2, motherB.getNumberOfChildren());
+        assertEquals(2, fatherA.getNumberOfChildren());
+        assertEquals(3, fatherB.getNumberOfChildren());
+
+        assertEquals(0, childAABBAB.getNumberOfChildren());
+        assertEquals(0, child.getNumberOfDescendants());
+
+        assertEquals(2, childAA.getNumberOfDescendants());
+        assertEquals(1, childAB.getNumberOfDescendants());
+    }
 }
