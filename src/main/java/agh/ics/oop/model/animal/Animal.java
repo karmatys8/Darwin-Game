@@ -8,14 +8,17 @@ import agh.ics.oop.model.worldMaps.AnimalConfig;
 public class Animal {
     private Vector2d position;
     private MapDirection direction;
-    private Genotype genotype;
+    private final Genotype genotype;
     private int energy;
     private int daysLived=0;
     private int eatenPlants=0;
     private int dayOfDeath;
     private int currentGeneIndex;
-    private AnimalTree animalTree;
-    private int minEnergyToReproduce;
+    private final Animal mother;
+    private final Animal father;
+    private int descendants=0;
+    private int children=0;
+    private final int minEnergyToReproduce;
 
 
     public Animal(Vector2d position, AnimalConfig animalConfig) {
@@ -24,8 +27,9 @@ public class Animal {
         this.energy=animalConfig.startingEnergy();
         this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
-        this.animalTree=new AnimalTree(this);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
+        this.mother=null;
+        this.father=null;
     }
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
@@ -36,10 +40,40 @@ public class Animal {
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         mother.useEnergy(animalConfig.energyUsedToReproduce());
-        mother.animalTree.addChild(this.animalTree);
         father.useEnergy(animalConfig.energyUsedToReproduce());
-        father.animalTree.addChild(this.animalTree);
+        this.mother=mother;
+        this.father=father;
+        mother.updateChildren();
+        mother.updateDescendants();
+        father.updateChildren();
+        father.updateDescendants();
     }
+
+    private void updateDescendants() {
+        this.descendants ++;
+        if (this.father != null) {
+            this.father.updateDescendants();
+        }
+        if (this.mother != null) {
+            this.mother.updateDescendants();
+        }
+    }
+
+    private void updateChildren() {
+        this.children++;
+    }
+    public Vector2d getPosition() {
+        return position;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public Genotype getGenotype() {
+        return new Genotype(genotype);
+    }
+    public int getCurrentGeneIndex(){ return currentGeneIndex;}
 
     private void useEnergy(int energyUsedToReproduce) {
         this.energy-=energyUsedToReproduce;
@@ -52,26 +86,15 @@ public class Animal {
         return this.energy>=this.minEnergyToReproduce;
     }
 
-    public int getNumberOfChildren(){
-        return animalTree.getChildrenCount();
-    }
-    public int getNumberOfDescendants(){
-        return animalTree.getDescendantsCount();
+    public int getNumberOfDescendants() {
+        return descendants;
     }
 
-    public Vector2d getPosition() {
-        return position;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public Genotype getGenotype() {
-        return new Genotype(genotype);
-    }
+    public int getNumberOfChildren() {
+        return children;
 
     public String toShortString() {
         return (direction.toString());
+
     }
 }

@@ -1,8 +1,8 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
 
@@ -22,10 +22,9 @@ public class Globe {
     MapVisualizer map = new MapVisualizer(this);
     private Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
-    private Map<Genotype, Integer> genotypeCount = new HashMap<>();
-    private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
     private final PlantConfig plantConfig;
     private final AnimalConfig animalConfig;
+    private final MostCommonGenotype genotypeHeapCounter = new MostCommonGenotype();
 
     public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
         checkIfPositive(width);
@@ -38,7 +37,6 @@ public class Globe {
 
         this.plantConfig = plantConfig;
         this.animalConfig = animalConfig;
-
 
         for (int i = 0; i < animalConfig.startingCount(); i++) {
             place(new Animal(new Vector2d(RandomInteger.getRandomInt(1, width), RandomInteger.getRandomInt(1, height)), animalConfig));        }
@@ -57,7 +55,8 @@ public class Globe {
         animalsAtThisPosition.add(animal);
 
         animals.put(position, animalsAtThisPosition);
-        updateGenotypeCount(animal.getGenotype());
+        genotypeHeapCounter.insert(animal.getGenotype());
+
     }
     public void remove(Animal animal) {
         try {
@@ -65,38 +64,14 @@ public class Globe {
             List<Animal> animalsAtThisPosition = animals.get(position);
 
             animalsAtThisPosition.remove(animal);
+            genotypeHeapCounter.remove(animal.getGenotype());
 
             if (animalsAtThisPosition.isEmpty()) {
                 animals.remove(position);
             }
-            removeGenotype(animal.getGenotype());
-
         } catch (NullPointerException e) {
             System.err.println("NullPointerException: Position in animal is not kept correctly.");
         }
-    }
-    public void updateGenotypeCount(Genotype genotype) {
-        int count = genotypeCount.getOrDefault(genotype, 0) + 1;
-        genotypeCount.put(genotype, count);
-
-        maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
-        maxHeap.add(Map.entry(genotype, count));
-    }
-    private void removeGenotype(Genotype genotype) {
-        int count=genotypeCount.get(genotype)-1;
-        maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
-
-        if(count>0){
-            maxHeap.add(Map.entry(genotype, count));
-            genotypeCount.put(genotype, count);
-        }
-        else {
-            genotypeCount.remove(genotype);
-        }
-
-    }
-    public Genotype findMostCommonGenotype() {
-        return maxHeap.isEmpty() ? null : maxHeap.peek().getKey();
     }
 
     public String toString(){
@@ -108,7 +83,7 @@ public class Globe {
         if (animalsAtThisPosition!=null) return animalsAtThisPosition;
         return plants.get(position);
     }
-
+  
     public int getWidth() {
         return width;
     }

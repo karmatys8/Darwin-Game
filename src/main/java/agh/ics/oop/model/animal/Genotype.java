@@ -2,10 +2,7 @@ package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.util.RandomInteger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Genotype {
     private final List<Integer> genes;
@@ -63,9 +60,12 @@ public class Genotype {
         }
     }
 
+    //przekazujemy mutator
+
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
+    //losowy inny
     public void randomGene(int geneIndex) {
         genes.set(geneIndex, RandomInteger.getRandomInt(7));
     }
@@ -85,10 +85,12 @@ public class Genotype {
         Genotype genotype = (Genotype) o;
         return Objects.equals(genes, genotype.genes);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(genes);
     }
+
     public int getCurrentGene(int currentGeneIndex) {
         return genes.get(currentGeneIndex);
     }
