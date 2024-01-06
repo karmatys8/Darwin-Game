@@ -13,7 +13,7 @@ public class Genotype {
         this.minNumberOfMutations=minNumberOfMutations;
         this.maxNumberOfMutations=maxNumberOfMutations;
 
-        genes = new ArrayList<>();
+        genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < genotypeLength; i++) {
             this.genes.add(RandomInteger.getRandomInt(7));
         }
@@ -34,7 +34,7 @@ public class Genotype {
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        genes = new ArrayList<>(genotypeLength);
+        genes = new ArrayList<>(mothersGenotype.genes.size());
         for (int i = 0; i < mothersGenotype.genes.size(); i++) {
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mothersGenotype.genes.get(i));

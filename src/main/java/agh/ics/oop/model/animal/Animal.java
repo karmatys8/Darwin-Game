@@ -92,6 +92,7 @@ public class Animal {
 
     public int getNumberOfChildren() {
         return children;
+    }
 
     public String toShortString() {
         return (direction.toString());
