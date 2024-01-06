@@ -29,10 +29,10 @@ public class GlobeTests {
                 new AnimalConfig(8, 9, 93, 0, 0, 0, 2));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 0)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(0, 199)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(0, 0)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(0, 199)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 199)));
-        Assertions.assertTrue(globe.canMoveTo(new Vector2d(35, 0)));
+        Assertions.assertFalse(globe.canMoveTo(new Vector2d(35, 0)));
 
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(-1 ,-1)));
         Assertions.assertFalse(globe.canMoveTo(new Vector2d(10 ,-1)));

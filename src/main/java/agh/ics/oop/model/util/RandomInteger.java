@@ -10,7 +10,7 @@ public class RandomInteger {
     }
 
     public static int getRandomInt(int min, int max) {
-        if (min >= max) {
+        if (min > max) {
             throw new IllegalArgumentException("Min value must be less than max value");
         }
         return random.nextInt(max - min + 1) + min;

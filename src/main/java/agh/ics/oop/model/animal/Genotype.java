@@ -55,7 +55,7 @@ public class Genotype {
 
         for (int i = 0; i < numberOfMutations; i++) {
             switchGenes(RandomInteger.getRandomInt(genes.size()-1), RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji z podmianką
-            randomGene(RandomInteger.getRandomInt(genes.size())-1); //opcja symulacji pełna losowość
+            randomGene(RandomInteger.getRandomInt(genes.size()-1)); //opcja symulacji pełna losowość
         }
     }
 
@@ -63,7 +63,7 @@ public class Genotype {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
     public void randomGene(int geneIndex) {
-        genes.set(geneIndex, RandomInteger.getRandomInt(8));
+        genes.set(geneIndex, RandomInteger.getRandomInt(7));
     }
 
     public String toString() {
