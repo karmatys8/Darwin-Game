@@ -22,7 +22,7 @@ abstract public class Genotype {
         this.minNumberOfMutations=minNumberOfMutations;
         this.maxNumberOfMutations=maxNumberOfMutations;
 
-        genes = new ArrayList<>();
+        genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < genotypeLength; i++) {
             this.genes.add(RandomInteger.getRandomInt(7));
         }
@@ -46,6 +46,7 @@ abstract public class Genotype {
         int genotypeLength = mothersGenotype.genes.size();
         genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < genotypeLength; i++) {
+
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mothersGenotype.genes.get(i));
             } else {
@@ -63,9 +64,12 @@ abstract public class Genotype {
 
     protected abstract void mutate();
 
+    //przekazujemy mutator
+
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
+    //losowy inny
     public void randomGene(int geneIndex) {
         Collections.shuffle(randomGenes);
         int randomGene = randomGenes.get(0);
@@ -92,10 +96,12 @@ abstract public class Genotype {
         Genotype genotype = (Genotype) o;
         return Objects.equals(genes, genotype.genes);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(genes);
     }
+
     public int getCurrentGene(int currentGeneIndex) {
         return genes.get(currentGeneIndex);
     }

@@ -1,15 +1,14 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 
 import java.util.*;
-
 
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
