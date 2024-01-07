@@ -1,4 +1,4 @@
-package agh.ics.oop.model.worldMaps;
+package agh.ics.oop.model.util.configs;
 
 import static agh.ics.oop.model.util.CommonMethods.checkIfNotNegative;
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;

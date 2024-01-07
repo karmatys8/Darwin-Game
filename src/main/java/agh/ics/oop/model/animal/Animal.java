@@ -3,7 +3,7 @@ package agh.ics.oop.model.animal;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
 
 public class Animal {
     private Vector2d position;
@@ -11,7 +11,7 @@ public class Animal {
     private final Genotype genotype;
     private int energy;
     private int daysLived=0;
-    private int eatenPlants=0;
+    private int plantsEaten=0;
     private int dayOfDeath;
     private int currentGeneIndex;
     private final Animal mother;
@@ -25,7 +25,7 @@ public class Animal {
         this.position=position;
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy=animalConfig.startingEnergy();
-        this.genotype=new Genotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
+        this.genotype=new RandomGenotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         this.mother=null;
@@ -36,7 +36,7 @@ public class Animal {
         this.position=mother.getPosition();
         this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.energy= animalConfig.energyUsedToReproduce()*2;
-        this.genotype=new Genotype(mother,father);
+        this.genotype=new RandomGenotype(mother,father);
         this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         mother.useEnergy(animalConfig.energyUsedToReproduce());
@@ -71,7 +71,7 @@ public class Animal {
     }
 
     public Genotype getGenotype() {
-        return new Genotype(genotype);
+        return new RandomGenotype(genotype);
     }
     public int getCurrentGeneIndex(){ return currentGeneIndex;}
 

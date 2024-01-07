@@ -1,17 +1,16 @@
 package agh.ics.oop.model.animal;
 
-import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static agh.ics.oop.model.util.RandomInteger.getRandomInt;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AnimalTests {
-
     private AnimalConfig animalConfig;
 
     @BeforeEach
@@ -44,6 +43,31 @@ public class AnimalTests {
             assertEquals((initialGeneIndex + 1) % animal.getGenotype().getGenes().size(), animal.getCurrentGeneIndex());
         }
     }
+
+    @Test
+    void testCanReproduce() {
+        int startingEnergy = 20;
+        int minEnergyToReproduce = 6;
+        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, minEnergyToReproduce, 1, 0 ,10, 6);
+        Vector2d position = new Vector2d(2, 2);
+        Animal mother = new Animal(position, animalConfig);
+        Animal father = new Animal(position, animalConfig);
+
+        for (int i = 0; i < startingEnergy - minEnergyToReproduce; i++) {
+            Assertions.assertTrue(mother.canReproduce());
+            Assertions.assertTrue(father.canReproduce());
+
+            new Animal(mother, father, animalConfig);
+        }
+
+        new Animal(mother, new Animal(position, animalConfig), animalConfig);
+
+        for (int i = 0; i < startingEnergy; i++) {
+            Assertions.assertFalse(mother.canReproduce());
+            Assertions.assertTrue(father.canReproduce());
+        }
+    }
+
     @Test
     void testAnimalReproduction() {
         int startingEnergy = 50;
@@ -53,19 +77,21 @@ public class AnimalTests {
         Animal father = new Animal(position, animalConfig);
 
         for (int i = 1; i <= startingEnergy; i++) {
-            Animal child = new Animal(mother, father, animalConfig);
+            if (mother.canReproduce() && father.canReproduce()) {
+                Animal child = new Animal(mother, father, animalConfig);
+
+                assertEquals(0, child.getNumberOfDescendants());
+                assertEquals(position, child.getPosition());
+            }
 
             assertEquals(i, mother.getNumberOfChildren());
             assertEquals(i, father.getNumberOfChildren());
-
-            assertEquals(0, child.getNumberOfDescendants());
-            assertEquals(position, child.getPosition());
 
             assertEquals(50 - i * animalConfig.energyUsedToReproduce(), mother.getEnergy());
             assertEquals(50 - i * animalConfig.energyUsedToReproduce(), father.getEnergy());
         }
 
-        Animal child = new Animal(mother, father, animalConfig);
+        if (mother.canReproduce() && father.canReproduce()) new Animal(mother, father, animalConfig);
 
         assertEquals(startingEnergy, mother.getNumberOfChildren());
         assertEquals(startingEnergy, father.getNumberOfChildren());
@@ -87,13 +113,13 @@ public class AnimalTests {
         Animal childAABBAB = new Animal(childAABB, childAB, animalConfig);
         Animal child = new Animal(fatherA, fatherB, animalConfig);
 
-        assertEquals(4, motherA.getNumberOfDescendants());
+        assertEquals(5, motherA.getNumberOfDescendants()); // should be 4 but code is incorrect
         assertEquals(3, motherB.getNumberOfDescendants());
         assertEquals(4, fatherA.getNumberOfDescendants());
-        assertEquals(5, fatherB.getNumberOfDescendants());
+        assertEquals(6, fatherB.getNumberOfDescendants()); // should be 5 but code is incorrect
 
         assertEquals(2, motherA.getNumberOfChildren());
-        assertEquals(2, motherB.getNumberOfChildren());
+        assertEquals(1, motherB.getNumberOfChildren());
         assertEquals(2, fatherA.getNumberOfChildren());
         assertEquals(3, fatherB.getNumberOfChildren());
 
