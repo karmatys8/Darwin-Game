@@ -3,7 +3,7 @@ package agh.ics.oop.model.animal;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
 
 public class Animal {
     private Vector2d position;

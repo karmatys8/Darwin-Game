@@ -1,9 +1,7 @@
 package agh.ics.oop.model.animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 

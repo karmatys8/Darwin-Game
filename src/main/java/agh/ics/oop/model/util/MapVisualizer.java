@@ -1,6 +1,7 @@
 package agh.ics.oop.model.util;
 
 import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.worldMaps.Plant;
@@ -11,15 +12,15 @@ public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
-    private final Globe globe;
+    private final AbstractWorldMap worldMap;
 
     /**
      * Initializes the MapVisualizer with an instance of map to visualize.
      *
-     * @param globe
+     * @param worldMap
      */
-    public MapVisualizer(Globe globe) {
-        this.globe = globe;
+    public MapVisualizer(AbstractWorldMap worldMap) {
+        this.worldMap = worldMap;
     }
 
     /**
@@ -72,7 +73,7 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        Object object = this.globe.objectAt(currentPosition);
+        Object object = this.worldMap.objectAt(currentPosition);
         if (object instanceof List<?>) {
             List<Animal> animalList = (List<Animal>) object;
             return animalList.get(0).toShortString();
