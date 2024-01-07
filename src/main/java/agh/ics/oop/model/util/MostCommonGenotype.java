@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class MostCommonGenotype {
-    private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap;
+    private final PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap;
     private final Map<Genotype, Integer> genotypeCounterMap;
 
     public MostCommonGenotype() {

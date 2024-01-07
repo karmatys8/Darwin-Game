@@ -11,7 +11,7 @@ public class Animal {
     private final Genotype genotype;
     private int energy;
     private int daysLived=0;
-    private int eatenPlants=0;
+    private int plantsEaten=0;
     private int dayOfDeath;
     private int currentGeneIndex;
     private final Animal mother;
