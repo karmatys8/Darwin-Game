@@ -7,8 +7,11 @@ import java.util.Objects;
 public class Plant {
     private final Vector2d position;
 
-    public Plant(Vector2d position) {
+    private final PlantConfig plantConfig;
+
+    public Plant(Vector2d position, PlantConfig plantConfig) {
         this.position = position;
+        this.plantConfig = plantConfig;
     }
 
     public Vector2d getPosition() {
@@ -26,5 +29,9 @@ public class Plant {
     @Override
     public int hashCode() {
         return Objects.hash(position);
+    }
+
+    public int getEnergy() {
+        return plantConfig.energyPerPlant();
     }
 }

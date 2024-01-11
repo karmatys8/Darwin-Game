@@ -17,21 +17,23 @@ public class Globe {
     private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
     private final Vector2d upperRightBoundary;
 
-    private Map<Vector2d, List<Animal>> animals;
-    private Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
-    private Map<Genotype, Integer> genotypeCount = new HashMap<>();
-    private PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
+    private final Map<Vector2d, List<Animal>> animals;
+    private final Map<Vector2d, Plant> plants;
+    private final Map<Genotype, Integer> genotypeCount = new HashMap<>();
+    private final PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
 
-    public Globe(int width, int height, Map<Vector2d, List<Animal>> animals) {
+    public Globe(int width, int height, Map<Vector2d, List<Animal>> animals, Map<Vector2d, Plant> plants) {
         checkIfPositive(width);
         this.width = width;
 
         checkIfPositive(height);
         this.height = height;
 
-        this.animals = animals;
-
         upperRightBoundary = new Vector2d(width, height);
+
+
+        this.animals = animals;
+        this.plants = plants;
     }
 
     public boolean canMoveTo(Vector2d position) {
@@ -104,10 +106,10 @@ public class Globe {
 
         Vector2d newPosition = animal.getPosition();
         if (oldPosition != newPosition) {
-            List<Animal> prevAnimals = animals.remove(oldPosition);
+            List<Animal> prevAnimals = animals.get(oldPosition);
             prevAnimals.remove(animal);
 
-            if (!prevAnimals.isEmpty()) animals.put(oldPosition, prevAnimals);
+            if (prevAnimals.isEmpty()) animals.remove(oldPosition);
 
             List<Animal> currAnimals = animals.getOrDefault(newPosition, new ArrayList<>(1));
             currAnimals.add(animal);
@@ -126,6 +128,10 @@ public class Globe {
         if (!prevAnimals.isEmpty()) animals.put(position, prevAnimals);
 
         // change genotype Heap here
+    }
+
+    public void animalEats(Vector2d position) {
+        animals.get(position).get(0).eat(plants.remove(position));
     }
 }
 

@@ -11,24 +11,25 @@ import java.util.Map;
 
 public class GlobeTests {
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    private static final Map<Vector2d, Plant> plants = new HashMap<>();
 
     @Test
     public void testGlobe() {
-        Globe globe1 = new Globe(20, 30, animals);
+        Globe globe1 = new Globe(20, 30, animals, plants);
         Assertions.assertInstanceOf(Globe.class, globe1);
 
-        Globe globe2 = new Globe(1000, 1, animals);
+        Globe globe2 = new Globe(1000, 1, animals, plants);
         Assertions.assertInstanceOf(Globe.class, globe2);
 
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(-2, 10, animals));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(-2, 10, animals, plants));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(400, 0, animals));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Globe(400, 0, animals, plants));
     }
 
     @Test
     public void testCanMoveTo() {
-        Globe globe = new Globe(36, 200, animals);
+        Globe globe = new Globe(36, 200, animals, plants);
 
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
