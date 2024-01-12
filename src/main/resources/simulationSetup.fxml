@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<<<<<<< HEAD
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -10,13 +9,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="600.0" style="-fx-background-color: #C9E3AC;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.controllers.SimulationSetupController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="600.0" style="-fx-background-color: #C9E3AC;" stylesheets="@simulationSetupStylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.controllers.SimulationSetupController">
    <center>
       <VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.12" prefHeight="522.0" prefWidth="602.0" style="-fx-background-image: url('setupBackground.png');" />
    </center>
    <top>
       <VBox alignment="CENTER" prefHeight="74.0" prefWidth="600.0" style="-fx-background-color: #90BE6D;" BorderPane.alignment="CENTER">
-
           <children>
             <Label text="Jungle Simulator" textFill="#27292b">
                <font>
@@ -27,85 +25,37 @@
       </VBox>
    </top>
    <bottom>
-      <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="103.0" prefWidth="600.0" style="-fx-background-color: #90BE6D;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="117.0" prefWidth="600.0" style="-fx-background-color: #90BE6D;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="startTheSimulation" prefHeight="30.0" prefWidth="238.0" style="-fx-background-color: #27292b;" text="Start the simulation" textFill="#fffcec">
+            <Button fx:id="startTheSimulation" styleClass="config-button" text="Start the simulation">
                <VBox.margin>
                   <Insets bottom="20.0" top="20.0" />
                </VBox.margin>
-               <font>
-                  <Font name="Berlin Sans FB" size="20.0" />
-               </font>
             </Button>
-            <Label text=" Projekt Darwin World  •  Informatyka Programowanie Obiektowe 2024  • Konrad Armatys i Gabriela Dumańska  " textFill="#27292b">
-               <font>
-                  <Font name="Verdana" size="10.0" />
-               </font>
-            </Label>
+            <Label text=" Darwin World Project  •  Computer Science- Object-Oriented Programming 2024" styleClass="config-label-bottom" />
+            <Label text="Konrad Armatys and Gabriela Dumańska" styleClass="config-label-bottom"/>
          </children></VBox>
    </bottom>
    <right>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="529.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="42.0" prefWidth="118.0" text="Map height" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="18.0" />
-               </font>
+            <Label styleClass="config-label-top" text="Map height"/>
+            <TextField fx:id="mapHeight" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Energy from one plant"/>
+            <TextField fx:id="energyFromOnePlant" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Initial number of animals"/>
+            <TextField fx:id="initialNumberOfAnimals" styleClass="config-text-field" />
+            <ComboBox fx:id="mutationOption" styleClass="config-combo-box">
                <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="mapHeight" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Energy from one plant" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="energyFromOnePlant" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="252.0" text="Initial number of animals" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="initialNumberOfAnimals" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <ComboBox fx:id="mutationOption" prefHeight="27.0" prefWidth="214.0">
-               <VBox.margin>
-                  <Insets top="14.0" />
+                  <Insets top="15"/>
                </VBox.margin>
             </ComboBox>
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="252.0" text="Energy to be well-fed" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="energyToBeWellFed" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="252.0" text="Length of genotypes" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="lengthOfGenotypes" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="252.0" text="Min number of mutations" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="minNumberOfMutations" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;">
+            <Label styleClass="config-label" text="Energy to be well-fed"/>
+            <TextField fx:id="energyToBeWellFed" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Length of genotypes"/>
+            <TextField fx:id="lengthOfGenotypes" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Min number of mutations"/>
+            <TextField fx:id="minNumberOfMutations" styleClass="config-text-field">
                <VBox.margin>
                   <Insets bottom="15.0" />
                </VBox.margin>
@@ -119,65 +69,23 @@
    <left>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="567.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="42.0" prefWidth="113.0" text="Map width" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="18.0" />
-               </font>
+            <Label styleClass="config-label-top" text="Map width"/>
+            <TextField fx:id="mapWidth" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Initial number of plants"/>
+            <TextField fx:id="initialNumberOfPlants" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Plants growing each day"/>
+            <TextField fx:id="plantsEachDay" styleClass="config-text-field" />
+            <ComboBox fx:id="mapOption" styleClass="config-combo-box">
                <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="mapWidth" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Initial number of plants" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="initialNumberOfPlants" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Plants growing each day" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="plantsEachDay" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <ComboBox fx:id="mapOption" prefHeight="27.0" prefWidth="214.0" style="-fx-background-color: #F3B153;">
-               <VBox.margin>
-                  <Insets top="15.0" />
+                  <Insets top="15"/>
                </VBox.margin>
             </ComboBox>
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Initial energy of animals" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="initialEnergyOfAnimals" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Energy to reproduce" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="energyToReproduce" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;" />
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="246.0" text="Max number of mutations" textFill="#27292b">
-               <font>
-                  <Font name="Verdana Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="maxNumberOfMutations" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="120.0" style="-fx-background-color: #F5F7DE;">
+            <Label styleClass="config-label" text="Initial energy of animals"/>
+            <TextField fx:id="initialEnergyOfAnimals" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Energy to reproduce"/>
+            <TextField fx:id="energyToReproduce" styleClass="config-text-field" />
+            <Label styleClass="config-label" text="Max number of mutations"/>
+            <TextField fx:id="maxNumberOfMutations" styleClass="config-text-field">
                <VBox.margin>
                   <Insets bottom="15.0" />
                </VBox.margin></TextField>
@@ -188,18 +96,3 @@
       </VBox>
    </left>
 </BorderPane>
-=======
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="agh.ics.oop.presenter.SimulationPresenter">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
->>>>>>> c1f1701ee68314b4cbc6c3c7710ad2245ac7dfe8

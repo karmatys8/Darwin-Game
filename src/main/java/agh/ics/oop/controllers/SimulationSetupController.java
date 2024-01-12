@@ -17,53 +17,26 @@ import java.util.stream.IntStream;
 
 public class SimulationSetupController {
 
-    @FXML
-    private ComboBox<String> mapOption;
-    @FXML
-    private ComboBox<String> mutationOption;
-    @FXML
-    private TextField mapWidth;
-    @FXML
-    private TextField mapHeight;
-    @FXML
-    private TextField initialNumberOfPlants;
-    @FXML
-    private TextField energyFromOnePlant;
-    @FXML
-    private TextField initialNumberOfAnimals;
-    @FXML
-    private TextField plantsEachDay;
-    @FXML
-    private TextField initialEnergyOfAnimals;
-    @FXML
-    private TextField energyToBeWellFed;
-    @FXML
-    private TextField energyToReproduce;
-    @FXML
-    private TextField lengthOfGenotypes;
-    @FXML
-    private TextField maxNumberOfMutations;
-    @FXML
-    private TextField minNumberOfMutations;
-    @FXML
-    private Button startTheSimulation;
+    @FXML private ComboBox<String> mapOption;
+    @FXML private ComboBox<String> mutationOption;
+    @FXML private TextField mapWidth;
+    @FXML private TextField mapHeight;
+    @FXML private TextField initialNumberOfPlants;
+    @FXML private TextField energyFromOnePlant;
+    @FXML private TextField initialNumberOfAnimals;
+    @FXML private TextField plantsEachDay;
+    @FXML private TextField initialEnergyOfAnimals;
+    @FXML private TextField energyToBeWellFed;
+    @FXML private TextField energyToReproduce;
+    @FXML private TextField lengthOfGenotypes;
+    @FXML private TextField maxNumberOfMutations;
+    @FXML private TextField minNumberOfMutations;
+    @FXML private Button startTheSimulation;
     List<TextField> nonNegativeFields;
     List<TextField> positiveFields;
 
     public void initialize() {
-
-        nonNegativeFields = Arrays.asList(
-                initialNumberOfPlants, energyFromOnePlant, plantsEachDay,
-                initialNumberOfAnimals, initialEnergyOfAnimals, energyToBeWellFed, energyToReproduce,
-                maxNumberOfMutations, minNumberOfMutations
-        );
-        positiveFields = Arrays.asList(
-                mapHeight, mapWidth,
-                lengthOfGenotypes
-        );
-        IntStream.range(0, positiveFields.size()).forEach(i -> positiveFields.get(i).setTextFormatter(positiveInteger()));
-        IntStream.range(0, nonNegativeFields.size()).forEach(i -> nonNegativeFields.get(i).setTextFormatter(nonNegativeInteger()));
-
+        setUpFields();
         ObservableList<String> optionsOfMap = FXCollections.observableArrayList(
                 "Underground tunnels",
                 "Globe"
@@ -82,6 +55,21 @@ public class SimulationSetupController {
 
         startTheSimulation.setOnAction(event -> startTheSimulation());
     }
+
+    private void setUpFields() {
+        nonNegativeFields = Arrays.asList(
+                initialNumberOfPlants, energyFromOnePlant, plantsEachDay,
+                initialNumberOfAnimals, initialEnergyOfAnimals, energyToBeWellFed, energyToReproduce,
+                maxNumberOfMutations, minNumberOfMutations
+        );
+        positiveFields = Arrays.asList(
+                mapHeight, mapWidth,
+                lengthOfGenotypes
+        );
+        positiveFields.forEach(field -> field.setTextFormatter(positiveInteger()));
+        nonNegativeFields.forEach(field -> field.setTextFormatter(nonNegativeInteger()));
+    }
+
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
         if (inputIsValid(errorMessage) & areNotGreater(errorMessage)) {
@@ -140,12 +128,13 @@ public class SimulationSetupController {
             }
         });
     }
+
     private boolean inputIsValid(StringBuilder errorMessage) {
         boolean isValid = positiveFields.stream().noneMatch(field -> field.getText().isEmpty())
-                & nonNegativeFields.stream().noneMatch(field-> field.getText().isEmpty())
+                & nonNegativeFields.stream().noneMatch(field -> field.getText().isEmpty())
                 & mutationOption.getValue() != null
                 & mapOption.getValue() != null;
-        if(!isValid){
+        if (!isValid) {
             errorMessage.append("Field cannot be empty.\n");
             return false;
         }
@@ -161,7 +150,7 @@ public class SimulationSetupController {
         alert.showAndWait();
     }
 
-    private boolean areNotGreater(StringBuilder errorMessage){
+    private boolean areNotGreater(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         boolean isNotGreater = true;
 
@@ -191,6 +180,7 @@ public class SimulationSetupController {
 
         return isNotGreater;
     }
+
     private int getValueFromTextField(TextField textField) {
         try {
             return Integer.parseInt(textField.getText());
