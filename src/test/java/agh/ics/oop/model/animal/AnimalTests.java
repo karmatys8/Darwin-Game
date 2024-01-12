@@ -113,10 +113,10 @@ public class AnimalTests {
         Animal childAABBAB = new Animal(childAABB, childAB, animalConfig);
         Animal child = new Animal(fatherA, fatherB, animalConfig);
 
-        assertEquals(5, motherA.getNumberOfDescendants()); // should be 4 but code is incorrect
+        assertEquals(4, motherA.getNumberOfDescendants());
         assertEquals(3, motherB.getNumberOfDescendants());
         assertEquals(4, fatherA.getNumberOfDescendants());
-        assertEquals(6, fatherB.getNumberOfDescendants()); // should be 5 but code is incorrect
+        assertEquals(5, fatherB.getNumberOfDescendants());
 
         assertEquals(2, motherA.getNumberOfChildren());
         assertEquals(1, motherB.getNumberOfChildren());
