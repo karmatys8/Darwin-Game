@@ -1,16 +1,26 @@
 package agh.ics.oop.model.worldMaps;
 
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class GlobeTests {
+    private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    private static final Map<Vector2d, Plant> plants = new HashMap<>();
+
     @Test
+
     public void testCanMoveTo() {
-        Globe globe = new Globe(36, 200, new PlantConfig(0, 22, 51),
-                new AnimalConfig(8, 9, 93, 0, 0, 0, 2));
+        Globe globe = new Globe(36, 200,
+                new AnimalConfig(8, 9, 93, 0, 0, 0, 2),
+                new PlantConfig(0, 22, 51), animals, plants);
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(10, 19)));
         Assertions.assertTrue(globe.canMoveTo(new Vector2d(15, 15)));
 

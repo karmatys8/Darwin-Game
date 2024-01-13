@@ -2,19 +2,16 @@ package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.MostCommonGenotype;
-import agh.ics.oop.model.util.MapVisualizer;
-import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 
 import java.util.*;
 
-import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
 public class Globe extends AbstractWorldMap {
-    public Globe(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
-        super(width, height, plantConfig, animalConfig);
+    public Globe(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig,
+                            Map<Vector2d, List<Animal>> animalsMap, Map<Vector2d, Plant> plants) {
+        super(width, height, animalConfig, plantConfig, animalsMap, plants);
     }
 
     @Override
@@ -24,8 +21,8 @@ public class Globe extends AbstractWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        List<Animal> animalsAtThisPosition = animals.get(position);
-        if (animalsAtThisPosition!=null) return animalsAtThisPosition;
+        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        if (animalsAtThisPosition != null) return animalsAtThisPosition;
         return plants.get(position);
     }
 }

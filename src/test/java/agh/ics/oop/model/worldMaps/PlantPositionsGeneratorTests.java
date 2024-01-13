@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 public class PlantPositionsGeneratorTests {
     @Test
-    public void testEquatorPositionsGenerator() {
-        EquatorPositionsGenerator generator1 = new EquatorPositionsGenerator(100, 1, 1);
+    public void testPlantPositionsGenerator() {
+        PlantPositionsGenerator generator1 = new PlantPositionsGenerator(100, 1, 1);
         Vector2d vector = new Vector2d(1, 1);
 
         for (Vector2d position : generator1) {

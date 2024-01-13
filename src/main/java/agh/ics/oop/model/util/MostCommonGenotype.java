@@ -34,6 +34,7 @@ public class MostCommonGenotype {
             genotypeCounterMap.remove(genotype);
         }
     }
+
     public Genotype getMostPopularGenotype(){
         return maxHeap.peek().getKey();
     }

@@ -35,12 +35,12 @@ public class PlantPositionsGenerator implements Iterable<Vector2d> {
                 boolean isInEquator = RandomInteger.getRandomInt(4) != 0; // ~80% that plants are in the equator
                 int y;
                 if (isInEquator) {
-                    y = RandomInteger.getRandomInt((int) (0.4 * mapHeight), (int) (0.6 * mapHeight));
+                    y = RandomInteger.getRandomInt((int) (0.4 * mapHeight) + 1, (int) (0.6 * mapHeight) + 1);
                 } else {
                     if (RandomInteger.getRandomBoolean()) {
-                        y = RandomInteger.getRandomInt(1, (int) (0.4 * mapHeight));
+                        y = RandomInteger.getRandomInt(1, (int) (0.4 * mapHeight) + 1);
                     } else {
-                        y = RandomInteger.getRandomInt((int) (0.6 * mapHeight), mapHeight);
+                        y = RandomInteger.getRandomInt((int) (0.6 * mapHeight) + 1, mapHeight);
                     }
                 }
 

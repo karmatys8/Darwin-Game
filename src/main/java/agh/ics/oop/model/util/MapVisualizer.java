@@ -2,7 +2,6 @@ package agh.ics.oop.model.util;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
-import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.worldMaps.Plant;
 
