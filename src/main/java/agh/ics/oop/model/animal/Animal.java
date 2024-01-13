@@ -5,6 +5,9 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Animal {
     private Vector2d position;
     private MapDirection direction;
@@ -41,21 +44,28 @@ public class Animal {
         this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
         mother.useEnergy(animalConfig.energyUsedToReproduce());
         father.useEnergy(animalConfig.energyUsedToReproduce());
+        Set<Animal> ancestors = new HashSet<>();
         this.mother=mother;
         this.father=father;
         mother.updateChildren();
-        mother.updateDescendants();
+        mother.updateDescendants(ancestors);
         father.updateChildren();
-        father.updateDescendants();
+        father.updateDescendants(ancestors);
     }
 
-    private void updateDescendants() {
+    private void updateDescendants(Set<Animal> ancestors) {
         this.descendants ++;
         if (this.father != null) {
-            this.father.updateDescendants();
+            if (!ancestors.contains(father)) {
+                ancestors.add(father);
+                this.father.updateDescendants(ancestors);
+            }
         }
         if (this.mother != null) {
-            this.mother.updateDescendants();
+            if(!ancestors.contains(mother)) {
+                ancestors.add(mother);
+                this.mother.updateDescendants(ancestors);
+            }
         }
     }
 
