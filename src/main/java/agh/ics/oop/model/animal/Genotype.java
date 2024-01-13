@@ -13,18 +13,17 @@ abstract public class Genotype {
     protected final List<Integer> genes;
     protected final int minNumberOfMutations;
     protected final int maxNumberOfMutations;
-
     private final List<Integer> randomGenes = IntStream.range(0, 8)
                                                         .boxed()
                                                         .collect(Collectors.toList());
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
-        this.minNumberOfMutations=minNumberOfMutations;
-        this.maxNumberOfMutations=maxNumberOfMutations;
+        this.minNumberOfMutations = minNumberOfMutations;
+        this.maxNumberOfMutations = maxNumberOfMutations;
 
         genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < genotypeLength; i++) {
-            this.genes.add(RandomInteger.getRandomInt(7));
+            genes.add(RandomInteger.getRandomInt(7));
         }
     }
     public Genotype(Genotype other) { //copying method
@@ -35,10 +34,10 @@ abstract public class Genotype {
 
     public Genotype(Animal mother, Animal father) {
         validateParents(mother, father);
-      
-        Genotype mothersGenotype=mother.getGenotype();
-        this.minNumberOfMutations=mothersGenotype.minNumberOfMutations;
-        this.maxNumberOfMutations=mothersGenotype.maxNumberOfMutations;
+
+        Genotype mothersGenotype = mother.getGenotype();
+        this.minNumberOfMutations = mothersGenotype.minNumberOfMutations;
+        this.maxNumberOfMutations = mothersGenotype.maxNumberOfMutations;
       
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
@@ -46,7 +45,6 @@ abstract public class Genotype {
         int genotypeLength = mothersGenotype.genes.size();
         genes = new ArrayList<>(genotypeLength);
         for (int i = 0; i < genotypeLength; i++) {
-
             if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
                 genes.add(mothersGenotype.genes.get(i));
             } else {
@@ -64,12 +62,10 @@ abstract public class Genotype {
 
     protected abstract void mutate();
 
-    //przekazujemy mutator
-
     public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
         Collections.swap(genes, firstGeneIndex, secondGeneIndex);
     }
-    //losowy inny
+
     public void randomGene(int geneIndex) {
         Collections.shuffle(randomGenes);
         int randomGene = randomGenes.get(0);

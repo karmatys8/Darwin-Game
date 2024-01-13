@@ -12,79 +12,96 @@ import java.util.*;
 
 public class Simulation implements Runnable {
     private final Globe globe;
-    private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    private final Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
+    private final Set<Animal> aliveAnimals = new HashSet<>();
     private final Map<Vector2d, Plant> plants = new HashMap<>();
     private final AnimalConfig animalConfig;
-
     private int currentDay = 0;
 
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
-        globe = new Globe(width, height, animalConfig, plantConfig, animals, plants);
+        globe = new Globe(width, height, animalConfig, plantConfig, animalsMap, plants);
 
         this.animalConfig = animalConfig;
         for (int i = 0; i < animalConfig.startingCount(); i++) {
-            globe.place(new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
-                    RandomInteger.getRandomInt(1, height)), animalConfig));
+            Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
+                    RandomInteger.getRandomInt(1, height)), animalConfig);
+            globe.place(animal);
+            aliveAnimals.add(animal);
         }
 
         // initialize plants
     }
 
+    private void killAnimal(Animal animal) {
+        aliveAnimals.remove(animal);
+
+        Vector2d position = animal.getPosition();
+        animal.kill(currentDay);
+
+        List<Animal> prevAnimals = animalsMap.remove(position);
+        prevAnimals.remove(animal);
+
+        if (!prevAnimals.isEmpty()) animalsMap.put(position, prevAnimals);
+
+        // change genotype Heap here
+    }
+
     private void killAnimals() {
         List<Animal> animalsToKill = new ArrayList<>();
-        for (Map.Entry<Vector2d, List<Animal>> animalEntry : animals.entrySet()) {
-            for (Animal animal : animalEntry.getValue()) {
-                int animalEnergy = animal.getEnergy();
+        for (Animal animal : aliveAnimals) {
+            int animalEnergy = animal.getEnergy();
 
-                if (animalEnergy <= 0) {
-                    animalsToKill.add(animal);
-                }
+            if (animalEnergy <= 0) {
+                animalsToKill.add(animal);
             }
         }
 
         for (Animal animal : animalsToKill) {
-            globe.killAnimal(animal, currentDay);
+            killAnimal(animal);
         }
     }
 
-    // copies both Map and Lists while keeping Animals the same to enable reference comparisons
-    private Map<Vector2d, List<Animal>> deepCopyAnimals() {
-        Map<Vector2d, List<Animal>> deepCopiedAnimals = new HashMap<>(animals.size());
-        for (Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
-            List<Animal> animalList = entry.getValue();
+    private void moveAnimal(Animal animal) {
+        Vector2d oldPosition = animal.getPosition();
+        animal.move(globe);
 
-            List<Animal> copiedList = new ArrayList<>(animalList.size());
-            copiedList.addAll(animalList);
+        Vector2d newPosition = animal.getPosition();
+        if (oldPosition != newPosition) {
+            List<Animal> prevAnimals = animalsMap.get(oldPosition);
+            prevAnimals.remove(animal);
 
-            deepCopiedAnimals.put(entry.getKey(), copiedList);
+            if (prevAnimals.isEmpty()) animalsMap.remove(oldPosition);
+
+            List<Animal> currAnimals = animalsMap.getOrDefault(newPosition, new ArrayList<>(1));
+            currAnimals.add(animal);
+
+            animalsMap.put(newPosition, currAnimals);
         }
-
-        return deepCopiedAnimals;
     }
 
     private void moveAnimals() {
-        for (Map.Entry<Vector2d, List<Animal>> animalEntry : deepCopyAnimals().entrySet()) {
-            for (Animal animal : animalEntry.getValue()) {
-                globe.moveAnimal(animal);
-            }
+        for (Animal animal : aliveAnimals) {
+            moveAnimal(animal);
         }
     }
 
     private void feedAndReproduceAnimals() {
-        for (Vector2d position : animals.keySet()) {
-            Plant plantToBeEaten = plants.get(position);
+        for (Vector2d position : animalsMap.keySet()) {
+            Plant plantToBeEaten = plants.remove(position);
 
             if (plantToBeEaten != null) {
-                globe.animalEats(position);
+                animalsMap.get(position).get(0).eat(plantToBeEaten);
             }
 
 
-            List<Animal> currAnimals = animals.get(position);
+            List<Animal> currAnimals = animalsMap.get(position);
             if (currAnimals.size() >= 2) {
                 Animal animal1 = currAnimals.get(0);
                 Animal animal2 = currAnimals.get(1);
                 if (animal1.canReproduce() && animal2.canReproduce()) {
-                    currAnimals.add(new Animal(animal1, animal2, animalConfig));
+                    Animal newBorn = new Animal(animal1, animal2, animalConfig);
+                    currAnimals.add(newBorn);
+                    aliveAnimals.add(newBorn);
                 }
             }
         }
@@ -93,7 +110,7 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         try{
-            while (! animals.isEmpty()) {
+            while (! aliveAnimals.isEmpty()) {
                 killAnimals();
                 moveAnimals();
                 feedAndReproduceAnimals();

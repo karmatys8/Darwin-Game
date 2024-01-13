@@ -44,7 +44,7 @@ public class AbstractWorldMapTests {
         Animal animal = new Animal(position, animalConfig);
         worldMap.place(animal);
 
-        Assertions.assertTrue(worldMap.animals.get(position).contains(animal));
+        Assertions.assertTrue(worldMap.animalsMap.get(position).contains(animal));
 
         return animal;
     }
@@ -70,14 +70,14 @@ public class AbstractWorldMapTests {
 
     private void removeAnimal(Animal animal, AbstractWorldMap worldMap) {
         Vector2d position = animal.getPosition();
-        int numberOfAnimals = worldMap.animals.get(position).size();
+        int numberOfAnimals = worldMap.animalsMap.get(position).size();
 
         worldMap.remove(animal);
 
         if (numberOfAnimals > 1) {
-            Assertions.assertFalse(worldMap.animals.get(position).contains(animal));
+            Assertions.assertFalse(worldMap.animalsMap.get(position).contains(animal));
         } else {
-            Assertions.assertNull(worldMap.animals.get(position));
+            Assertions.assertNull(worldMap.animalsMap.get(position));
         }
     }
 

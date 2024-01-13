@@ -14,7 +14,6 @@ public record Plant(Vector2d position, int energy) {
         return Objects.equals(position, plant.position);
     }
 
-
     public int getEnergy() {
         return energy;
     }

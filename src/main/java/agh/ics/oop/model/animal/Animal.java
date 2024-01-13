@@ -27,46 +27,55 @@ public class Animal {
 
 
     public Animal(Vector2d position, AnimalConfig animalConfig) {
-        this.position=position;
-        this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
-        this.energy=animalConfig.startingEnergy();
-        this.genotype=new RandomGenotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
-        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
-        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
-        this.mother=null;
-        this.father=null;
+        this.position = position;
+        this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
+
+        this.genotype = new RandomGenotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
+        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
+
+        this.energy = animalConfig.startingEnergy();
+        this.minEnergyToReproduce = animalConfig.minEnergyToReproduce();
+
+        this.mother = null;
+        this.father = null;
     }
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
-        this.position=mother.getPosition();
-        this.direction=MapDirection.values()[RandomInteger.getRandomInt(7)];
-        this.energy= animalConfig.energyUsedToReproduce()*2;
-        this.genotype=new RandomGenotype(mother,father);
-        this.currentGeneIndex=RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
-        this.minEnergyToReproduce=animalConfig.minEnergyToReproduce();
+        this.position = mother.getPosition();
+        this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
+
+        this.genotype = new RandomGenotype(mother,father);
+        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
+
+        this.energy = animalConfig.energyUsedToReproduce()*2;
+        this.minEnergyToReproduce = animalConfig.minEnergyToReproduce();
+
+        this.mother = mother;
+        this.father = father;
+
         mother.useEnergy(animalConfig.energyUsedToReproduce());
         father.useEnergy(animalConfig.energyUsedToReproduce());
-        Set<Animal> ancestors = new HashSet<>();
-        this.mother=mother;
-        this.father=father;
+
         mother.updateChildren();
-        mother.updateDescendants(ancestors);
         father.updateChildren();
+
+        Set<Animal> ancestors = new HashSet<>();
+        mother.updateDescendants(ancestors);
         father.updateDescendants(ancestors);
     }
 
     private void updateDescendants(Set<Animal> ancestors) {
-        this.descendants ++;
-        if (this.father != null) {
+        descendants++;
+        if (father != null) {
             if (!ancestors.contains(father)) {
                 ancestors.add(father);
-                this.father.updateDescendants(ancestors);
+                father.updateDescendants(ancestors);
             }
         }
-        if (this.mother != null) {
+        if (mother != null) {
             if(!ancestors.contains(mother)) {
                 ancestors.add(mother);
-                this.mother.updateDescendants(ancestors);
+                mother.updateDescendants(ancestors);
             }
         }
     }
@@ -86,11 +95,13 @@ public class Animal {
     public Genotype getGenotype() {
         return new RandomGenotype(genotype);
     }
+
     public int getCurrentGeneIndex(){ return currentGeneIndex;}
 
     private void useEnergy(int energyUsedToReproduce) {
         this.energy-=energyUsedToReproduce;
     }
+
     public void nextGene(){
         this.currentGeneIndex=(this.currentGeneIndex+1)%genotype.getGenes().size();
     }
@@ -109,10 +120,9 @@ public class Animal {
 
     public String toShortString() {
         return (direction.toString());
-
     }
 
-    public void move(Globe globe) {
+    public void move(Globe globe) { // I feel like animal should not receive globe
         energy--;
         daysLived++;
 
@@ -134,6 +144,6 @@ public class Animal {
 
     public void eat(Plant plant) {
         plantsEaten++;
-        energy+=plant.getEnergy();
+        energy += plant.getEnergy();
     }
 }

@@ -4,7 +4,6 @@ import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MapVisualizer;
-import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 
@@ -20,20 +19,18 @@ abstract public class AbstractWorldMap {
 
     protected int plantCount = 0;
     protected int numberOfAnimals = 0;
+    protected final PlantConfig plantConfig;
+    protected final AnimalConfig animalConfig;
 
-    MapVisualizer map = new MapVisualizer(this);
-
-    protected Map<Vector2d, List<Animal>> animals = new HashMap<>();
-    protected Map<Vector2d, Plant> plants = new HashMap<Vector2d, Plant>();
+    MapVisualizer mapVisualizer = new MapVisualizer(this);
+    protected Map<Vector2d, List<Animal>> animalsMap;
+    protected Map<Vector2d, Plant> plants;
 
     protected Map<Genotype, Integer> genotypeCount = new HashMap<>();
     protected PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
 
-    protected final PlantConfig plantConfig;
-    protected final AnimalConfig animalConfig;
-
     public AbstractWorldMap(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig,
-                            Map<Vector2d, List<Animal>> animals, Map<Vector2d, Plant> plants) {
+                            Map<Vector2d, List<Animal>> animalsMap, Map<Vector2d, Plant> plants) {
         checkIfPositive(width);
         this.width = width;
 
@@ -42,12 +39,10 @@ abstract public class AbstractWorldMap {
 
         upperRightBoundary = new Vector2d(width, height);
 
-        this.plantConfig = plantConfig;
         this.animalConfig = animalConfig;
-
-
-        for (int i = 0; i < animalConfig.startingCount(); i++) {
-            place(new Animal(new Vector2d(RandomInteger.getRandomInt(1, width), RandomInteger.getRandomInt(1, height)), animalConfig));        }
+        this.plantConfig = plantConfig;
+        this.animalsMap = animalsMap;
+        this.plants = plants;
     }
 
     abstract public boolean canMoveTo(Vector2d position);
@@ -57,11 +52,10 @@ abstract public class AbstractWorldMap {
         if (position.follows(lowerLeftBoundary) && position.precedes(upperRightBoundary)) {
             numberOfAnimals++;
 
-            List<Animal> animalsAtThisPosition = animals.remove(position);
-            if (animalsAtThisPosition == null) animalsAtThisPosition = new ArrayList<>();
+            List<Animal> animalsAtThisPosition = animalsMap.getOrDefault(position, new ArrayList<>());
             animalsAtThisPosition.add(animal);
 
-            animals.put(position, animalsAtThisPosition);
+            animalsMap.put(position, animalsAtThisPosition);
             updateGenotypeCount(animal.getGenotype());
         } else {
             throw new IllegalArgumentException("Animal is placed out of bounds!");
@@ -71,12 +65,12 @@ abstract public class AbstractWorldMap {
     public void remove(Animal animal) {
         try {
             Vector2d position = animal.getPosition();
-            List<Animal> animalsAtThisPosition = animals.get(position);
+            List<Animal> animalsAtThisPosition = animalsMap.get(position);
 
             animalsAtThisPosition.remove(animal);
 
             if (animalsAtThisPosition.isEmpty()) {
-                animals.remove(position);
+                animalsMap.remove(position);
             }
             removeGenotype(animal.getGenotype());
 
@@ -84,6 +78,7 @@ abstract public class AbstractWorldMap {
             System.err.println("NullPointerException: Position in animal is not kept correctly.");
         }
     }
+
     public void updateGenotypeCount(Genotype genotype) {
         int count = genotypeCount.getOrDefault(genotype, 0) + 1;
         genotypeCount.put(genotype, count);
@@ -91,6 +86,7 @@ abstract public class AbstractWorldMap {
         maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
         maxHeap.add(Map.entry(genotype, count));
     }
+
     private void removeGenotype(Genotype genotype) {
         int count=genotypeCount.get(genotype)-1;
         maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
@@ -103,21 +99,14 @@ abstract public class AbstractWorldMap {
             genotypeCount.remove(genotype);
         }
     }
+
     public Genotype findMostCommonGenotype() {
         return maxHeap.isEmpty() ? null : maxHeap.peek().getKey();
     }
 
     public String toString(){
-        return map.draw(this.lowerLeftBoundary, this.upperRightBoundary);
+        return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
     abstract public Object objectAt(Vector2d position);
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }

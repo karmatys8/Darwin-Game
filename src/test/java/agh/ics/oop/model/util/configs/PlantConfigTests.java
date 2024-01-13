@@ -1,4 +1,4 @@
-package agh.ics.oop.model.util;
+package agh.ics.oop.model.util.configs;
 
 import agh.ics.oop.model.util.configs.PlantConfig;
 import org.junit.jupiter.api.Assertions;
