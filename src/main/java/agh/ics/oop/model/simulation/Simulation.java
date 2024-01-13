@@ -3,23 +3,23 @@ package agh.ics.oop.model.simulation;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.worldMaps.Plant;
-import agh.ics.oop.model.worldMaps.PlantConfig;
+import agh.ics.oop.model.util.configs.PlantConfig;
 
 import java.util.*;
 
 public class Simulation implements Runnable {
     private final Globe globe;
-    private Map<Vector2d, List<Animal>> animals = new HashMap<>();
-    private Map<Vector2d, Plant> plants = new HashMap<>();
+    private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    private final Map<Vector2d, Plant> plants = new HashMap<>();
     private final AnimalConfig animalConfig;
 
     private int currentDay = 0;
 
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
-        globe = new Globe(width, height, animals, plants);
+        globe = new Globe(width, height, animalConfig, plantConfig, animals, plants);
 
         this.animalConfig = animalConfig;
         for (int i = 0; i < animalConfig.startingCount(); i++) {

@@ -1,5 +1,6 @@
-package agh.ics.oop.model.worldMaps;
+package agh.ics.oop.model.util;
 
+import agh.ics.oop.model.util.configs.PlantConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

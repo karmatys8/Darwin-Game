@@ -1,6 +1,6 @@
 package agh.ics.oop.model.animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.worldMaps.AnimalConfig;
+import agh.ics.oop.model.util.configs.AnimalConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,8 +12,11 @@ public class GenotypeTests {
         int genotypeLength = 10;
         int minMutations = 1;
         int maxMutations = 3;
-        Genotype genotype = new Genotype(genotypeLength, minMutations, maxMutations);
+        Genotype genotype = new SwitchGenotype(genotypeLength, minMutations, maxMutations);
         assertEquals(genotypeLength, genotype.toString().length());
+
+        Genotype genotype2 = new RandomGenotype(genotypeLength, minMutations, maxMutations);
+        assertEquals(genotypeLength, genotype2.toString().length());
     }
 
     private void switchTester(Genotype genotype, int idx1, int idx2) {
@@ -29,7 +32,7 @@ public class GenotypeTests {
     @Test
     public void testSwitchGenes() {
         int genotypeLength = 10;
-        Genotype genotype = new Genotype(genotypeLength, 1, 3);
+        Genotype genotype = new SwitchGenotype(genotypeLength, 1, 3);
 
         switchTester(genotype, 0, genotypeLength - 1);
         switchTester(genotype, 3, 4);
@@ -40,7 +43,7 @@ public class GenotypeTests {
     @Test
     public void testRandomGene() {
         int genotypeLength = 30;
-        Genotype genotype = new Genotype(genotypeLength, 1, 3);
+        Genotype genotype = new RandomGenotype(genotypeLength, 1, 3);
 
         String initialGenotype = genotype.toString();
 
@@ -63,7 +66,7 @@ public class GenotypeTests {
         Animal father = new Animal(vector, animalConfig);
 
         for (int  i = 0; i < 4; i++) {
-            Genotype childGenotype = new Genotype(mother, father);
+            Genotype childGenotype = new RandomGenotype(mother, father);
 
             assertNotNull(childGenotype);
             assertEquals(genotypeLength, childGenotype.toString().length());

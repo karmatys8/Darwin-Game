@@ -1,103 +1,34 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.MostCommonGenotype;
+import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomInteger;
+import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.util.configs.PlantConfig;
 
 import java.util.*;
 
-
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
-public class Globe {
-    private final int width;
-    private final int height;
 
-    private static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
-    private final Vector2d upperRightBoundary;
-
-    private final Map<Vector2d, List<Animal>> animals;
-    private final Map<Vector2d, Plant> plants;
-    private final Map<Genotype, Integer> genotypeCount = new HashMap<>();
-    private final PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
-
-    public Globe(int width, int height, Map<Vector2d, List<Animal>> animals, Map<Vector2d, Plant> plants) {
-        checkIfPositive(width);
-        this.width = width;
-
-        checkIfPositive(height);
-        this.height = height;
-
-        upperRightBoundary = new Vector2d(width, height);
-
-
-        this.animals = animals;
-        this.plants = plants;
+public class Globe extends AbstractWorldMap {
+    public Globe(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig,
+                            Map<Vector2d, List<Animal>> animals, Map<Vector2d, Plant> plants) {
+        super(width, height, animalConfig, plantConfig, animals, plants);
     }
 
+    @Override
     public boolean canMoveTo(Vector2d position) {
         return position.precedes(upperRightBoundary) && position.follows(lowerLeftBoundary);
     }
 
-
-
-    public void place(Animal animal) {
-        Vector2d position = animal.getPosition();
-
-        List<Animal> animalsAtThisPosition = animals.remove(position);
-        if (animalsAtThisPosition == null) animalsAtThisPosition = new ArrayList<>();
-        animalsAtThisPosition.add(animal);
-
-        animals.put(position, animalsAtThisPosition);
-        updateGenotypeCount(animal.getGenotype());
-    }
-    public void remove(Animal animal) {
-        try {
-            Vector2d position = animal.getPosition();
-            List<Animal> animalsAtThisPosition = animals.get(position);
-
-            animalsAtThisPosition.remove(animal);
-
-            if (animalsAtThisPosition.isEmpty()) {
-                animals.remove(position);
-            }
-            removeGenotype(animal.getGenotype());
-
-        } catch (NullPointerException e) {
-            System.err.println("NullPointerException: Position in animal is not kept correctly.");
-        }
-    }
-    public void updateGenotypeCount(Genotype genotype) {
-        int count = genotypeCount.getOrDefault(genotype, 0) + 1;
-        genotypeCount.put(genotype, count);
-
-        maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
-        maxHeap.add(Map.entry(genotype, count));
-    }
-    private void removeGenotype(Genotype genotype) {
-        int count=genotypeCount.get(genotype)-1;
-        maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
-
-        if(count>0){
-            maxHeap.add(Map.entry(genotype, count));
-            genotypeCount.put(genotype, count);
-        }
-        else {
-            genotypeCount.remove(genotype);
-        }
-
-    }
-    public Genotype findMostCommonGenotype() {
-        return maxHeap.isEmpty() ? null : maxHeap.peek().getKey();
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+    @Override
+    public Object objectAt(Vector2d position) {
+        List<Animal> animalsAtThisPosition = animals.get(position);
+        if (animalsAtThisPosition!=null) return animalsAtThisPosition;
+        return plants.get(position);
     }
 
     public void moveAnimal(Animal animal) {

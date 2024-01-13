@@ -4,20 +4,8 @@ import agh.ics.oop.model.movement.Vector2d;
 
 import java.util.Objects;
 
-public class Plant {
-    private final Vector2d position;
 
-    private final PlantConfig plantConfig;
-
-    public Plant(Vector2d position, PlantConfig plantConfig) {
-        this.position = position;
-        this.plantConfig = plantConfig;
-    }
-
-    public Vector2d getPosition() {
-        return position;
-    }
-
+public record Plant(Vector2d position, int energy) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -26,12 +14,8 @@ public class Plant {
         return Objects.equals(position, plant.position);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(position);
-    }
 
     public int getEnergy() {
-        return plantConfig.energyPerPlant();
+        return energy;
     }
 }
