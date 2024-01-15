@@ -1,5 +1,7 @@
 package agh.ics.oop.controllers;
 
+import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.util.configs.PlantConfig;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,6 +81,8 @@ public class SimulationSetupController {
                 stage.setScene(scene);
                 Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
                 currentStage.hide();
+                SimulationController controller = loader.getController();
+                setSimulationController(controller);
                 stage.show();
             } catch (IOException e) {
                 System.err.println("Failed to start the simulation. Reason: " + e.getMessage());
@@ -187,4 +191,10 @@ public class SimulationSetupController {
             return 0;
         }
     }
+    private void setSimulationController(SimulationController simulationController) {
+        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes));
+        PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
+        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight));
+    }
+
 }
