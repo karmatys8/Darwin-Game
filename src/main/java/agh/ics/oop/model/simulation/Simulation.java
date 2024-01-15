@@ -2,6 +2,7 @@ package agh.ics.oop.model.simulation;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldMaps.Globe;
@@ -14,6 +15,7 @@ public class Simulation implements Runnable {
     private final Globe globe;
     private final Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     private final Set<Animal> aliveAnimals = new HashSet<>();
+    private final MostCommonGenotype mostCommonGenotype = new MostCommonGenotype();
     private final Plants plants;
     private final AnimalConfig animalConfig;
     private final PlantConfig plantConfig;
@@ -30,14 +32,16 @@ public class Simulation implements Runnable {
             Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
                     RandomInteger.getRandomInt(1, height)), animalConfig);
             globe.place(animal);
+
             aliveAnimals.add(animal);
+            mostCommonGenotype.insert(animal.getGenotype());
         }
 
         this.plantConfig = plantConfig;
     }
 
     private void killAnimal(Animal animal) {
-        globe.removeGenotype(animal.getGenotype());
+        mostCommonGenotype.remove(animal.getGenotype());
 
         Vector2d position = animal.getPosition();
 
@@ -102,7 +106,9 @@ public class Simulation implements Runnable {
                 if (animal1.canReproduce() && animal2.canReproduce()) {
                     Animal newBorn = new Animal(animal1, animal2, animalConfig);
                     currAnimals.add(newBorn);
+
                     aliveAnimals.add(newBorn);
+                    mostCommonGenotype.insert(newBorn.getGenotype());
                 }
             }
         }

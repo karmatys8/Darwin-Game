@@ -14,11 +14,11 @@ public class Plants {
 
     public Plants(int width, int height) {
         equatorStart = (int) (0.4 * height) + 1;
-        equatorEnd = (int) (0.6 * height) + 1;
+        equatorEnd = (int) (0.6 * height);
 
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {
-                Set<Vector2d> targetSet = (y > equatorStart && y < equatorEnd) ? emptyFieldsOnEquator : emptyFieldsOutsideOfEquator;
+                Set<Vector2d> targetSet = (y >= equatorStart && y <= equatorEnd) ? emptyFieldsOnEquator : emptyFieldsOutsideOfEquator;
                 targetSet.add(new Vector2d(x, y));
             }
         }
@@ -40,7 +40,7 @@ public class Plants {
     }
 
     public boolean wasEaten(Vector2d position) {
-        if (position.getY() > equatorStart  &&  position.getY() < equatorEnd) {
+        if (position.getY() >= equatorStart  &&  position.getY() <= equatorEnd) {
             return emptyFieldsOnEquator.add(position);
         }
         return emptyFieldsOutsideOfEquator.add(position);
