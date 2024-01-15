@@ -5,7 +5,6 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldMaps.Globe;
-import agh.ics.oop.model.worldMaps.Plant;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -142,8 +141,8 @@ public class Animal {
         this.genotype = null;
     }
 
-    public void eat(Plant plant) {
+    public void eat(int energy) {
         plantsEaten++;
-        energy += plant.getEnergy();
+        this.energy += energy;
     }
 }

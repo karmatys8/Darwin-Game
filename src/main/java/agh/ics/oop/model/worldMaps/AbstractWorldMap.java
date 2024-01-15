@@ -6,6 +6,7 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -24,13 +25,13 @@ abstract public class AbstractWorldMap {
 
     MapVisualizer mapVisualizer = new MapVisualizer(this);
     protected Map<Vector2d, List<Animal>> animalsMap;
-    protected Map<Vector2d, Plant> plants;
+    protected Plants plants;
 
     protected Map<Genotype, Integer> genotypeCount = new HashMap<>();
     protected PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
 
     public AbstractWorldMap(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig,
-                            Map<Vector2d, List<Animal>> animalsMap, Map<Vector2d, Plant> plants) {
+                            Map<Vector2d, List<Animal>> animalsMap, Plants plants) {
         checkIfPositive(width);
         this.width = width;
 
@@ -62,23 +63,6 @@ abstract public class AbstractWorldMap {
         }
     }
 
-    public void remove(Animal animal) {
-        try {
-            Vector2d position = animal.getPosition();
-            List<Animal> animalsAtThisPosition = animalsMap.get(position);
-
-            animalsAtThisPosition.remove(animal);
-
-            if (animalsAtThisPosition.isEmpty()) {
-                animalsMap.remove(position);
-            }
-            removeGenotype(animal.getGenotype());
-
-        } catch (NullPointerException e) {
-            System.err.println("NullPointerException: Position in animal is not kept correctly.");
-        }
-    }
-
     public void updateGenotypeCount(Genotype genotype) {
         int count = genotypeCount.getOrDefault(genotype, 0) + 1;
         genotypeCount.put(genotype, count);
@@ -87,7 +71,7 @@ abstract public class AbstractWorldMap {
         maxHeap.add(Map.entry(genotype, count));
     }
 
-    private void removeGenotype(Genotype genotype) {
+    public void removeGenotype(Genotype genotype) {
         int count=genotypeCount.get(genotype)-1;
         maxHeap.removeIf(entry -> entry.getKey().equals(genotype));
 
@@ -108,5 +92,5 @@ abstract public class AbstractWorldMap {
         return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
-    abstract public Object objectAt(Vector2d position);
+    abstract public Pair<Optional<List<Animal>>, Optional<Boolean>> objectAt(Vector2d position);
 }

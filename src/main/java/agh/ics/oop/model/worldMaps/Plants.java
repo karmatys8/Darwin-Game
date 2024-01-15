@@ -9,10 +9,12 @@ import java.util.*;
 public class Plants {
     private final Set<Vector2d> emptyFieldsOnEquator = new LinkedHashSet<>();
     private final Set<Vector2d> emptyFieldsOutsideOfEquator = new LinkedHashSet<>();
+    private final int equatorStart;
+    private final int equatorEnd;
 
     public Plants(int width, int height) {
-        int equatorStart = (int) (0.4 * height) + 1;
-        int equatorEnd = (int) (0.6 * height) + 1;
+        equatorStart = (int) (0.4 * height) + 1;
+        equatorEnd = (int) (0.6 * height) + 1;
 
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {
@@ -38,7 +40,10 @@ public class Plants {
     }
 
     public boolean wasEaten(Vector2d position) {
-        return emptyFieldsOutsideOfEquator.remove(position) || emptyFieldsOnEquator.remove(position);
+        if (position.getY() > equatorStart  &&  position.getY() < equatorEnd) {
+            return emptyFieldsOnEquator.add(position);
+        }
+        return emptyFieldsOutsideOfEquator.add(position);
     }
 
     public boolean isFieldEmpty(Vector2d position) {

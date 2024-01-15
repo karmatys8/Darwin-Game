@@ -5,8 +5,8 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldMaps.Globe;
-import agh.ics.oop.model.worldMaps.Plant;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import agh.ics.oop.model.worldMaps.Plants;
 
 import java.util.*;
 
@@ -14,11 +14,15 @@ public class Simulation implements Runnable {
     private final Globe globe;
     private final Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     private final Set<Animal> aliveAnimals = new HashSet<>();
-    private final Map<Vector2d, Plant> plants = new HashMap<>();
+    private final Plants plants;
     private final AnimalConfig animalConfig;
+    private final PlantConfig plantConfig;
     private int currentDay = 0;
 
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
+        plants = new Plants(width, height);
+        plants.addPlants(plantConfig.startingCount());
+
         globe = new Globe(width, height, animalConfig, plantConfig, animalsMap, plants);
 
         this.animalConfig = animalConfig;
@@ -29,21 +33,20 @@ public class Simulation implements Runnable {
             aliveAnimals.add(animal);
         }
 
-        // initialize plants
+        this.plantConfig = plantConfig;
     }
 
     private void killAnimal(Animal animal) {
-        aliveAnimals.remove(animal);
+        globe.removeGenotype(animal.getGenotype());
 
         Vector2d position = animal.getPosition();
-        animal.kill(currentDay);
 
         List<Animal> prevAnimals = animalsMap.remove(position);
         prevAnimals.remove(animal);
-
         if (!prevAnimals.isEmpty()) animalsMap.put(position, prevAnimals);
 
-        // change genotype Heap here
+        animal.kill(currentDay);
+        aliveAnimals.remove(animal);
     }
 
     private void killAnimals() {
@@ -87,10 +90,8 @@ public class Simulation implements Runnable {
 
     private void feedAndReproduceAnimals() {
         for (Vector2d position : animalsMap.keySet()) {
-            Plant plantToBeEaten = plants.remove(position);
-
-            if (plantToBeEaten != null) {
-                animalsMap.get(position).get(0).eat(plantToBeEaten);
+            if (plants.wasEaten(position)) {
+                animalsMap.get(position).get(0).eat(plantConfig.energyPerPlant());
             }
 
 
@@ -114,6 +115,7 @@ public class Simulation implements Runnable {
                 killAnimals();
                 moveAnimals();
                 feedAndReproduceAnimals();
+                plants.addPlants(plantConfig.plantsPerDay());
 
                 currentDay++;
                 Thread.sleep(500);
