@@ -5,10 +5,12 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.util.configs.PlantConfig;
 import agh.ics.oop.model.worldMaps.Plants;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Simulation implements Runnable {
@@ -20,13 +22,15 @@ public class Simulation implements Runnable {
     private final AnimalConfig animalConfig;
     private final PlantConfig plantConfig;
     private int currentDay = 0;
+    private final SimulationController controller;
+    private boolean running = true;
 
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
         globe = new Globe(width, height, animalConfig, plantConfig, animalsMap, plants);
-
+        this.controller = controller;
         this.animalConfig = animalConfig;
         for (int i = 0; i < animalConfig.startingCount(); i++) {
             Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
@@ -114,10 +118,28 @@ public class Simulation implements Runnable {
         }
     }
 
-    @Override
+    public boolean isRunning() {
+        return running;
+    }
+    public void pauseSimulation() {
+        running = false;
+    }
+    public void resumeSimulation() {
+        running = true;
+    }
+    public int getCurrentDay(){
+        return currentDay;
+    }
+    public int getNumberOfAnimals(){
+        return aliveAnimals.size();
+    }
+    public int getNumberOfPlants(){
+        return plants.size();
+    }
+
     public void run() {
-        try{
-            while (! aliveAnimals.isEmpty()) {
+        try {
+            if (!aliveAnimals.isEmpty() && running) {
                 killAnimals();
                 moveAnimals();
                 feedAndReproduceAnimals();
@@ -125,7 +147,13 @@ public class Simulation implements Runnable {
 
                 currentDay++;
                 Thread.sleep(500);
+            } else {
+                running = false;
             }
         } catch (InterruptedException ignored) {}
+    }
+
+    public AbstractWorldMap getMap() {
+        return globe;
     }
 }
