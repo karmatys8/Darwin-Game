@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class MostCommonGenotype {
-    private final PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap = new PriorityQueue<>(
-            Comparator.comparingInt(entry -> (
-                    (Map.Entry<Genotype, Integer>) entry
-            ).getValue()).reversed()
-    );
-    private final Map<Genotype, Integer> genotypeCounterMap = new HashMap<>();
+    private final PriorityQueue<Map.Entry<Genotype, Integer>> maxHeap;
+    private final Map<Genotype, Integer> genotypeCounterMap;
+
+    public MostCommonGenotype() {
+        maxHeap = new PriorityQueue<>(Comparator.comparingInt(entry -> ((Map.Entry<Genotype, Integer>) entry).getValue()).reversed());
+        genotypeCounterMap = new HashMap<>();
+    }
 
     public void insert(Genotype genotype) {
         int count = genotypeCounterMap.getOrDefault(genotype, 0) + 1;

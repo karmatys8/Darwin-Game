@@ -15,7 +15,7 @@ public class AbstractWorldMapTests {
     private final AnimalConfig animalConfig = new AnimalConfig(0, 3, 54, 2323, 17, 454, 2);
     private final PlantConfig plantConfig = new PlantConfig(1, 1, 1);
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
-    private static final Plants plants = new Plants(1, 1);
+    private static final Map<Vector2d, Plant> plants = new HashMap<>();
     private final Globe globe = new Globe(10, 10, animalConfig, plantConfig, animals, plants);
 
     @Test
@@ -40,6 +40,15 @@ public class AbstractWorldMapTests {
                 new PlantConfig(0, 0, 0), animals, plants));
     }
 
+    private Animal placeAnimal(Vector2d position, AnimalConfig animalConfig, AbstractWorldMap worldMap) {
+        Animal animal = new Animal(position, animalConfig);
+        worldMap.place(animal);
+
+        Assertions.assertTrue(worldMap.animalsMap.get(position).contains(animal));
+
+        return animal;
+    }
+
     @Test
     public void testPlace() {
         int width = 9;
@@ -48,11 +57,7 @@ public class AbstractWorldMapTests {
 
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {
-                Vector2d position = new Vector2d(x, y);
-                Animal animal = new Animal(position, animalConfig);
-                globe.place(animal);
-
-                Assertions.assertTrue(globe.animalsMap.get(position).contains(animal));
+                placeAnimal(new Vector2d(x, y), animalConfig, globe);
             }
         }
 
@@ -61,5 +66,30 @@ public class AbstractWorldMapTests {
 
             Assertions.assertThrows(IllegalArgumentException.class, () -> globe.place(animal));
         }
+    }
+
+    private void removeAnimal(Animal animal, AbstractWorldMap worldMap) {
+        Vector2d position = animal.getPosition();
+        int numberOfAnimals = worldMap.animalsMap.get(position).size();
+
+        worldMap.remove(animal);
+
+        if (numberOfAnimals > 1) {
+            Assertions.assertFalse(worldMap.animalsMap.get(position).contains(animal));
+        } else {
+            Assertions.assertNull(worldMap.animalsMap.get(position));
+        }
+    }
+
+    @Test
+    public void testRemove() {
+        Vector2d position = new Vector2d(1, 3);
+        Animal animal1 = placeAnimal(new Vector2d(1, 1), animalConfig, globe);
+        Animal animal2 = placeAnimal(position, animalConfig, globe);
+        Animal animal3 = placeAnimal(position, animalConfig, globe);
+
+        removeAnimal(animal1, globe);
+        removeAnimal(animal2, globe);
+        removeAnimal(animal3, globe);
     }
 }

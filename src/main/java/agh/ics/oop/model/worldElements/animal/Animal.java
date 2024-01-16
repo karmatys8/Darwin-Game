@@ -6,6 +6,9 @@ import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.Globe;
+import agh.ics.oop.model.worldMaps.Plant;
+import javafx.scene.control.Label;
+import javafx.util.Pair;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -141,9 +144,9 @@ public class Animal implements WorldElement {
         this.genotype = null;
     }
 
-    public void eat(int energy) {
+    public void eat(Plant plant) {
         plantsEaten++;
-        this.energy += energy;
+        energy += plant.getEnergy();
     }
 
     @Override

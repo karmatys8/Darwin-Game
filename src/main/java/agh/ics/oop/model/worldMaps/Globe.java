@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Globe extends AbstractWorldMap {
     public Globe(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig,
-                            Map<Vector2d, List<Animal>> animalsMap, Plants plants) {
+                            Map<Vector2d, List<Animal>> animalsMap, Map<Vector2d, Plant> plants) {
         super(width, height, animalConfig, plantConfig, animalsMap, plants);
     }
 
@@ -27,11 +27,11 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public Pair<Optional<List<Animal>>, Optional<Boolean>> objectAt(Vector2d position) {
-        return new Pair<>(
-                Optional.ofNullable(animalsMap.get(position)),
-                Optional.of(!plants.isFieldEmpty(position))
-        );
+    public WorldElement objectAt(Vector2d position) {
+        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        if (animalsAtThisPosition != null) return animalsAtThisPosition.get(0);
+        if (plants.get(position) != null) return dumbPlant;
+        else return null;
     }
 }
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class GlobeTests {
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
-    private static final Plants plants = new Plants(1, 1);
+    private static final Map<Vector2d, Plant> plants = new HashMap<>();
 
     @Test
     public void testHowToMove() {
