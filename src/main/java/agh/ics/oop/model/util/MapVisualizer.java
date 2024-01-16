@@ -1,11 +1,8 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.worldMaps.Plant;
-
-import java.util.List;
 
 public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
@@ -72,13 +69,8 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        Object object = this.worldMap.objectAt(currentPosition);
-        if (object instanceof List<?>) {
-            List<Animal> animalList = (List<Animal>) object;
-            return animalList.get(0).toShortString();
-        } else if (object instanceof Plant) {
-            return object.toString();
-        }
+        WorldElement worldElement = this.worldMap.objectAt(currentPosition);
+        if (worldElement != null) return worldElement.getElementString();
         return EMPTY_CELL;
     }
 }

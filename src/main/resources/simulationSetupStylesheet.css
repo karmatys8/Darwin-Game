@@ -13,16 +13,10 @@
     -fx-alignment: CENTER;
     -fx-margin-top: 5.0;
 }
+
 .config-label-bottom {
     -fx-font-size: 10.0;
     -fx-text-fill: #27292b;
-}
-.config-label-top {
-    -fx-font-family: 'Verdana Bold';
-    -fx-font-size: 18.0;
-    -fx-pref-height: 42.0;
-    -fx-text-fill: #27292b;
-    -fx-font-weight: bold;
 }
 
 .config-combo-box {

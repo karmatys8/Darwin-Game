@@ -1,6 +1,6 @@
 package agh.ics.oop.model.simulation;
 
-import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
