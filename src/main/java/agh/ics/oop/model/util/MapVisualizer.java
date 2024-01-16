@@ -3,14 +3,16 @@ package agh.ics.oop.model.util;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.worldMaps.Plant;
+import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
+    private static final String PLANT_VIEW = "*";
     private final AbstractWorldMap worldMap;
 
     /**
@@ -72,12 +74,12 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        Object object = this.worldMap.objectAt(currentPosition);
-        if (object instanceof List<?>) {
-            List<Animal> animalList = (List<Animal>) object;
+        Pair<Optional<List<Animal>>, Optional<Boolean>> objects = worldMap.objectAt(currentPosition);
+        if (objects.getKey().isPresent()) {
+            List<Animal> animalList = objects.getKey().get();
             return animalList.get(0).toShortString();
-        } else if (object instanceof Plant) {
-            return object.toString();
+        } else if (objects.getValue().isPresent()) {
+            return PLANT_VIEW;
         }
         return EMPTY_CELL;
     }
