@@ -1,6 +1,6 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.animal.Genotype;
+import agh.ics.oop.model.worldElements.animal.Genotype;
 
 import java.util.Comparator;
 import java.util.HashMap;

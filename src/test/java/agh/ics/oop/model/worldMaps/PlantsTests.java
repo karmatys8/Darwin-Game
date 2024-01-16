@@ -11,7 +11,7 @@ public class PlantsTests {
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {
                 Vector2d position = new Vector2d(x, y);
-                Assertions.assertFalse(plants.isFieldEmpty(position));
+                Assertions.assertTrue(plants.isFieldEmpty(position));
             }
         }
     }
@@ -31,24 +31,27 @@ public class PlantsTests {
         int numberOfPlants = 0;
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {
-                if (plants.isFieldEmpty(new Vector2d(x, y))) numberOfPlants++;
+                if (! plants.isFieldEmpty(new Vector2d(x, y))) numberOfPlants++;
             }
         }
 
-        Assertions.assertEquals(numberOfPlants, numberToAdd);
+        Assertions.assertEquals(numberToAdd, numberOfPlants);
     }
 
     @Test
     public void testAddPlants() {
-        wereAdded(4, 3, 5);
-        wereAdded(8, 4, 32);
-        wereAdded(50, 2, 99);
-        wereAdded(11, 3, 0);
+        for (int i = 0; i < 25; i++) {
+            wereAdded(4, 3, 5);
+            wereAdded(8, 4, 32);
+            wereAdded(50, 2, 99);
+            wereAdded(11, 3, 0);
+        }
     }
 
 
     private void wereEaten(int width, int height) {
         Plants plants = new Plants(width, height);
+        plants.addPlants(width * height);
 
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height; y++) {

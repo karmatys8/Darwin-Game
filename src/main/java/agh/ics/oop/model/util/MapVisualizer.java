@@ -1,18 +1,14 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.movement.Vector2d;
-import javafx.util.Pair;
 
-import java.util.List;
-import java.util.Optional;
 
 public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
-    private static final String PLANT_VIEW = "*";
     private final AbstractWorldMap worldMap;
 
     /**
@@ -35,17 +31,17 @@ public class MapVisualizer {
      */
     public String draw(Vector2d lowerLeft, Vector2d upperRight) {
         StringBuilder builder = new StringBuilder();
-        for (int i = upperRight.getY() + 1; i >= lowerLeft.getY() - 1; i--) {
-            if (i == upperRight.getY() + 1) {
+        for (int i = upperRight.y() + 1; i >= lowerLeft.y() - 1; i--) {
+            if (i == upperRight.y() + 1) {
                 builder.append(drawHeader(lowerLeft, upperRight));
             }
             builder.append(String.format("%3d: ", i));
-            for (int j = lowerLeft.getX(); j <= upperRight.getX() + 1; j++) {
-                if (i < lowerLeft.getY() || i > upperRight.getY()) {
-                    builder.append(drawFrame(j <= upperRight.getX()));
+            for (int j = lowerLeft.x(); j <= upperRight.x() + 1; j++) {
+                if (i < lowerLeft.y() || i > upperRight.y()) {
+                    builder.append(drawFrame(j <= upperRight.x()));
                 } else {
                     builder.append(CELL_SEGMENT);
-                    if (j <= upperRight.getX()) {
+                    if (j <= upperRight.x()) {
                         builder.append(drawObject(new Vector2d(j, i)));
                     }
                 }
@@ -66,7 +62,7 @@ public class MapVisualizer {
     private String drawHeader(Vector2d lowerLeft, Vector2d upperRight) {
         StringBuilder builder = new StringBuilder();
         builder.append(" y\\x ");
-        for (int j = lowerLeft.getX(); j < upperRight.getX() + 1; j++) {
+        for (int j = lowerLeft.x(); j < upperRight.x() + 1; j++) {
             builder.append(String.format("%2d", j));
         }
         builder.append(System.lineSeparator());
@@ -74,13 +70,8 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        Pair<Optional<List<Animal>>, Optional<Boolean>> objects = worldMap.objectAt(currentPosition);
-        if (objects.getKey().isPresent()) {
-            List<Animal> animalList = objects.getKey().get();
-            return animalList.get(0).toShortString();
-        } else if (objects.getValue().isPresent()) {
-            return PLANT_VIEW;
-        }
+        WorldElement worldElement = this.worldMap.objectAt(currentPosition);
+        if (worldElement != null) return worldElement.getElementString();
         return EMPTY_CELL;
     }
 }

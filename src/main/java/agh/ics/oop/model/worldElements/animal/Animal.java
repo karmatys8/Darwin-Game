@@ -1,15 +1,17 @@
-package agh.ics.oop.model.animal;
+package agh.ics.oop.model.worldElements.animal;
 
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.Globe;
 
+import javafx.util.Pair;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal {
+public class Animal implements WorldElement {
     private Vector2d position;
     private MapDirection direction;
     private Genotype genotype;
@@ -128,10 +130,9 @@ public class Animal {
         direction = direction.turnRight(genotype.getCurrentGene(this.currentGeneIndex));
         this.nextGene();
 
-        Vector2d newPosition = position.add(direction.getUnitVector());
-        if (globe.canMoveTo(newPosition)) {
-            position = newPosition;
-        }
+        Pair<Vector2d, Integer> instructions = globe.howToMove(position, direction);
+        position = instructions.getKey();
+        direction.turnRight(instructions.getValue());
     }
 
     public void kill(int dayOfDeath) {
@@ -144,5 +145,10 @@ public class Animal {
     public void eat(int energy) {
         plantsEaten++;
         this.energy += energy;
+    }
+
+    @Override
+    public String getElementString() {
+        return genotype.toString();
     }
 }

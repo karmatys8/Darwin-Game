@@ -1,6 +1,9 @@
 package agh.ics.oop.model.worldMaps;
 
-import agh.ics.oop.model.animal.Animal;
+
+import agh.ics.oop.model.movement.MapDirection;
+import agh.ics.oop.model.worldElements.WorldElement;
+import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.configs.AnimalConfig;
@@ -21,6 +24,7 @@ abstract public class AbstractWorldMap {
     protected final AnimalConfig animalConfig;
 
     MapVisualizer mapVisualizer = new MapVisualizer(this);
+    protected static final agh.ics.oop.model.worldElements.artificialElements.Plant dumbPlant = new agh.ics.oop.model.worldElements.artificialElements.Plant();
     protected Map<Vector2d, List<Animal>> animalsMap;
     protected Plants plants;
 
@@ -40,12 +44,11 @@ abstract public class AbstractWorldMap {
         this.plants = plants;
     }
 
-    abstract public boolean canMoveTo(Vector2d position);
+    abstract public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction);
 
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         if (position.follows(lowerLeftBoundary) && position.precedes(upperRightBoundary)) {
-
             List<Animal> animalsAtThisPosition = animalsMap.getOrDefault(position, new ArrayList<>());
             animalsAtThisPosition.add(animal);
 
@@ -59,5 +62,5 @@ abstract public class AbstractWorldMap {
         return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
-    abstract public Pair<Optional<List<Animal>>, Optional<Boolean>> objectAt(Vector2d position);
+    abstract public WorldElement objectAt(Vector2d position);
 }

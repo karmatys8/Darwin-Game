@@ -31,22 +31,22 @@ public class Plants {
         Collections.shuffle(outsideOfEquator);
 
         for (int i = 0; i < numberToAdd; i++) {
-            if (! onEquator.isEmpty()  &&  RandomInteger.getRandomInt(4) == 0) {
+            if (! onEquator.isEmpty()  &&  RandomInteger.getRandomInt(4) != 0) {
                 emptyFieldsOnEquator.remove(onEquator.remove(0));
             } else if (! outsideOfEquator.isEmpty()) {
                 emptyFieldsOutsideOfEquator.remove(outsideOfEquator.remove(0));
-            }
+            } else i--;
         }
     }
 
     public boolean wasEaten(Vector2d position) {
-        if (position.getY() >= equatorStart  &&  position.getY() <= equatorEnd) {
+        if (position.y() >= equatorStart  &&  position.y() <= equatorEnd) {
             return emptyFieldsOnEquator.add(position);
         }
         return emptyFieldsOutsideOfEquator.add(position);
     }
 
     public boolean isFieldEmpty(Vector2d position) {
-        return ! (emptyFieldsOutsideOfEquator.contains(position) || emptyFieldsOnEquator.contains(position));
+        return emptyFieldsOutsideOfEquator.contains(position) || emptyFieldsOnEquator.contains(position);
     }
 }

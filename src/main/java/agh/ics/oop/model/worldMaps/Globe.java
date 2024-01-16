@@ -1,6 +1,8 @@
 package agh.ics.oop.model.worldMaps;
 
-import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.movement.MapDirection;
+import agh.ics.oop.model.worldElements.WorldElement;
+import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
@@ -16,16 +18,20 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return position.precedes(upperRightBoundary) && position.follows(lowerLeftBoundary);
+    public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction) {
+        Vector2d newPosition = oldPosition.add(direction.getUnitVector());
+        if (newPosition.y() < 1  ||  newPosition.y() > height) return new Pair<>(oldPosition, 4);
+        if (newPosition.x() < 1) return new Pair<>(new Vector2d(newPosition.x() + width, newPosition.y()), 0);
+        if (newPosition.x() > width) return new Pair<>(new Vector2d(newPosition.x() % width, newPosition.y()), 0);
+        return new Pair<>(newPosition, 0);
     }
 
     @Override
-    public Pair<Optional<List<Animal>>, Optional<Boolean>> objectAt(Vector2d position) {
-        return new Pair<>(
-                Optional.ofNullable(animalsMap.get(position)),
-                Optional.of(!plants.isFieldEmpty(position))
-        );
+    public WorldElement objectAt(Vector2d position) {
+        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        if (animalsAtThisPosition != null) return animalsAtThisPosition.get(0);
+        if (! plants.isFieldEmpty(position)) return dumbPlant;
+        else return null;
     }
 }
 
