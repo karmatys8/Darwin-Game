@@ -1,10 +1,12 @@
 package agh.ics.oop.model.simulation;
 
+import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.worldElements.artificialElements.Plant;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.util.configs.PlantConfig;
@@ -25,7 +27,7 @@ public class Simulation implements Runnable {
     private final SimulationController controller;
     private boolean running = true;
 
-    public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig) {
+    public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, SimulationController controller) {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
@@ -134,7 +136,7 @@ public class Simulation implements Runnable {
         return aliveAnimals.size();
     }
     public int getNumberOfPlants(){
-        return plants.size();
+        return 10;
     }
 
     public void run() {

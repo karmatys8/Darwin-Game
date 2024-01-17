@@ -1,12 +1,13 @@
 package agh.ics.oop.controllers;
 
-import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.worldElements.animal.Animal;
+
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import agh.ics.oop.model.worldElements.artificialElements.Plant;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
-import agh.ics.oop.model.worldMaps.Plant;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
