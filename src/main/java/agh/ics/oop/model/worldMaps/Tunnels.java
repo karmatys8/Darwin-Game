@@ -27,7 +27,7 @@ public class Tunnels extends AbstractWorldMap {
         return tunnelEntry;
     }
 
-    public Tunnels(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig, Map<Vector2d, List<Animal>> animalsMap, Map<Vector2d, Plant> plants) {
+    public Tunnels(int width, int height, AnimalConfig animalConfig, PlantConfig plantConfig, Map<Vector2d, List<Animal>> animalsMap, Plants plants) {
         super(width, height, animalConfig, plantConfig, animalsMap, plants);
 
         int numberOfTunnels = width * height / 50;
@@ -45,8 +45,8 @@ public class Tunnels extends AbstractWorldMap {
     public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction) {
         Vector2d newPosition = oldPosition.add(direction.getUnitVector());
         if (tunnels.containsKey(newPosition)) return new Pair<>(tunnels.get(newPosition), 0);
-        if (newPosition.getY() < 1  ||  newPosition.getY() > height
-                ||  newPosition.getX() < 1  ||  newPosition.getX() > width) return new Pair<>(oldPosition, 0);
+        if (newPosition.y() < 1  ||  newPosition.y() > height
+                ||  newPosition.x() < 1  ||  newPosition.x() > width) return new Pair<>(oldPosition, 0);
         return new Pair<>(newPosition, 0);
     }
 
@@ -55,7 +55,7 @@ public class Tunnels extends AbstractWorldMap {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) return animalsAtThisPosition.get(0);
         if (tunnels.containsKey(position)) return dumbTunnel;
-        if (plants.get(position) != null) return dumbPlant;
+        if (! plants.isFieldEmpty(position)) return dumbPlant;
         else return null;
     }
 }

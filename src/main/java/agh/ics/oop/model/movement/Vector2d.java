@@ -36,14 +36,6 @@ public record Vector2d(int x, int y) {
         return new Vector2d(-x, -y);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public boolean equals(Object other) {
         if (this == other)
             return true;
