@@ -1,5 +1,6 @@
 package agh.ics.oop.controllers;
 
+import agh.ics.oop.model.util.exceceptions.NonJsonFileException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,14 +11,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class SimulationSetupController {
-
     @FXML private ComboBox<String> mapOption;
     @FXML private ComboBox<String> mutationOption;
+    @FXML private ComboBox<String> listOfSavedConfigs;
     @FXML private TextField mapWidth;
     @FXML private TextField mapHeight;
     @FXML private TextField initialNumberOfPlants;
@@ -31,8 +38,14 @@ public class SimulationSetupController {
     @FXML private TextField maxNumberOfMutations;
     @FXML private TextField minNumberOfMutations;
     @FXML private Button startTheSimulation;
+    @FXML private Button saveConfigs;
     List<TextField> nonNegativeFields;
     List<TextField> positiveFields;
+
+    private static boolean isJsonFile(Path filePath) {
+        // Check if the file name ends with ".json" (case-insensitive)
+        return filePath.getFileName().toString().toLowerCase().endsWith(".json");
+    }
 
     public void initialize() {
         setUpFields();
@@ -51,6 +64,34 @@ public class SimulationSetupController {
         mutationOption.setItems(optionsOfMutation);
         mutationOption.setPromptText("Mutation Option");
         mutationOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
+
+        ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
+        try (Stream<Path> paths = Files.walk(Paths.get("src/main/resources/savedConfigs"))) {
+            paths
+                .filter(Files::isRegularFile)
+                .forEach(path -> {
+                    try {
+                        if (isJsonFile(path)) {
+                            listOfConfigs.add(String.valueOf(path.getFileName()));
+                        } else {
+
+                                throw new NonJsonFileException(path);
+                        }
+                    } catch (NonJsonFileException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        } catch (IOException | RuntimeException e) {
+            if (e.getCause() instanceof NonJsonFileException) {
+                e.getCause().printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
+        listOfSavedConfigs.setItems(listOfConfigs);
+        listOfSavedConfigs.setPromptText("Saved configs");
+        listOfSavedConfigs.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
 
         startTheSimulation.setOnAction(event -> startTheSimulation());
     }

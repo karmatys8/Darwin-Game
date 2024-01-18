@@ -52,7 +52,7 @@
             </padding>
             <Button fx:id="saveConfigs" styleClass="config-button-sm" text="Save configurations">
                <HBox.margin>
-                  <Insets top="15" bottom="15" />
+                  <Insets top="16" bottom="16" />
                </HBox.margin>
             </Button>
          </HBox>
@@ -98,7 +98,7 @@
             </padding>
             <ComboBox fx:id="listOfSavedConfigs" styleClass="config-combo-box">
                <HBox.margin>
-                  <Insets top="18" bottom="18" />
+                  <Insets top="20" bottom="20" />
                </HBox.margin>
             </ComboBox>
          </HBox>
