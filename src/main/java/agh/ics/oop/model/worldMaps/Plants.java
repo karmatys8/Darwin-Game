@@ -11,6 +11,7 @@ public class Plants {
     private final Set<Vector2d> emptyFieldsOutsideOfEquator = new LinkedHashSet<>();
     private final int equatorStart;
     private final int equatorEnd;
+    private int numberOfPlants = 0;
 
     public Plants(int width, int height) {
         equatorStart = (int) (0.4 * height) + 1;
@@ -25,6 +26,7 @@ public class Plants {
     }
 
     public void addPlants(int numberToAdd) {
+        numberOfPlants += numberToAdd;
         List<Vector2d> onEquator = new ArrayList<>(emptyFieldsOnEquator);
         Collections.shuffle(onEquator);
         List<Vector2d> outsideOfEquator = new ArrayList<>(emptyFieldsOutsideOfEquator);
@@ -40,13 +42,25 @@ public class Plants {
     }
 
     public boolean wasEaten(Vector2d position) {
+
         if (position.y() >= equatorStart  &&  position.y() <= equatorEnd) {
-            return emptyFieldsOnEquator.add(position);
+            if(emptyFieldsOnEquator.add(position)){
+                numberOfPlants -=1;
+                return true;
+            }
         }
-        return emptyFieldsOutsideOfEquator.add(position);
+        if(emptyFieldsOutsideOfEquator.add(position)){
+            numberOfPlants -=1;
+            return true;
+        }
+        return false;
     }
 
     public boolean isFieldEmpty(Vector2d position) {
         return emptyFieldsOutsideOfEquator.contains(position) || emptyFieldsOnEquator.contains(position);
+    }
+
+    public int getNumberOfPlants(){
+        return numberOfPlants;
     }
 }
