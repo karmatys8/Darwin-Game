@@ -13,6 +13,7 @@ import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.worldMaps.Plants;
 import agh.ics.oop.model.worldMaps.Tunnels;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Simulation implements Runnable {
