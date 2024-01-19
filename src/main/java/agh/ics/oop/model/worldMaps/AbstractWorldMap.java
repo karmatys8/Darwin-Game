@@ -57,6 +57,14 @@ abstract public class AbstractWorldMap {
             throw new IllegalArgumentException("Animal is placed out of bounds!");
         }
     }
+    public void remove(Animal animal) {
+        Vector2d position = animal.getPosition();
+        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        animalsAtThisPosition.remove(animal);
+        if(!animalsAtThisPosition.isEmpty()){
+            animalsMap.put(position, animalsAtThisPosition);
+        }
+    }
 
     public String toString(){
         return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
