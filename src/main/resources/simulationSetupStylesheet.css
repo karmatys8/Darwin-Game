@@ -21,7 +21,7 @@
 
 .config-combo-box {
     -fx-pref-height: 27.0;
-    -fx-pref-width: 214.0;
+    -fx-pref-width: 200.0;
     -fx-background-color: #F3B153;
 }
 
@@ -34,3 +34,18 @@
     -fx-text-fill: #fffcec;
 }
 
+.config-button-sm {
+    -fx-font-family: "Berlin Sans FB";
+    -fx-font-size: 15.0;
+    -fx-background-color: #27292b;
+    -fx-pref-height: 24.0;
+    -fx-pref-width: 180.0;
+    -fx-text-fill: #fffcec;
+}
+
+.title-label-box {
+    -fx-background-color: #90BE6D;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-color: #27292b;
+    -fx-border-width: 0.5;
+}
