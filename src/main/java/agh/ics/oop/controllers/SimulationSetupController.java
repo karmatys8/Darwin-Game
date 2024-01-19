@@ -34,51 +34,23 @@ public class SimulationSetupController {
     @FXML private Button startTheSimulation;
     @FXML private Button saveConfigs;
 
-    List<TextField> nonNegativeFields;
-    List<TextField> positiveFields;
-    List<TextField> allTextFields;
-    List<ComboBox> comboBoxes;
+    List<TextField> nonNegativeFields, positiveFields, allTextFields;
+    List<ComboBox<String>> comboBoxes;
     GsonConfigs gsonConfigs;
 
 
     public void initialize() {
         setUpFields();
-        allTextFields = new ArrayList<>(nonNegativeFields);
-        allTextFields.addAll(positiveFields);
-        comboBoxes = Arrays.asList(mapOption, mutationOption);
+        setUpComboBoxes();
 
+        comboBoxes = List.of(mapOption, mutationOption);
         gsonConfigs = new GsonConfigs(allTextFields, comboBoxes);
 
+        setUpListOfSavedConfigs();
+        setActions();
+    }
 
-        ObservableList<String> optionsOfMap = FXCollections.observableArrayList(
-                "Underground tunnels",
-                "Globe"
-        );
-        mapOption.setItems(optionsOfMap);
-        mapOption.setPromptText("Map option");
-        mapOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
-
-
-        ObservableList<String> optionsOfMutation = FXCollections.observableArrayList(
-                "Full randomness",
-                "Swap"
-        );
-        mutationOption.setItems(optionsOfMutation);
-        mutationOption.setPromptText("Mutation Option");
-        mutationOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
-
-        try {
-            ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
-            gsonConfigs.filesAsList(listOfConfigs);
-
-            listOfSavedConfigs.setItems(listOfConfigs);
-            listOfSavedConfigs.setPromptText("Saved configs");
-        } catch (IOException e) {
-            listOfSavedConfigs.setPromptText("Failed to load");
-            showError("File load Error", "Saved files could not be loaded", e.getMessage());
-        }
-        listOfSavedConfigs.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
-
+    private void setActions() {
         startTheSimulation.setOnAction(event -> startTheSimulation());
         saveConfigs.setOnAction(event -> saveConfigs());
         listOfSavedConfigs.setOnAction(event -> {
@@ -90,38 +62,65 @@ public class SimulationSetupController {
         });
     }
 
+    private void setUpListOfSavedConfigs() {
+        try {
+            ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
+            gsonConfigs.filesAsList(listOfConfigs);
+
+            listOfSavedConfigs.setItems(listOfConfigs);
+            listOfSavedConfigs.setPromptText("Saved configs");
+        } catch (IOException e) {
+            listOfSavedConfigs.setPromptText("Failed to load");
+            showError("File load Error", "Saved files could not be loaded", e.getMessage());
+        }
+        listOfSavedConfigs.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
+    }
+
+    private void setUpComboBoxes() {
+        mapOption.setItems(FXCollections.observableArrayList("Underground tunnels", "Globe"));
+        mapOption.setPromptText("Map option");
+        mapOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
+
+        mutationOption.setItems(FXCollections.observableArrayList("Full randomness", "Swap"));
+        mutationOption.setPromptText("Mutation Option");
+        mutationOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
+    }
+
     private void setUpFields() {
         nonNegativeFields = Arrays.asList(
-                initialNumberOfPlants, energyFromOnePlant, plantsEachDay,
-                initialNumberOfAnimals, initialEnergyOfAnimals, energyToBeWellFed, energyToReproduce,
-                maxNumberOfMutations, minNumberOfMutations
-        );
-        positiveFields = Arrays.asList(
-                mapHeight, mapWidth,
-                lengthOfGenotypes
-        );
+                initialNumberOfPlants, energyFromOnePlant, plantsEachDay, initialNumberOfAnimals, initialEnergyOfAnimals,
+                energyToBeWellFed, energyToReproduce, maxNumberOfMutations, minNumberOfMutations);
+        positiveFields = Arrays.asList(mapHeight, mapWidth,lengthOfGenotypes);
+
         positiveFields.forEach(field -> field.setTextFormatter(positiveInteger()));
         nonNegativeFields.forEach(field -> field.setTextFormatter(nonNegativeInteger()));
+
+        allTextFields = new ArrayList<>(nonNegativeFields);
+        allTextFields.addAll(positiveFields);
     }
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
         if (inputIsValid(errorMessage) & areNotGreater(errorMessage)) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
-                Scene scene = new Scene(loader.load());
-                Stage stage = new Stage();
-                stage.setScene(scene);
-                Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
-                currentStage.hide();
-                stage.show();
+                loadSimulationScene();
             } catch (IOException e) {
-                System.err.println("Failed to start the simulation. Reason: " + e.getMessage());
+                System.err.println("Failed to start the simulation. Reason: " + e.getMessage()); // maybe use showError() instead?
                 Platform.exit();
             }
         } else {
             showValidationAlert(errorMessage.toString());
         }
+    }
+
+    private void loadSimulationScene() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
+        currentStage.hide();
+        stage.show();
     }
 
     private TextFormatter<Integer> nonNegativeInteger() {
@@ -165,14 +164,13 @@ public class SimulationSetupController {
 
     private boolean inputIsValid(StringBuilder errorMessage) {
         boolean isValid = positiveFields.stream().noneMatch(field -> field.getText().isEmpty())
-                & nonNegativeFields.stream().noneMatch(field -> field.getText().isEmpty())
-                & mutationOption.getValue() != null
-                & mapOption.getValue() != null;
+                && nonNegativeFields.stream().noneMatch(field -> field.getText().isEmpty())
+                && mutationOption.getValue() != null
+                && mapOption.getValue() != null;
         if (!isValid) {
             errorMessage.append("Field cannot be empty.\n");
-            return false;
         }
-        return true;
+        return isValid;
     }
 
     private void showValidationAlert(String message) {
@@ -204,33 +202,21 @@ public class SimulationSetupController {
 
     private boolean areNotGreater(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
-        boolean isNotGreater = true;
+        return checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants", errorMessage)
+                && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day", errorMessage)
+                && checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
+                "Minimal energy to reproduce", errorMessage)
+                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations,
+                "Minimal number of mutations", errorMessage);
+    }
 
-        if (getValueFromTextField(initialNumberOfPlants) > mapArea) {
-            initialNumberOfPlants.clear();
-            errorMessage.append("Initial number of plants cannot be greater than the map area.\n");
-            isNotGreater = false;
+    private boolean checkMaxValues(int maxValue, TextField field, String violated, StringBuilder errorMessage) {
+        if (getValueFromTextField(field) > maxValue) {
+            field.clear();
+            errorMessage.append(violated + " cannot be greater than the map area.\n");
+            return false;
         }
-
-        if (getValueFromTextField(plantsEachDay) > mapArea) {
-            plantsEachDay.clear();
-            errorMessage.append("Number of plants growing each day cannot be greater than the map area.\n");
-            isNotGreater = false;
-        }
-
-        if (getValueFromTextField(energyToReproduce) > getValueFromTextField(energyToBeWellFed)) {
-            energyToReproduce.clear();
-            errorMessage.append("Minimal energy to reproduce cannot be greater than the energy required to be well-fed.\n");
-            isNotGreater = false;
-        }
-
-        if (getValueFromTextField(minNumberOfMutations) > getValueFromTextField(maxNumberOfMutations)) {
-            minNumberOfMutations.clear();
-            errorMessage.append("Minimal number of mutations cannot be greater than the maximal.\n");
-            isNotGreater = false;
-        }
-
-        return isNotGreater;
+        return true;
     }
 
     private void saveConfigs() {

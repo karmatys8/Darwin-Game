@@ -26,11 +26,10 @@ public class GsonConfigs {
     private static final String SAVED_CONFIGS_URL = "src/main/resources/savedConfigs";
     private final static Path savedConfigsPath = Paths.get(SAVED_CONFIGS_URL);
     private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final JsonParser jsonParser = new JsonParser();
     private final List<TextField> textFields;
-    private final List<ComboBox> comboBoxes;
+    private final List<ComboBox<String>> comboBoxes;
 
-    public GsonConfigs(List<TextField> textFields, List<ComboBox> comboBoxes) {
+    public GsonConfigs(List<TextField> textFields, List<ComboBox<String>> comboBoxes) {
         this.textFields = textFields;
         this.comboBoxes = comboBoxes;
     }
