@@ -55,8 +55,8 @@ public class Simulation implements Runnable {
         prevAnimals.remove(animal);
         if (!prevAnimals.isEmpty()) animalsMap.put(position, prevAnimals);
 
-        animal.kill(currentDay);
         aliveAnimals.remove(animal);
+        animal.kill(currentDay);
     }
 
     private void killAnimals() {
@@ -116,7 +116,6 @@ public class Simulation implements Runnable {
                     globe.place(newBorn);
                     aliveAnimals.add(newBorn);
                     mostCommonGenotype.insert(newBorn.getGenotype());
-                    System.out.println(newBorn.getGenotype());
                 }
             }
         }

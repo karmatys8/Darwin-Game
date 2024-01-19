@@ -21,6 +21,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import static java.lang.Math.min;
 import static java.lang.StrictMath.max;
@@ -184,8 +186,12 @@ public class SimulationController {
     private void handleAnimalButtonClick(Animal animal) {
         if (!alertShowing) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initModality(Modality.NONE);
             alert.setTitle("Animal Information");
             alert.setHeaderText(null);
+
+            ((Stage)alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+
             GridPane gridPane = new GridPane();
             observedAnimal = animal;
             genotypeLabel.setText("Genotype: ");

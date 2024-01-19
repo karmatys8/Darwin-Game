@@ -48,8 +48,7 @@ public class Plants {
                 numberOfPlants -=1;
                 return true;
             }
-        }
-        if(emptyFieldsOutsideOfEquator.add(position)){
+        } else if(emptyFieldsOutsideOfEquator.add(position)){
             numberOfPlants -=1;
             return true;
         }

@@ -146,7 +146,6 @@ public class Animal implements WorldElement {
         this.dayOfDeath = dayOfDeath;
         this.position = null;
         this.direction = null;
-        this.genotype = null;
     }
 
     public void eat(int energy) {
