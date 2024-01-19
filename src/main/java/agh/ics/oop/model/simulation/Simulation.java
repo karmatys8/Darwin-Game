@@ -48,7 +48,7 @@ public class Simulation implements Runnable {
 
     private void killAnimal(Animal animal) {
         mostCommonGenotype.remove(animal.getGenotype());
-
+        globe.remove(animal);
         Vector2d position = animal.getPosition();
 
         List<Animal> prevAnimals = animalsMap.remove(position);
@@ -113,6 +113,7 @@ public class Simulation implements Runnable {
                     Animal newBorn = new Animal(animal1, animal2, animalConfig);
                     currAnimals.add(newBorn);
 
+                    globe.place(newBorn);
                     aliveAnimals.add(newBorn);
                     mostCommonGenotype.insert(newBorn.getGenotype());
                 }
@@ -136,7 +137,7 @@ public class Simulation implements Runnable {
         return aliveAnimals.size();
     }
     public int getNumberOfPlants(){
-        return 10;
+        return plants.getNumberOfPlants();
     }
 
     public void run() {
