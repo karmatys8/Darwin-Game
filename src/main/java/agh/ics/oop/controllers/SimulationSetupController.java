@@ -1,7 +1,6 @@
 package agh.ics.oop.controllers;
 
 import agh.ics.oop.model.util.exceceptions.DuplicateConfigNameException;
-import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class SimulationSetupController {
@@ -38,15 +36,18 @@ public class SimulationSetupController {
 
     List<TextField> nonNegativeFields;
     List<TextField> positiveFields;
+    List<TextField> allTextFields;
+    List<ComboBox> comboBoxes;
     GsonConfigs gsonConfigs;
 
 
     public void initialize() {
         setUpFields();
+        allTextFields = new ArrayList<>(nonNegativeFields);
+        allTextFields.addAll(positiveFields);
+        comboBoxes = Arrays.asList(mapOption, mutationOption);
 
-        List<TextField> combinedFields = new ArrayList<>(nonNegativeFields);
-        combinedFields.addAll(positiveFields);
-        gsonConfigs = new GsonConfigs(combinedFields, Arrays.asList(mapOption, mutationOption));
+        gsonConfigs = new GsonConfigs(allTextFields, comboBoxes);
 
 
         ObservableList<String> optionsOfMap = FXCollections.observableArrayList(
@@ -80,6 +81,13 @@ public class SimulationSetupController {
 
         startTheSimulation.setOnAction(event -> startTheSimulation());
         saveConfigs.setOnAction(event -> saveConfigs());
+        listOfSavedConfigs.setOnAction(event -> {
+            try {
+                gsonConfigs.readConfigs(listOfSavedConfigs.getValue());
+            } catch (FileNotFoundException e) {
+                showError("Missing file Error", "", "");
+            }
+        });
     }
 
     private void setUpFields() {
