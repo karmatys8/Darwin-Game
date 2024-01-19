@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class SimulationSetupController {
     @FXML private ComboBox<String> mapOption;
@@ -123,17 +124,17 @@ public class SimulationSetupController {
         stage.show();
     }
 
-    private TextFormatter<Integer> nonNegativeInteger() {
+    private TextFormatter<Integer> createIntegerFormatter(Predicate<Integer> condition) {
         return new TextFormatter<>(value -> {
             if (value.isDeleted()) {
                 return value;
             }
             String newText = value.getControlNewText();
 
-            if (newText.isEmpty() || newText.matches("\\d+")) {
+            if (newText.matches("\\d+")) {
                 try {
                     int n = Integer.parseInt(newText);
-                    return n >= 0 ? value : null;
+                    return condition.test(n) ? value : null;
                 } catch (NumberFormatException e) {
                     return null;
                 }
@@ -142,24 +143,12 @@ public class SimulationSetupController {
         });
     }
 
+    private TextFormatter<Integer> nonNegativeInteger() {
+        return createIntegerFormatter(n -> n >= 0);
+    }
+
     private TextFormatter<Integer> positiveInteger() {
-        return new TextFormatter<>(value -> {
-            if (value.isDeleted()) {
-                return value;
-            }
-            String newText = value.getControlNewText();
-
-            if (newText.isEmpty() || newText.matches("0\\d+")) {
-                return null;
-            }
-
-            try {
-                int n = Integer.parseInt(newText);
-                return n > 0 ? value : null;
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        });
+        return createIntegerFormatter(n -> n > 0);
     }
 
     private boolean inputIsValid(StringBuilder errorMessage) {
