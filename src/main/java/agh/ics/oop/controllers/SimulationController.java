@@ -11,8 +11,10 @@ import agh.ics.oop.model.util.configs.PlantConfig;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -51,6 +53,15 @@ public class SimulationController {
     private Simulation simulation;
 
     private int emptyCells;
+    private boolean alertShowing = false;
+    private Label genotypeLabel = new Label();
+    private Label currentGenotypeLabel = new Label();
+    private Label energyLabel = new Label();
+    private Label eatenPlantsLabel = new Label();
+    private Label childrenLabel = new Label();
+    private Label descendantsLabel = new Label();
+    private Label daysLivedOrDayOfDeathLabel = new Label();
+    private Animal observedAnimal;
 
     public void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height) {
         this.animalConfig = animalConfig;
@@ -96,18 +107,24 @@ public class SimulationController {
     private void printCell(int column, int row, String backgroundColor) {
         Object object = worldMap.objectAt(new Vector2d(column, row));
         Label cellLabel = new Label(" ");
+        Node cellNode = cellLabel;
 
         if (object instanceof Animal) {
+            System.out.println(((Animal) object).getGenotype());
             Circle dot = createDot("#31081F", 3.5);
-            cellLabel.setGraphic(dot);
+            Button animalButton = new Button();
             dot.setOpacity(min((((double)((Animal) object).getEnergy())/(double) animalConfig.startingEnergy()), 1));
+            animalButton.setGraphic(dot);
+            animalButton.setOnAction(event -> handleAnimalButtonClick((Animal) object));
+            cellNode = animalButton;
         } else if (object instanceof Plant) {
             Circle circle = createDot("#F5FCE9", 4.0);
             cellLabel.setGraphic(circle);
+            cellNode = cellLabel;
         } else {
             emptyCells += 1;
         }
-        addCellLabel(cellLabel, column, height - row + 1, backgroundColor);
+        addCellNode(cellNode, column, height - row + 1, backgroundColor);
     }
     private Circle createDot(String color, Double radiusFraction) {
         double radius = Math.min(cellWidth, cellHeight) / radiusFraction;
@@ -115,19 +132,24 @@ public class SimulationController {
         dot.setFill(Color.web(color));
         return dot;
     }
-
-
-
-    private void addCellLabel(Label cellLabel, int col, int row, String backgroundColor) {
-        configureLabel(cellLabel, col, row, backgroundColor, "#11150a");
+    private void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
+        configureNode(cellNode, col, row, backgroundColor, "#11150a");
+        mapGrid.add(cellNode, col, row);
     }
 
-    private void configureLabel(Label label, int col, int row, String backgroundColor, String textColor) {
-        label.setAlignment(Pos.CENTER);
-        label.setMinSize(cellWidth, cellHeight);
-        label.setMaxSize(cellWidth, cellHeight);
-        label.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: %s; -fx-border-color: #ffffff; -fx-border-width: 0 1 1 0;", backgroundColor, textColor));
-        mapGrid.add(label, col, row);
+    private void configureNode(Node node, int col, int row, String backgroundColor, String textColor) {
+        if (node instanceof Button) {
+            Button button = (Button) node;
+            button.setMinSize(cellWidth, cellHeight);
+            button.setMaxSize(cellWidth, cellHeight);
+        } else if (node instanceof Label) {
+            Label label = (Label) node;
+            label.setAlignment(Pos.CENTER);
+            label.setMinSize(cellWidth, cellHeight);
+            label.setMaxSize(cellWidth, cellHeight);
+        }
+
+        node.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: %s; -fx-border-color: #ffffff; -fx-border-width: 0 1 1 0;", backgroundColor, textColor));
     }
 
     private void initializeLineChart() {
@@ -159,6 +181,61 @@ public class SimulationController {
         XYChart.Series<String, Number> plantSeries = lineChart.getData().get(1);
         plantSeries.getData().remove(0);
     }
+    private void handleAnimalButtonClick(Animal animal) {
+        if (!alertShowing) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Animal Information");
+            alert.setHeaderText(null);
+            GridPane gridPane = new GridPane();
+            observedAnimal = animal;
+            genotypeLabel.setText("Genotype: ");
+            gridPane.add(genotypeLabel, 0, 0);
+
+            currentGenotypeLabel.setText("Current gene: ");
+            gridPane.add(currentGenotypeLabel, 0, 1);
+
+            energyLabel.setText("Energy: ");
+            gridPane.add(energyLabel, 0, 2);
+
+            eatenPlantsLabel.setText("Eaten plants: ");
+            gridPane.add(eatenPlantsLabel, 0, 3);
+
+            childrenLabel.setText("Number of children: ");
+            gridPane.add(childrenLabel, 0, 4);
+
+            descendantsLabel.setText("Number of descendants: ");
+            gridPane.add(descendantsLabel, 0, 5);
+
+            daysLivedOrDayOfDeathLabel.setText("");
+            gridPane.add(daysLivedOrDayOfDeathLabel, 0, 6);
+
+            updateAnimalInformation();
+            gridPane.setPrefWidth(250);
+
+            alert.getDialogPane().setContent(gridPane);
+            alert.setOnCloseRequest(event -> {
+                alertShowing = false;
+                observedAnimal = null;
+            });
+            alertShowing = true;
+            alert.showAndWait();
+        }
+    }
+
+
+    private void updateAnimalInformation() {
+        genotypeLabel.setText("Genotype: " + observedAnimal.getGenotype());
+        currentGenotypeLabel.setText("Current gene: " + observedAnimal.getCurrentGeneIndex());
+        energyLabel.setText("Energy: " + observedAnimal.getEnergy());
+        eatenPlantsLabel.setText("Eaten plants: " + observedAnimal.getPlantsEaten());
+        childrenLabel.setText("Number of children: " + observedAnimal.getNumberOfChildren());
+        descendantsLabel.setText("Number of descendants: " + observedAnimal.getNumberOfDescendants());
+        if (observedAnimal.getDayOfDeath() == -1) {
+            daysLivedOrDayOfDeathLabel.setText("Days lived: " + observedAnimal.getDaysLived());
+        } else {
+            daysLivedOrDayOfDeathLabel.setText("Day of death: " + observedAnimal.getDayOfDeath());
+        }
+    }
 
     @FXML
     public void onSimulationStartClicked() {
@@ -171,6 +248,7 @@ public class SimulationController {
             animationTimer = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
+                    if(alertShowing){ updateAnimalInformation();}
                     if (!simulation.isRunning()) {
                         animationTimer.stop();
                         animationTimer = null;

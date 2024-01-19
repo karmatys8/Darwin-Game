@@ -37,6 +37,64 @@
                   <Insets left="20.0" right="10.0" />
                </VBox.margin>
                 </LineChart>
+            <BorderPane prefHeight="174.0" prefWidth="426.0" style="-fx-background-color: C9E3AC;">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+               <left>
+                  <VBox prefHeight="238.0" prefWidth="269.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label alignment="TOP_LEFT" text="Number of empty cells:" textFill="#27292b">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label text="Most popular genotype:" textFill="#27292b">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="22.0" prefWidth="259.0" text="Average animal energy:" textAlignment="JUSTIFY">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="22.0" prefWidth="259.0" text="Average age of alive animals:" textAlignment="JUSTIFY">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="22.0" prefWidth="259.0" text="Average age of dead animals:" textAlignment="JUSTIFY">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+               </left>
+               <right>
+                  <VBox prefHeight="218.0" prefWidth="129.0" style="-fx-background-color: #F5FCE9;" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="10.0" right="15.0" top="10.0" />
+                     </BorderPane.margin>
+                  </VBox>
+               </right>
+            </BorderPane>
             </children>
         </VBox>
     </left>

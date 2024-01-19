@@ -1,22 +1,22 @@
 package agh.ics.oop.model.simulation;
 
+
 import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.artificialElements.Plant;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
-import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.worldMaps.Plants;
+import agh.ics.oop.model.worldMaps.Tunnels;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Simulation implements Runnable {
-    private final Globe globe;
+    private final AbstractWorldMap globe;
     private final Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     private final Set<Animal> aliveAnimals = new HashSet<>();
     private final MostCommonGenotype mostCommonGenotype = new MostCommonGenotype();
@@ -116,6 +116,7 @@ public class Simulation implements Runnable {
                     globe.place(newBorn);
                     aliveAnimals.add(newBorn);
                     mostCommonGenotype.insert(newBorn.getGenotype());
+                    System.out.println(newBorn.getGenotype());
                 }
             }
         }

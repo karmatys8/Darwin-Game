@@ -54,8 +54,12 @@ public class Tunnels extends AbstractWorldMap {
     public WorldElement objectAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) return animalsAtThisPosition.get(0);
-        if (tunnels.containsKey(position)) return dumbTunnel;
+        //if (tunnels.containsKey(position)) return dumbTunnel;
         if (! plants.isFieldEmpty(position)) return dumbPlant;
         else return null;
+    }
+
+    public boolean isTunnel(Vector2d position){
+        return  tunnels.containsKey(position);
     }
 }
