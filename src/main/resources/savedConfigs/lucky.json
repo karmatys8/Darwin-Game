@@ -1,0 +1,16 @@
+{
+  "initialNumberOfAnimals": "7",
+  "energyToReproduce": "7",
+  "initialEnergyOfAnimals": "7",
+  "lengthOfGenotypes": "7",
+  "plantsEachDay": "7",
+  "energyFromOnePlant": "7",
+  "maxNumberOfMutations": "7",
+  "mapHeight": "7",
+  "mapOption": "Globe",
+  "minNumberOfMutations": "7",
+  "mutationOption": "Full randomness",
+  "initialNumberOfPlants": "7",
+  "mapWidth": "7",
+  "energyToBeWellFed": "7"
+}

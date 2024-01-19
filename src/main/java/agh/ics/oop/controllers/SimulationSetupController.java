@@ -1,6 +1,7 @@
 package agh.ics.oop.controllers;
 
-import agh.ics.oop.model.util.exceceptions.NonJsonFileException;
+import agh.ics.oop.model.util.exceceptions.DuplicateConfigNameException;
+import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,15 +12,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 public class SimulationSetupController {
     @FXML private ComboBox<String> mapOption;
@@ -39,16 +35,20 @@ public class SimulationSetupController {
     @FXML private TextField minNumberOfMutations;
     @FXML private Button startTheSimulation;
     @FXML private Button saveConfigs;
+
     List<TextField> nonNegativeFields;
     List<TextField> positiveFields;
+    GsonConfigs gsonConfigs;
 
-    private static boolean isJsonFile(Path filePath) {
-        // Check if the file name ends with ".json" (case-insensitive)
-        return filePath.getFileName().toString().toLowerCase().endsWith(".json");
-    }
 
     public void initialize() {
         setUpFields();
+
+        List<TextField> combinedFields = new ArrayList<>(nonNegativeFields);
+        combinedFields.addAll(positiveFields);
+        gsonConfigs = new GsonConfigs(combinedFields, Arrays.asList(mapOption, mutationOption));
+
+
         ObservableList<String> optionsOfMap = FXCollections.observableArrayList(
                 "Underground tunnels",
                 "Globe"
@@ -56,6 +56,7 @@ public class SimulationSetupController {
         mapOption.setItems(optionsOfMap);
         mapOption.setPromptText("Map option");
         mapOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
+
 
         ObservableList<String> optionsOfMutation = FXCollections.observableArrayList(
                 "Full randomness",
@@ -65,35 +66,20 @@ public class SimulationSetupController {
         mutationOption.setPromptText("Mutation Option");
         mutationOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
 
-        ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
-        try (Stream<Path> paths = Files.walk(Paths.get("src/main/resources/savedConfigs"))) {
-            paths
-                .filter(Files::isRegularFile)
-                .forEach(path -> {
-                    try {
-                        if (isJsonFile(path)) {
-                            listOfConfigs.add(String.valueOf(path.getFileName()));
-                        } else {
+        try {
+            ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
+            gsonConfigs.filesAsList(listOfConfigs);
 
-                                throw new NonJsonFileException(path);
-                        }
-                    } catch (NonJsonFileException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-        } catch (IOException | RuntimeException e) {
-            if (e.getCause() instanceof NonJsonFileException) {
-                e.getCause().printStackTrace();
-            } else {
-                e.printStackTrace();
-            }
+            listOfSavedConfigs.setItems(listOfConfigs);
+            listOfSavedConfigs.setPromptText("Saved configs");
+        } catch (IOException e) {
+            listOfSavedConfigs.setPromptText("Failed to load");
+            showError("File load Error", "Saved files could not be loaded", e.getMessage());
         }
-        listOfSavedConfigs.setItems(listOfConfigs);
-        listOfSavedConfigs.setPromptText("Saved configs");
         listOfSavedConfigs.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
 
         startTheSimulation.setOnAction(event -> startTheSimulation());
+        saveConfigs.setOnAction(event -> saveConfigs());
     }
 
     private void setUpFields() {
@@ -190,6 +176,24 @@ public class SimulationSetupController {
         alert.showAndWait();
     }
 
+    private void showError(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private Optional<String> showFileNameForm() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Configs file name");
+        dialog.setHeaderText("Please enter a file name below.");
+        dialog.setContentText("Name:");
+
+        return dialog.showAndWait();
+    }
+
     private boolean areNotGreater(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         boolean isNotGreater = true;
@@ -219,6 +223,24 @@ public class SimulationSetupController {
         }
 
         return isNotGreater;
+    }
+
+    private void saveConfigs() {
+        StringBuilder errorMessage = new StringBuilder();
+        if (inputIsValid(errorMessage) & areNotGreater(errorMessage)) {
+            Optional<String> fileName = showFileNameForm();
+            try {
+                if (fileName.isPresent()) {
+                    gsonConfigs.saveConfigs(fileName.get());
+                }
+            } catch (DuplicateConfigNameException e) {
+                showError("Duplicate file name Error", "", e.getMessage());
+            } catch (IOException e) {
+                showError("Error", "Something went wrong during traversing savedConfigs folder.", e.getMessage());
+            }
+        } else {
+            showValidationAlert(errorMessage.toString());
+        }
     }
 
     private int getValueFromTextField(TextField textField) {
