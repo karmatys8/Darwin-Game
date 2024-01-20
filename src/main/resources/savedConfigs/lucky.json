@@ -10,6 +10,7 @@
   "mapOption": "Globe",
   "minNumberOfMutations": "7",
   "mutationOption": "Full randomness",
+  "updateInterval": "77",
   "initialNumberOfPlants": "7",
   "mapWidth": "7",
   "energyToBeWellFed": "7"

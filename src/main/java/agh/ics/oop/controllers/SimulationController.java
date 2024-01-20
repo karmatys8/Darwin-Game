@@ -49,7 +49,7 @@ public class SimulationController {
         if(simulation == null) {
             simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
             initializeMapLegend();
-            mapDrawer = new TunnelDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
+            mapDrawer = new MapDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
 

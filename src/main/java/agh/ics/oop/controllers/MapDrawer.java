@@ -1,9 +1,11 @@
 package agh.ics.oop.controllers;
 
+import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.util.Average;
-import agh.ics.oop.model.worldElements.animal.Animal;
-import agh.ics.oop.model.worldElements.animal.Genotype;
+import agh.ics.oop.model.animal.animal.Animal;
+import agh.ics.oop.model.animal.animal.Genotype;
+import agh.ics.oop.model.util.exceceptions.UnexpectedNodeException;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -12,18 +14,15 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Shape;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import static java.lang.StrictMath.max;
 
-public abstract class MapDrawer {
+public class MapDrawer {
     protected AbstractWorldMap worldMap;
     protected Simulation simulation;
     private final double cellWidth, cellHeight;
@@ -80,30 +79,6 @@ public abstract class MapDrawer {
             this.notify();
         }
         updateStats();
-    }
-
-    protected abstract void printCell(int column, int row, String backgroundColor);
-
-    protected Circle createDot(String color, Double radiusFraction) {
-        double radius = Math.min(cellWidth, cellHeight) / radiusFraction;
-        Circle dot = new Circle(radius);
-        dot.setFill(Color.web(color));
-        return dot;
-    }
-
-    protected Shape createTriangle(String color) {
-        double sideLength = Math.min(cellWidth, cellHeight) / 2.0;
-        double height = sideLength * Math.sqrt(3) / 2;
-
-        Polygon triangle = new Polygon();
-        triangle.getPoints().addAll(
-                0.0, 0.0,
-                -sideLength / 2, height,
-                sideLength / 2, height
-        );
-        triangle.setFill(Color.web(color));
-
-        return triangle;
     }
 
     protected void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
@@ -207,5 +182,22 @@ public abstract class MapDrawer {
         simulationStats[2].setText(String.valueOf(simulationAverageStats[0].getAverage()));
         simulationStats[3].setText(String.valueOf(simulationAverageStats[1].getAverage()));
         simulationStats[4].setText(String.valueOf(simulationAverageStats[2].getAverage()));
+    }
+
+    private void printCell(int column, int row, String backgroundColor) {
+        Vector2d position = new Vector2d(column, row);
+        Node node = worldMap.nodeAt(position);
+
+        if (node instanceof Button button) {
+            button.setOnAction(event -> handleAnimalButtonClick(worldMap.animalAt(position)));
+            button.setContentDisplay(ContentDisplay.CENTER);
+        } else if (node instanceof Label) {
+            ((Label)node).setContentDisplay(ContentDisplay.CENTER);
+        } else if (node == null) {
+            emptyCells++;
+            node = new Label(" ");
+        } else throw new UnexpectedNodeException(node);
+
+        addCellNode(node, column, height - row + 1, backgroundColor);
     }
 }

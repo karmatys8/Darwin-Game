@@ -1,10 +1,7 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal.animal;
+import agh.ics.oop.model.animal.animal.*;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.animal.Animal;
-import agh.ics.oop.model.worldElements.animal.Genotype;
-import agh.ics.oop.model.worldElements.animal.RandomGenotype;
-import agh.ics.oop.model.worldElements.animal.SwitchGenotype;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

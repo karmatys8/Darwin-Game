@@ -1,14 +1,13 @@
 package agh.ics.oop.model.worldMaps;
 
 
+import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.movement.MapDirection;
-import agh.ics.oop.model.worldElements.WorldElement;
-import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.animal.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import agh.ics.oop.model.worldElements.artificialElements.Plant;
+import javafx.scene.Node;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -24,8 +23,7 @@ abstract public class AbstractWorldMap {
     protected final PlantConfig plantConfig;
     protected final AnimalConfig animalConfig;
 
-    MapVisualizer mapVisualizer = new MapVisualizer(this);
-    protected static final Plant dumbPlant = new Plant();
+    protected NodeCreator nodeCreator;
     protected Map<Vector2d, List<Animal>> animalsMap;
     protected Plants plants;
 
@@ -43,6 +41,8 @@ abstract public class AbstractWorldMap {
         this.plantConfig = plantConfig;
         this.animalsMap = animalsMap;
         this.plants = plants;
+
+        nodeCreator = new NodeCreator(width, height, animalConfig.startingEnergy());
     }
 
     abstract public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction);
@@ -68,9 +68,9 @@ abstract public class AbstractWorldMap {
         }
     }
 
-    public String toString(){
-        return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
-    }
+    abstract public Node nodeAt(Vector2d position);
 
-    abstract public WorldElement objectAt(Vector2d position);
+    public Animal animalAt(Vector2d position) {
+        return animalsMap.get(position).get(0);
+    }
 }

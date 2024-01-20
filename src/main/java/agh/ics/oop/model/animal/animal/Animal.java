@@ -1,10 +1,9 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal.animal;
 
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 
 import javafx.util.Pair;
@@ -12,7 +11,7 @@ import javafx.util.Pair;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal implements WorldElement {
+public class Animal {
     private Vector2d position;
     private MapDirection direction;
     private Genotype genotype;
@@ -143,10 +142,5 @@ public class Animal implements WorldElement {
     public void eat(int energy) {
         plantsEaten++;
         this.energy += energy;
-    }
-
-    @Override
-    public String getElementString() {
-        return genotype.toString();
     }
 }

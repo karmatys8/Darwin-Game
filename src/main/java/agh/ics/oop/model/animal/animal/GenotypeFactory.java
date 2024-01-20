@@ -1,4 +1,4 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal.animal;
 
 
 public class GenotypeFactory {

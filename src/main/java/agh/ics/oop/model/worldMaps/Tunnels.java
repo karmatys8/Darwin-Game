@@ -1,13 +1,12 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.movement.MapDirection;
-import agh.ics.oop.model.worldElements.WorldElement;
-import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.animal.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import agh.ics.oop.model.worldElements.artificialElements.Tunnel;
+import javafx.scene.Node;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 public class Tunnels extends AbstractWorldMap {
     private final Map<Vector2d, Vector2d> tunnels = new HashMap<>();
-    private final static Tunnel dumbTunnel = new Tunnel();
     private final static Vector2d placeholder = new Vector2d(-1, -1);
 
     private Vector2d generateTunnelEntry() {
@@ -51,11 +49,11 @@ public class Tunnels extends AbstractWorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Node nodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
-        if (animalsAtThisPosition != null) return animalsAtThisPosition.get(0);
-        if (tunnels.containsKey(position)) return dumbTunnel;
-        if (! plants.isFieldEmpty(position)) return dumbPlant;
+        if (animalsAtThisPosition != null) return nodeCreator.animalsNode(animalsAtThisPosition.get(0));
+        if (tunnels.containsKey(position)) return nodeCreator.tunnelsNode();
+        if (! plants.isFieldEmpty(position)) return nodeCreator.plantsNode();
         else return null;
     }
 

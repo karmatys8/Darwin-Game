@@ -3,12 +3,12 @@ package agh.ics.oop.model.simulation;
 
 import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.util.Average;
-import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.animal.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.animal.Genotype;
+import agh.ics.oop.model.animal.animal.Genotype;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.util.configs.PlantConfig;
 import agh.ics.oop.model.worldMaps.Plants;

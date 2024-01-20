@@ -1,5 +1,6 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal.animal;
 
+import agh.ics.oop.model.animal.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import org.junit.jupiter.api.Assertions;

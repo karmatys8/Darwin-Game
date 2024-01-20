@@ -1,7 +1,7 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.worldElements.animal.Genotype;
-import agh.ics.oop.model.worldElements.animal.RandomGenotype;
+import agh.ics.oop.model.animal.animal.Genotype;
+import agh.ics.oop.model.animal.animal.RandomGenotype;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
