@@ -96,13 +96,7 @@
                            </GridPane.margin>
                         </Circle>
                         <Label styleClass="map-legend-text" text=" Animals" GridPane.columnIndex="3" />
-                        <Circle fill="TRANSPARENT" radius="17.0" stroke="#1e3f20" strokeType="INSIDE" GridPane.columnIndex="4">
-                           <GridPane.margin>
-                              <Insets left="10.0" />
-                           </GridPane.margin>
-                        </Circle>
-                        <Label styleClass="map-legend-text" text="Tunnels" GridPane.columnIndex="5" />
-                     <Polygon fill="#f5fce9" points="20.799806594848633, -4.8005475997924805, 56.79974365234375, -4.800585746765137, 38.399749755859375, -37.602821350097656" stroke="#f5fce9" strokeType="INSIDE" />
+                        <Polygon fill="#f5fce9" points="20.799806594848633, -4.8005475997924805, 56.79974365234375, -4.800585746765137, 38.399749755859375, -37.602821350097656" stroke="#f5fce9" strokeType="INSIDE" />
                   </GridPane>
                </bottom>
             </BorderPane>

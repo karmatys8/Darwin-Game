@@ -189,8 +189,12 @@ public class MapDrawer {
         Node node = worldMap.nodeAt(position);
 
         if (node instanceof Button button) {
-            button.setOnAction(event -> handleAnimalButtonClick(worldMap.animalAt(position)));
+            Animal animal = worldMap.animalAt(position);
+            button.setOnAction(event -> handleAnimalButtonClick(animal));
             button.setContentDisplay(ContentDisplay.CENTER);
+            if(animal == observedAnimal){
+                backgroundColor = "#F3B153";
+            }
         } else if (node instanceof Label) {
             ((Label)node).setContentDisplay(ContentDisplay.CENTER);
         } else if (node == null) {

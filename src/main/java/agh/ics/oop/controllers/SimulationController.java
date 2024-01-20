@@ -5,10 +5,13 @@ import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class SimulationController {
     private MapDrawer mapDrawer;
@@ -42,13 +45,14 @@ public class SimulationController {
         this.height = height;
         this.updateInterval = updateInterval;
         this.mapOption = mapOption;
+        initializeMapLegend();
+        initializeStatistic();
     }
 
     @FXML
     private void onSimulationStartClicked() {
         if(simulation == null) {
             simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
-            initializeMapLegend();
             mapDrawer = new MapDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
@@ -85,7 +89,6 @@ public class SimulationController {
 
     @FXML
     public void initialize() {
-        initializeStatistic();
         startTheSimulation.setOnAction(event -> onSimulationStartClicked());
     }
     private void initializeStatistic() {
@@ -96,5 +99,18 @@ public class SimulationController {
         simulationStats[4] = ageOfDeadAnimalsLabel;
     }
     private void initializeMapLegend() {
+        if(mapOption == "Underground tunnels"){
+            Label label = new Label("Tunnels");
+            label.getStyleClass().add("map-legend-text");
+
+            Circle circle = new Circle();
+            circle.setRadius(17.0);
+            circle.setFill(Color.TRANSPARENT);
+            circle.setStroke(Color.web("#1e3f20"));
+            mapLegend.setMargin(circle, new Insets(0, 0, 0, 10));
+
+            mapLegend.add(circle, 4, 0);
+            mapLegend.add(label, 5, 0);
+        }
     }
 }
