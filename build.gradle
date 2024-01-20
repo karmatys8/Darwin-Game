@@ -25,8 +25,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.projekt'
-    mainClass = 'com.example.projekt.HelloApplication'
+    getMainClass().set('agh.ics.oop.World')
 }
 
 javafx {
@@ -35,9 +34,9 @@ javafx {
 }
 
 dependencies {
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 test {
