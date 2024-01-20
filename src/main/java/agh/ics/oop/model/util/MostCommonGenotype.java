@@ -35,6 +35,10 @@ public class MostCommonGenotype {
     }
 
     public Genotype getMostCommonGenotype(){
-        return maxHeap.peek().getKey();
+        if (!maxHeap.isEmpty()) {
+            return maxHeap.peek().getKey();
+        } else {
+            return null;
+        }
     }
 }

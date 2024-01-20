@@ -20,7 +20,7 @@ public class GlobeTests {
     @Test
     public void testHowToMove() {
         Globe globe = new Globe(36, 200,
-                new AnimalConfig(8, 9, 93, 0, 0, 0, 2),
+                new AnimalConfig(8, 9, 93, 0, 0, 0, 2, "Swap"),
                 new PlantConfig(0, 22, 51), animals, plants);
         Vector2d lowerLeft = new Vector2d(1, 1);
         Vector2d upperRight = new Vector2d(36, 200);

@@ -17,7 +17,7 @@ import java.util.Objects;
 public class TunnelsTests {
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private static final Plants plants = new Plants(8, 6);
-    private static final AnimalConfig animalConfig = new AnimalConfig(0, 70, 40, 5, 2, 6, 9);
+    private static final AnimalConfig animalConfig = new AnimalConfig(0, 70, 40, 5, 2, 6, 9, "Full randomness");
     private static final PlantConfig plantConfig = new PlantConfig(0, 2, 0);
 
     private void countTunnels(int width, int height) {

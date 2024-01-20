@@ -32,7 +32,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
 
-        this.genotype = new RandomGenotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
+        this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.startingEnergy();
@@ -46,7 +46,7 @@ public class Animal implements WorldElement {
         this.position = mother.getPosition();
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
 
-        this.genotype = new RandomGenotype(mother,father);
+        this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), mother, father);
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.energyUsedToReproduce()*2;
@@ -94,9 +94,7 @@ public class Animal implements WorldElement {
         return energy;
     }
 
-    public Genotype getGenotype() {
-        return new RandomGenotype(genotype);
-    }
+    public Genotype getGenotype() { return GenotypeFactory.getGenotype(genotype);}
 
     public int getCurrentGene(){ return genotype.getCurrentGene(currentGeneIndex);}
 

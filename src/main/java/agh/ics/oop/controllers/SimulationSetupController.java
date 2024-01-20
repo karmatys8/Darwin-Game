@@ -196,13 +196,14 @@ public class SimulationSetupController {
 
     private boolean areInBoundaries(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
-        return checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
+        return  checkMaxValues(99, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
+                && checkMaxValues(99, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
+                && checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
                 && checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
                 && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
                 && checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
                 "Minimal energy to reproduce cannot be greater than the energy to be well fed.", errorMessage)
-                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations,
-                "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
+                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
     }
 
     private boolean checkMaxValues(int maxValue, TextField field, String message, StringBuilder errorMessage) {
@@ -241,8 +242,8 @@ public class SimulationSetupController {
     }
 
     private void setSimulationController(SimulationController simulationController) {
-        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes));
+        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes), mutationOption.getValue());
         PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
-        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval));
+        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue());
     }
 }

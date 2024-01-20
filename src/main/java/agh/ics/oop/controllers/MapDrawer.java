@@ -3,6 +3,7 @@ package agh.ics.oop.controllers;
 import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.util.Average;
 import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.worldElements.animal.Genotype;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -201,7 +202,8 @@ public abstract class MapDrawer {
     private void updateStats() {
         Average[] simulationAverageStats = simulation.getSimulationStats();
         simulationStats[0].setText(String.valueOf(emptyCells));
-        simulationStats[1].setText(String.valueOf(simulation.getMostCommonGenotype()));
+        Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
+        simulationStats[1].setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");
         simulationStats[2].setText(String.valueOf(simulationAverageStats[0].getAverage()));
         simulationStats[3].setText(String.valueOf(simulationAverageStats[1].getAverage()));
         simulationStats[4].setText(String.valueOf(simulationAverageStats[2].getAverage()));

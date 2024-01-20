@@ -17,6 +17,7 @@ public class SimulationController {
     private int width;
     protected int height;
     private int updateInterval;
+    private String mapOption;
 
     @FXML private Button startTheSimulation;
     @FXML private GridPane mapGrid;
@@ -34,18 +35,19 @@ public class SimulationController {
     Label[] simulationStats = new Label[5];
 
 
-    protected void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval) {
+    protected void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption) {
         this.animalConfig = animalConfig;
         this.plantConfig = plantConfig;
         this.width = width;
         this.height = height;
         this.updateInterval = updateInterval;
+        this.mapOption = mapOption;
     }
 
     @FXML
     private void onSimulationStartClicked() {
         if(simulation == null) {
-            simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval,this);
+            simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
             initializeMapLegend();
             mapDrawer = new TunnelDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();

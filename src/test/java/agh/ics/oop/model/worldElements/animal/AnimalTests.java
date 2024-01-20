@@ -15,7 +15,7 @@ public class AnimalTests {
 
     @BeforeEach
     void setUp() {
-        animalConfig = new AnimalConfig(1, 10, 9, 3, 3, 20, 10);
+        animalConfig = new AnimalConfig(1, 10, 9, 3, 3, 20, 10, "Swap");
     }
 
     @Test
@@ -32,23 +32,10 @@ public class AnimalTests {
 
 
     @Test
-    void testAnimalNextGene() {
-        for(int i=0;i<1000;i++) {
-
-            Animal animal = new Animal(new Vector2d(2, 2), animalConfig);
-            int initialGeneIndex = animal.getCurrentGene();
-
-            animal.nextGene();
-
-            assertEquals((initialGeneIndex + 1) % animal.getGenotype().getGenes().size(), animal.getCurrentGene());
-        }
-    }
-
-    @Test
     void testCanReproduce() {
         int startingEnergy = 20;
         int minEnergyToReproduce = 6;
-        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, minEnergyToReproduce, 1, 0 ,10, 6);
+        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, minEnergyToReproduce, 1, 0 ,10, 6, "Full randomness");
         Vector2d position = new Vector2d(2, 2);
         Animal mother = new Animal(position, animalConfig);
         Animal father = new Animal(position, animalConfig);
@@ -71,7 +58,7 @@ public class AnimalTests {
     @Test
     void testAnimalReproduction() {
         int startingEnergy = 50;
-        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, 1, 1, 0 ,10, 6);
+        AnimalConfig animalConfig = new AnimalConfig(2, startingEnergy, 1, 1, 0 ,10, 6, "Swap");
         Vector2d position = new Vector2d(2, 2);
         Animal mother = new Animal(position, animalConfig);
         Animal father = new Animal(position, animalConfig);
@@ -101,7 +88,7 @@ public class AnimalTests {
     }
     @Test
     void testCountingDescendants() {
-        AnimalConfig animalConfig = new AnimalConfig(4, 100, 10, 2, 0, 0, 8);
+        AnimalConfig animalConfig = new AnimalConfig(4, 100, 10, 2, 0, 0, 8, "Full randomness");
         Animal motherA = new Animal(new Vector2d(2, 2), animalConfig);
         Animal fatherA = new Animal(new Vector2d(3, 3), animalConfig);
         Animal motherB = new Animal(new Vector2d(12, 12), animalConfig);

@@ -50,7 +50,7 @@ public class Plants {
         if(targetSet.add(position)){
             numberOfPlants--;
             return true;
-        }git
+        }
         return false;
     }
 
