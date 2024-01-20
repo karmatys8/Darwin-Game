@@ -36,6 +36,18 @@
                   </HBox.margin>
                </ComboBox>
          </HBox>
+         <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #B0DA90;">
+               <Label styleClass="config-label" text="Simulation Update Interval [ms]">
+                  <HBox.margin>
+                     <Insets left="20.0" right="30.0" />
+                  </HBox.margin>
+               </Label>
+               <TextField fx:id="updateInterval" styleClass="config-text-field">
+                  <HBox.margin>
+                     <Insets bottom="10.0" left="35.0" />
+                  </HBox.margin>
+               </TextField>
+         </HBox>
       </VBox>
    </top>
    <bottom>
