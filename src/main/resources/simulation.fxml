@@ -11,7 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="850.0" style="-fx-background-color: #F5FCE9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.controllers.SimulationController">
+<BorderPane minHeight="550.0" minWidth="850.0" style="-fx-background-color: #F5FCE9;"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="agh.ics.oop.controllers.SimulationController" stylesheets="@simulationStylesheet.css">
     <left>
         <VBox prefHeight="550.0" prefWidth="430.0" style="-fx-border-color: #1E3F20; -fx-border-width: 2;" BorderPane.alignment="CENTER">
             <children>
@@ -44,46 +46,11 @@
                <left>
                   <VBox prefHeight="238.0" prefWidth="269.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label alignment="TOP_LEFT" text="Number of empty cells:" textFill="#27292b">
-                           <font>
-                              <Font name="Verdana" size="17.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label text="Most popular genotype:" textFill="#27292b">
-                           <font>
-                              <Font name="Verdana" size="17.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label prefHeight="22.0" prefWidth="259.0" text="Average animal energy:" textAlignment="JUSTIFY">
-                           <font>
-                              <Font name="Verdana" size="17.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label prefHeight="22.0" prefWidth="259.0" text="Average age of alive animals:" textAlignment="JUSTIFY">
-                           <font>
-                              <Font name="Verdana" size="17.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label prefHeight="22.0" prefWidth="259.0" text="Average age of dead animals:" textAlignment="JUSTIFY">
-                           <font>
-                              <Font name="Verdana" size="17.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
+                        <Label styleClass="stats-label" text="Number of empty cells:"/>
+                        <Label styleClass="stats-label" text="Most common genotype:"/>
+                        <Label styleClass="stats-label" text="Average animal energy:"/>
+                        <Label styleClass="stats-label" text="Average age of alive animals:"/>
+                        <Label styleClass="stats-label" text="Average age of dead animals:"/>
                      </children>
                   </VBox>
                </left>
@@ -92,6 +59,13 @@
                      <BorderPane.margin>
                         <Insets bottom="10.0" right="15.0" top="10.0" />
                      </BorderPane.margin>
+                     <children>
+                        <Label fx:id="emptyCellsLabel" styleClass="stats-label"/>
+                        <Label fx:id="mostCommonGenotypeLabel" styleClass="stats-label" />
+                        <Label fx:id="animalEnergyLabel" styleClass="stats-label"/>
+                        <Label fx:id="ageOfAliveAnimalsLabel" styleClass="stats-label" />
+                        <Label fx:id="ageOfDeadAnimalsLabel" styleClass="stats-label" />
+                     </children>
                   </VBox>
                </right>
             </BorderPane>

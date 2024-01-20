@@ -2,7 +2,6 @@ package agh.ics.oop.model.worldElements.animal;
 
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.animal.Animal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,11 +36,11 @@ public class AnimalTests {
         for(int i=0;i<1000;i++) {
 
             Animal animal = new Animal(new Vector2d(2, 2), animalConfig);
-            int initialGeneIndex = animal.getCurrentGeneIndex();
+            int initialGeneIndex = animal.getCurrentGene();
 
             animal.nextGene();
 
-            assertEquals((initialGeneIndex + 1) % animal.getGenotype().getGenes().size(), animal.getCurrentGeneIndex());
+            assertEquals((initialGeneIndex + 1) % animal.getGenotype().getGenes().size(), animal.getCurrentGene());
         }
     }
 

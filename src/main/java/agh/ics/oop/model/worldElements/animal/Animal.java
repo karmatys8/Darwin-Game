@@ -6,11 +6,9 @@ import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.worldElements.WorldElement;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
-import agh.ics.oop.model.worldMaps.Globe;
 
 import javafx.util.Pair;
 
-import java.util.AbstractCollection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -100,7 +98,7 @@ public class Animal implements WorldElement {
         return new RandomGenotype(genotype);
     }
 
-    public int getCurrentGeneIndex(){ return currentGeneIndex;}
+    public int getCurrentGene(){ return genotype.getCurrentGene(currentGeneIndex);}
 
     private void useEnergy(int energyUsedToReproduce) {
         this.energy-=energyUsedToReproduce;
@@ -125,10 +123,6 @@ public class Animal implements WorldElement {
     public int getDaysLived(){ return daysLived;}
     public int getDayOfDeath(){ return dayOfDeath;}
 
-
-    public String toShortString() {
-        return (direction.toString());
-    }
 
     public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe
         energy--;

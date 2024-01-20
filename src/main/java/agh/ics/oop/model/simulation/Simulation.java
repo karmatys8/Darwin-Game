@@ -7,13 +7,12 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.worldElements.animal.Genotype;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import agh.ics.oop.model.worldMaps.Globe;
 import agh.ics.oop.model.worldMaps.Plants;
 import agh.ics.oop.model.worldMaps.Tunnels;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Simulation implements Runnable {
@@ -32,7 +31,7 @@ public class Simulation implements Runnable {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
-        globe = new Globe(width, height, animalConfig, plantConfig, animalsMap, plants);
+        globe = new Tunnels(width, height, animalConfig, plantConfig, animalsMap, plants);
         this.controller = controller;
         this.animalConfig = animalConfig;
         for (int i = 0; i < animalConfig.startingCount(); i++) {
@@ -140,6 +139,7 @@ public class Simulation implements Runnable {
     public int getNumberOfPlants(){
         return plants.getNumberOfPlants();
     }
+    public Genotype getMostCommonGenotype(){ return mostCommonGenotype.getMostCommonGenotype(); }
 
     public void run() {
         try {
