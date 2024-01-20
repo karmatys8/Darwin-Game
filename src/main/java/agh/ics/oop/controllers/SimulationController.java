@@ -16,35 +16,39 @@ public class SimulationController {
     private PlantConfig plantConfig;
     private int width;
     protected int height;
+    private int updateInterval;
 
     @FXML private Button startTheSimulation;
     @FXML private GridPane mapGrid;
     @FXML private LineChart<String, Number> lineChart;
+    @FXML private GridPane mapLegend;
 
     private AnimationTimer animationTimer;
 
     private Simulation simulation = null;
 
-    @FXML private Label emptyCellsLabel = new Label();
-    @FXML private Label mostCommonGenotypeLabel = new Label();
-    @FXML private Label animalEnergyLabel = new Label();
-    @FXML private Label ageOfAliveAnimalsLabel = new Label();
-    @FXML private Label ageOfDeadAnimalsLabel = new Label();
-    Label[] simulationStats = {emptyCellsLabel, mostCommonGenotypeLabel, animalEnergyLabel, ageOfAliveAnimalsLabel, ageOfDeadAnimalsLabel};
+    @FXML private Label emptyCellsLabel;
+    @FXML private Label mostCommonGenotypeLabel;
+    @FXML private Label animalEnergyLabel;
+    @FXML private Label ageOfAliveAnimalsLabel;
+    @FXML private Label ageOfDeadAnimalsLabel;
+    Label[] simulationStats = new Label[5];
 
 
-    protected void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height) {
+    protected void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval) {
         this.animalConfig = animalConfig;
         this.plantConfig = plantConfig;
         this.width = width;
         this.height = height;
+        this.updateInterval = updateInterval;
     }
 
     @FXML
     private void onSimulationStartClicked() {
         if(simulation == null) {
-            simulation = new Simulation(width, height, plantConfig, animalConfig, this);
-            mapDrawer = new TunnelDrawer(simulation.getMap(), width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
+            simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval,this);
+            initializeMapLegend();
+            mapDrawer = new TunnelDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
 
@@ -79,7 +83,17 @@ public class SimulationController {
     }
     @FXML
     public void initialize() {
+        initializeStatistic();
         startTheSimulation.setOnAction(event -> onSimulationStartClicked());
 
+    }
+    private void initializeStatistic() {
+        simulationStats[0] = emptyCellsLabel;
+        simulationStats[1] = mostCommonGenotypeLabel;
+        simulationStats[2] = animalEnergyLabel;
+        simulationStats[3] = ageOfAliveAnimalsLabel;
+        simulationStats[4] = ageOfDeadAnimalsLabel;
+    }
+    private void initializeMapLegend() {
     }
 }

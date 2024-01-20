@@ -1,6 +1,7 @@
 package agh.ics.oop.controllers;
 
 import agh.ics.oop.model.simulation.Simulation;
+import agh.ics.oop.model.util.Average;
 import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
@@ -14,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -56,7 +59,6 @@ public abstract class MapDrawer {
         emptyCells = 0;
         mapGrid.getChildren().clear();
         updateLineChart();
-        updateStats();
         if(dataPointCounter > 10){
             removeOldData();
         }
@@ -78,6 +80,7 @@ public abstract class MapDrawer {
         synchronized (this) {
             this.notify();
         }
+        updateStats();
     }
 
     protected abstract void printCell(int column, int row, String backgroundColor);
@@ -88,7 +91,20 @@ public abstract class MapDrawer {
         dot.setFill(Color.web(color));
         return dot;
     }
+    protected Shape createTriangle(String color) {
+        double sideLength = Math.min(cellWidth, cellHeight) / 2.0;
+        double height = sideLength * Math.sqrt(3) / 2;
 
+        Polygon triangle = new Polygon();
+        triangle.getPoints().addAll(
+                0.0, 0.0,
+                -sideLength / 2, height,
+                sideLength / 2, height
+        );
+        triangle.setFill(Color.web(color));
+
+        return triangle;
+    }
     protected void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
         if (cellNode instanceof Button button) {
             button.setMinSize(cellWidth, cellHeight);
@@ -181,8 +197,11 @@ public abstract class MapDrawer {
         return alertShowing;
     }
     private void updateStats() {
+        Average[] simulationAverageStats = simulation.getSimulationStats();
         simulationStats[0].setText(String.valueOf(emptyCells));
-        System.out.println(emptyCells);
         simulationStats[1].setText(String.valueOf(simulation.getMostCommonGenotype()));
+        simulationStats[2].setText(String.valueOf(simulationAverageStats[0].getAverage()));
+        simulationStats[3].setText(String.valueOf(simulationAverageStats[1].getAverage()));
+        simulationStats[4].setText(String.valueOf(simulationAverageStats[2].getAverage()));
     }
 }

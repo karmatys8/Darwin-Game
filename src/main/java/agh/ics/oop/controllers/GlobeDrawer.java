@@ -4,7 +4,6 @@ import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.worldElements.artificialElements.Plant;
-import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
@@ -12,6 +11,8 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
+
 import static java.lang.Math.min;
 
 public class GlobeDrawer extends MapDrawer {
@@ -31,11 +32,11 @@ public class GlobeDrawer extends MapDrawer {
             animalButton.setOnAction(event -> super.handleAnimalButtonClick((Animal) object));
             cellNode = animalButton;
         } else if (object instanceof Plant) {
-            Circle circle = createDot("#F5FCE9", 4.0);
-            cellLabel.setGraphic(circle);
+            Shape triangle = createTriangle("#F5FCE9");
+            cellLabel.setGraphic(triangle);
             cellNode = cellLabel;
         } else {
-            emptyCells += 1;
+            emptyCells++;
         }
         cellLabel.setContentDisplay(ContentDisplay.CENTER);
         addCellNode(cellNode, column, super.height - row + 1, backgroundColor);

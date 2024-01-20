@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
+
 import static java.lang.Math.min;
 
 public class TunnelDrawer extends MapDrawer {
@@ -34,8 +36,8 @@ public class TunnelDrawer extends MapDrawer {
             animalButton.setOnAction(event -> super.handleAnimalButtonClick((Animal) object));
             cellNode = animalButton;
         } else if (object instanceof Plant) {
-            Circle dot = createDot("#F5FCE9", 4.0);
-            cellLabel.setGraphic(dot);
+            Shape triangle = createTriangle("#F5FCE9");
+            cellLabel.setGraphic(triangle);
             cellNode = cellLabel;
         } else if(object instanceof Tunnel){
             Circle dot = createDot("#00000000", 4.0);
@@ -43,7 +45,6 @@ public class TunnelDrawer extends MapDrawer {
             cellLabel.setGraphic(dot);
             cellNode = cellLabel;
         } else {
-            System.out.println(emptyCells);
             emptyCells++;
         }
         addCellNode(cellNode, column, super.height - row + 1, backgroundColor);

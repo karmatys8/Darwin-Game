@@ -2,6 +2,7 @@ package agh.ics.oop.model.simulation;
 
 
 import agh.ics.oop.controllers.SimulationController;
+import agh.ics.oop.model.util.Average;
 import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
@@ -23,11 +24,14 @@ public class Simulation implements Runnable {
     private final Plants plants;
     private final AnimalConfig animalConfig;
     private final PlantConfig plantConfig;
+    private final int updateInterval;
     private int currentDay = 0;
     private final SimulationController controller;
     private boolean running = true;
-
-    public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, SimulationController controller) {
+    private Average animalsEnergy = new Average();
+    private Average aliveAnimalsAge = new Average();
+    private Average deadAnimalsAge = new Average();
+    public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, int updateInterval, SimulationController controller) {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
@@ -42,13 +46,13 @@ public class Simulation implements Runnable {
             aliveAnimals.add(animal);
             mostCommonGenotype.insert(animal.getGenotype());
         }
-
         this.plantConfig = plantConfig;
+        this.updateInterval = updateInterval;
     }
 
     private void killAnimal(Animal animal) {
         mostCommonGenotype.remove(animal.getGenotype());
-        globe.remove(animal);
+        deadAnimalsAge.add(animal.getDaysLived());
 
         Vector2d position = animal.getPosition();
 
@@ -91,6 +95,8 @@ public class Simulation implements Runnable {
 
             animalsMap.put(newPosition, currAnimals);
         }
+        animalsEnergy.add(animal.getEnergy());
+        aliveAnimalsAge.add(animal.getDaysLived());
     }
 
     private void moveAnimals() {
@@ -116,7 +122,6 @@ public class Simulation implements Runnable {
 
                     globe.place(newBorn);
                     aliveAnimals.add(newBorn);
-                    globe.place(newBorn);
                     mostCommonGenotype.insert(newBorn.getGenotype());
                 }
             }
@@ -142,17 +147,22 @@ public class Simulation implements Runnable {
         return plants.getNumberOfPlants();
     }
     public Genotype getMostCommonGenotype(){ return mostCommonGenotype.getMostCommonGenotype(); }
+    public Average[] getSimulationStats(){
+        Average[] simulationStats = {animalsEnergy, aliveAnimalsAge, deadAnimalsAge};
+        return simulationStats;
+    }
 
     public void run() {
         try {
             if (!aliveAnimals.isEmpty() && running) {
+                setUpAverages();
                 killAnimals();
                 moveAnimals();
                 feedAndReproduceAnimals();
                 plants.addPlants(plantConfig.plantsPerDay());
 
                 currentDay++;
-                Thread.sleep(500);
+                Thread.sleep(updateInterval);
             } else {
                 running = false;
             }
@@ -161,5 +171,9 @@ public class Simulation implements Runnable {
 
     public AbstractWorldMap getMap() {
         return globe;
+    }
+    private void setUpAverages(){
+        animalsEnergy = new Average();
+        aliveAnimalsAge = new Average();
     }
 }
