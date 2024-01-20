@@ -38,7 +38,6 @@ public class Simulation implements Runnable {
             Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
                     RandomInteger.getRandomInt(1, height)), animalConfig);
             globe.place(animal);
-
             aliveAnimals.add(animal);
             mostCommonGenotype.insert(animal.getGenotype());
         }
@@ -49,13 +48,6 @@ public class Simulation implements Runnable {
     private void killAnimal(Animal animal) {
         mostCommonGenotype.remove(animal.getGenotype());
         globe.remove(animal);
-
-        Vector2d position = animal.getPosition();
-
-        List<Animal> prevAnimals = animalsMap.remove(position);
-        prevAnimals.remove(animal);
-        if (!prevAnimals.isEmpty()) animalsMap.put(position, prevAnimals);
-
         aliveAnimals.remove(animal);
         animal.kill(currentDay);
     }
@@ -63,9 +55,7 @@ public class Simulation implements Runnable {
     private void killAnimals() {
         List<Animal> animalsToKill = new ArrayList<>();
         for (Animal animal : aliveAnimals) {
-            int animalEnergy = animal.getEnergy();
-
-            if (animalEnergy <= 0) {
+            if (animal.getEnergy() <= 0) {
                 animalsToKill.add(animal);
             }
         }
@@ -105,18 +95,14 @@ public class Simulation implements Runnable {
                 animalsMap.get(position).get(0).eat(plantConfig.energyPerPlant());
             }
 
-
             List<Animal> currAnimals = animalsMap.get(position);
             if (currAnimals.size() >= 2) {
                 Animal animal1 = currAnimals.get(0);
                 Animal animal2 = currAnimals.get(1);
                 if (animal1.canReproduce() && animal2.canReproduce()) {
                     Animal newBorn = new Animal(animal1, animal2, animalConfig);
-                    currAnimals.add(newBorn);
-
                     globe.place(newBorn);
                     aliveAnimals.add(newBorn);
-                    globe.place(newBorn);
                     mostCommonGenotype.insert(newBorn.getGenotype());
                 }
             }
@@ -126,21 +112,27 @@ public class Simulation implements Runnable {
     public boolean isRunning() {
         return running;
     }
+
     public void pauseSimulation() {
         running = false;
     }
+
     public void resumeSimulation() {
         running = true;
     }
+
     public int getCurrentDay(){
         return currentDay;
     }
+
     public int getNumberOfAnimals(){
         return aliveAnimals.size();
     }
+
     public int getNumberOfPlants(){
         return plants.getNumberOfPlants();
     }
+
     public Genotype getMostCommonGenotype(){ return mostCommonGenotype.getMostCommonGenotype(); }
 
     public void run() {
@@ -152,7 +144,7 @@ public class Simulation implements Runnable {
                 plants.addPlants(plantConfig.plantsPerDay());
 
                 currentDay++;
-                Thread.sleep(500);
+                Thread.sleep(10);
             } else {
                 running = false;
             }

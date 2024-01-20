@@ -22,7 +22,6 @@ public class SimulationController {
     @FXML private LineChart<String, Number> lineChart;
 
     private AnimationTimer animationTimer;
-
     private Simulation simulation = null;
 
     @FXML private Label emptyCellsLabel = new Label();
@@ -44,7 +43,7 @@ public class SimulationController {
     private void onSimulationStartClicked() {
         if(simulation == null) {
             simulation = new Simulation(width, height, plantConfig, animalConfig, this);
-            mapDrawer = new TunnelDrawer(simulation.getMap(), width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
+            mapDrawer = new TunnelDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
 
@@ -77,9 +76,9 @@ public class SimulationController {
             }
         }
     }
+
     @FXML
     public void initialize() {
         startTheSimulation.setOnAction(event -> onSimulationStartClicked());
-
     }
 }

@@ -25,10 +25,8 @@ public abstract class MapDrawer {
     private final double cellWidth, cellHeight;
     protected final int width, height;
     protected int startingEnergy;
-    @FXML
-    private final GridPane mapGrid;
-    @FXML
-    private final LineChart<String, Number> lineChart;
+    @FXML private final GridPane mapGrid;
+    @FXML private final LineChart<String, Number> lineChart;
     private int dataPointCounter = 0;
     protected int emptyCells;
     private final int equatorEnd, equatorStart;
@@ -43,7 +41,7 @@ public abstract class MapDrawer {
         this.cellWidth = 500.0/max(width, height);
         this.cellHeight =  500.0/max(width, height);
         this.equatorEnd = (int)(height * 0.6);
-        this.equatorStart = (int)(height * 0.4);
+        this.equatorStart = (int)(height * 0.4) + 1;
         this.mapGrid = mapGrid;
         this.lineChart = lineChart;
         this.startingEnergy = startingEnergy;
@@ -177,12 +175,13 @@ public abstract class MapDrawer {
             animalStats[6].setText("Day of death: " + observedAnimal.getDayOfDeath());
         }
     }
+
     public boolean alertShowing() {
         return alertShowing;
     }
+
     private void updateStats() {
         simulationStats[0].setText(String.valueOf(emptyCells));
-        System.out.println(emptyCells);
         simulationStats[1].setText(String.valueOf(simulation.getMostCommonGenotype()));
     }
 }

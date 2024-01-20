@@ -5,7 +5,6 @@ import agh.ics.oop.model.worldElements.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.worldElements.artificialElements.Plant;
 import agh.ics.oop.model.worldElements.artificialElements.Tunnel;
-import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
@@ -20,6 +19,7 @@ public class TunnelDrawer extends MapDrawer {
     public TunnelDrawer(int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation){
         super(width,  height, startingEnergy, mapGrid, lineChart, simulationStats, simulation);
     }
+
     protected void printCell(int column, int row, String backgroundColor) {
         Object object = super.worldMap.objectAt(new Vector2d(column, row));
         Label cellLabel = new Label(" ");
@@ -43,7 +43,6 @@ public class TunnelDrawer extends MapDrawer {
             cellLabel.setGraphic(dot);
             cellNode = cellLabel;
         } else {
-            System.out.println(emptyCells);
             emptyCells++;
         }
         addCellNode(cellNode, column, super.height - row + 1, backgroundColor);

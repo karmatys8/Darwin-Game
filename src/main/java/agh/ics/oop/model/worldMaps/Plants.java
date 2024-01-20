@@ -26,30 +26,29 @@ public class Plants {
     }
 
     public void addPlants(int numberToAdd) {
-        numberOfPlants += numberToAdd;
         List<Vector2d> onEquator = new ArrayList<>(emptyFieldsOnEquator);
         Collections.shuffle(onEquator);
         List<Vector2d> outsideOfEquator = new ArrayList<>(emptyFieldsOutsideOfEquator);
         Collections.shuffle(outsideOfEquator);
 
         for (int i = 0; i < numberToAdd; i++) {
+            if (onEquator.isEmpty()  &&  outsideOfEquator.isEmpty()) return;
+
             if (! onEquator.isEmpty()  &&  RandomInteger.getRandomInt(4) != 0) {
                 emptyFieldsOnEquator.remove(onEquator.remove(0));
+                numberOfPlants++;
             } else if (! outsideOfEquator.isEmpty()) {
                 emptyFieldsOutsideOfEquator.remove(outsideOfEquator.remove(0));
+                numberOfPlants++;
             } else i--;
         }
     }
 
     public boolean wasEaten(Vector2d position) {
-
-        if (position.y() >= equatorStart  &&  position.y() <= equatorEnd) {
-            if(emptyFieldsOnEquator.add(position)){
-                numberOfPlants -=1;
-                return true;
-            }
-        } else if(emptyFieldsOutsideOfEquator.add(position)){
-            numberOfPlants -=1;
+        Set<Vector2d> targetSet = (position.y() >= equatorStart && position.y() <= equatorEnd)
+                ? emptyFieldsOnEquator : emptyFieldsOutsideOfEquator;
+        if(targetSet.add(position)){
+            numberOfPlants--;
             return true;
         }
         return false;

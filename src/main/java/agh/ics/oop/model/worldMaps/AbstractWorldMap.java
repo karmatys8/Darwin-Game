@@ -61,7 +61,7 @@ abstract public class AbstractWorldMap {
 
     public void remove(Animal animal) {
         Vector2d position = animal.getPosition();
-        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        List<Animal> animalsAtThisPosition = animalsMap.remove(position);
         animalsAtThisPosition.remove(animal);
         if(!animalsAtThisPosition.isEmpty()){
             animalsMap.put(position, animalsAtThisPosition);
