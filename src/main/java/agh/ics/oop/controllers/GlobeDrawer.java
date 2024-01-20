@@ -15,8 +15,8 @@ import javafx.scene.shape.Circle;
 import static java.lang.Math.min;
 
 public class GlobeDrawer extends MapDrawer {
-    public GlobeDrawer(AbstractWorldMap worldMap, int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation){
-        super(worldMap,  width,  height, startingEnergy, mapGrid, lineChart, simulationStats, simulation);
+    public GlobeDrawer(int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation){
+        super(width,  height, startingEnergy, mapGrid, lineChart, simulationStats, simulation);
     }
     protected void printCell(int column, int row, String backgroundColor) {
         Object object = super.worldMap.objectAt(new Vector2d(column, row));

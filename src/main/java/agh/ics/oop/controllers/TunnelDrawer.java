@@ -17,8 +17,8 @@ import javafx.scene.shape.Circle;
 import static java.lang.Math.min;
 
 public class TunnelDrawer extends MapDrawer {
-    public TunnelDrawer(AbstractWorldMap worldMap, int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation){
-        super(worldMap,  width,  height, startingEnergy, mapGrid, lineChart, simulationStats, simulation);
+    public TunnelDrawer(int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation){
+        super(width,  height, startingEnergy, mapGrid, lineChart, simulationStats, simulation);
     }
     protected void printCell(int column, int row, String backgroundColor) {
         Object object = super.worldMap.objectAt(new Vector2d(column, row));

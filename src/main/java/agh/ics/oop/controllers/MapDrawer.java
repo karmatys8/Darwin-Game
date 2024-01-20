@@ -37,8 +37,7 @@ public abstract class MapDrawer {
     Label[] animalStats = new Label[7];
     Label[] simulationStats;
 
-    public MapDrawer(AbstractWorldMap worldMap, int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation) {
-        this.worldMap = worldMap;
+    public MapDrawer(int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation) {
         this.width = width;
         this.height = height;
         this.cellWidth = 500.0/max(width, height);
@@ -49,6 +48,7 @@ public abstract class MapDrawer {
         this.lineChart = lineChart;
         this.startingEnergy = startingEnergy;
         this.simulation = simulation;
+        this.worldMap = simulation.getMap();
         this.simulationStats = simulationStats;
     }
 

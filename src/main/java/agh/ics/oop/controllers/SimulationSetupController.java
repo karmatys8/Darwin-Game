@@ -122,6 +122,8 @@ public class SimulationSetupController {
         Stage stage = new Stage();
         stage.setScene(scene);
         Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
+        SimulationController controller = loader.getController();
+        setSimulationController(controller);
         currentStage.hide();
         stage.show();
     }
