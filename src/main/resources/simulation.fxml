@@ -78,17 +78,6 @@
                      <BorderPane.margin>
                         <Insets bottom="10.0" left="15.0" />
                      </BorderPane.margin>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                     </rowConstraints>
-                     <columnConstraints>
-                        <ColumnConstraints maxWidth="57.39998817443848" prefWidth="38.999993896484376" />
-                        <ColumnConstraints maxWidth="96.4000015258789" prefWidth="84.60000610351562" />
-                        <ColumnConstraints maxWidth="80.39999389648438" prefWidth="47.79999389648438" />
-                        <ColumnConstraints maxWidth="103.00000610351563" prefWidth="103.00000610351563" />
-                        <ColumnConstraints maxWidth="93.199951171875" prefWidth="47.99997558593748" />
-                        <ColumnConstraints maxWidth="94.199951171875" prefWidth="93.60002441406249" />
-                     </columnConstraints>
                         <Label styleClass="map-legend-text" text="Plants" GridPane.columnIndex="1" />
                         <Circle fill="#31081f" radius="17.0" stroke="#31081f" strokeType="INSIDE" GridPane.columnIndex="2">
                            <GridPane.margin>
