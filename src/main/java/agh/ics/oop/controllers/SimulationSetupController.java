@@ -105,28 +105,36 @@ public class SimulationSetupController {
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
-            try {
-                loadSimulationScene();
-            } catch (IOException e) {
-                showError("Error", "Failed to start the simulation.", e.getMessage());
-                Platform.exit();
-            }
+        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+            new Thread(() -> {
+                try {
+                    loadSimulationScene();
+                } catch (IOException e) {
+                    showError("Error", "Failed to start the simulation.", e.getMessage());
+                    Platform.exit();
+                }
+            }).start();
         } else {
             showValidationAlert(errorMessage.toString());
         }
     }
 
     private void loadSimulationScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
-        SimulationController controller = loader.getController();
-        setSimulationController(controller);
-        currentStage.hide();
-        stage.show();
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = new Stage();
+                stage.setScene(scene);
+
+                SimulationController controller = loader.getController();
+                setSimulationController(controller);
+                stage.show();
+            } catch (IOException e) {
+                showError("Error", "Failed to start the simulation.", e.getMessage());
+                Platform.exit();
+            }
+        });
     }
 
     private TextFormatter<Integer> createIntegerFormatter(Predicate<Integer> condition) {
