@@ -8,6 +8,7 @@ import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import agh.ics.oop.model.worldElements.artificialElements.Plant;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -24,7 +25,7 @@ abstract public class AbstractWorldMap {
     protected final AnimalConfig animalConfig;
 
     MapVisualizer mapVisualizer = new MapVisualizer(this);
-    protected static final agh.ics.oop.model.worldElements.artificialElements.Plant dumbPlant = new agh.ics.oop.model.worldElements.artificialElements.Plant();
+    protected static final Plant dumbPlant = new Plant();
     protected Map<Vector2d, List<Animal>> animalsMap;
     protected Plants plants;
 
@@ -57,6 +58,7 @@ abstract public class AbstractWorldMap {
             throw new IllegalArgumentException("Animal is placed out of bounds!");
         }
     }
+
     public void remove(Animal animal) {
         Vector2d position = animal.getPosition();
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
