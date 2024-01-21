@@ -25,7 +25,7 @@
             </VBox.margin>
          </Label>
          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #B0DA90;">
-               <Button fx:id="saveConfigs" alignment="CENTER" styleClass="config-button-sm" text="Save configurations "  >
+               <Button fx:id="saveConfigs" alignment="CENTER" styleClass="config-button-sm" text="Save configurations">
                   <HBox.margin>
                      <Insets bottom="16.0" left="65.0" right="30.0" top="16.0" />
                   </HBox.margin>

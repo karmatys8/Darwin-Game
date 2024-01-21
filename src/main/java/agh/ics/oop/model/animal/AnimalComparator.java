@@ -1,6 +1,7 @@
-package agh.ics.oop.model.util;
+package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.Comparator;
 
@@ -22,6 +23,6 @@ public class AnimalComparator implements Comparator<Animal> {
             return childrenComparison;
         }
 
-        return Math.random() < 0.5 ? -1 : 1;
+        return RandomInteger.getRandomBoolean() ? -1 : 1;
     }
 }

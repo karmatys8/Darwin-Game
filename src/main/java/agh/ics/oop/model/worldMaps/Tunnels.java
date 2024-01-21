@@ -3,7 +3,6 @@ package agh.ics.oop.model.worldMaps;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.AnimalComparator;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
@@ -51,7 +50,7 @@ public class Tunnels extends AbstractWorldMap {
     public Pair<Node, Optional<Animal>> nodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) {
-            Collections.sort(animalsAtThisPosition, new AnimalComparator());
+            Collections.sort(animalsAtThisPosition, animalComparator);
             Animal animal = animalsAtThisPosition.get(0);
             return new Pair<>(nodeCreator.animalsNode(animal), Optional.of(animal));
         }

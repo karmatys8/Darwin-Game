@@ -64,7 +64,7 @@ public class SimulationController {
 
             startTheSimulation.setText("Stop the simulation");
         } else {
-            if (!simulation.isRunning()) {
+            if (simulation.isNotRunning()) {
                 simulation.resumeSimulation();
                 animationTimer.start();
                 startTheSimulation.setText("Stop the simulation");
@@ -81,7 +81,7 @@ public class SimulationController {
             @Override
             public void handle(long now) {
                 if(mapDrawer.getIsAlertShown()){ mapDrawer.updateAnimalInformation();}
-                if (!simulation.isRunning()) {
+                if (simulation.isNotRunning()) {
                     animationTimer.stop();
                     animationTimer = null;
                     startTheSimulation.setDisable(true);

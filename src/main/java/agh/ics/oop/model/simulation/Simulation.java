@@ -3,7 +3,7 @@ package agh.ics.oop.model.simulation;
 
 import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.util.Average;
-import agh.ics.oop.model.util.AnimalComparator;
+import agh.ics.oop.model.animal.AnimalComparator;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
@@ -34,6 +34,7 @@ public class Simulation implements Runnable {
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
     private Average deadAnimalsAge = new Average();
+    private static final AnimalComparator animalComparator = new AnimalComparator();
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, int updateInterval, String mapOption, SimulationController controller) {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
@@ -104,7 +105,7 @@ public class Simulation implements Runnable {
         for (Vector2d position : animalsMap.keySet()) {
             List<Animal> currAnimals = animalsMap.get(position);
 
-            Collections.sort(currAnimals, new AnimalComparator());
+            currAnimals.sort(animalComparator);
 
             if (plants.wasEaten(position)) {
                currAnimals.get(0).eat(plantConfig.energyPerPlant());
@@ -123,8 +124,8 @@ public class Simulation implements Runnable {
         }
     }
 
-    public boolean isRunning() {
-        return running;
+    public boolean isNotRunning() {
+        return !running;
     }
 
     public void pauseSimulation() {
@@ -150,8 +151,7 @@ public class Simulation implements Runnable {
     public Genotype getMostCommonGenotype(){ return mostCommonGenotype.getMostCommonGenotype(); }
 
     public Average[] getSimulationStats(){
-        Average[] simulationStats = {animalsEnergy, aliveAnimalsAge, deadAnimalsAge};
-        return simulationStats;
+        return new Average[]{animalsEnergy, aliveAnimalsAge, deadAnimalsAge};
     }
 
     public void run() {
