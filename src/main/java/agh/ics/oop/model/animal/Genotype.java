@@ -1,4 +1,4 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.util.RandomInteger;
 
@@ -13,9 +13,6 @@ abstract public class Genotype {
     protected final List<Integer> genes;
     protected final int minNumberOfMutations;
     protected final int maxNumberOfMutations;
-    private final List<Integer> randomGenes = IntStream.range(0, 8)
-                                                        .boxed()
-                                                        .collect(Collectors.toList());
 
     public Genotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         this.minNumberOfMutations = minNumberOfMutations;
@@ -61,21 +58,6 @@ abstract public class Genotype {
     }
 
     protected abstract void mutate();
-
-    public void switchGenes(int firstGeneIndex, int secondGeneIndex) {
-        Collections.swap(genes, firstGeneIndex, secondGeneIndex);
-    }
-
-    public void randomGene(int geneIndex) {
-        Collections.shuffle(randomGenes);
-        int randomGene = randomGenes.get(0);
-
-        if (randomGene != genes.get(geneIndex)) {
-            genes.set(geneIndex, randomGene);
-        }
-
-        genes.set(geneIndex, randomGenes.get(1));
-    }
 
     public String toString() {
         StringBuilder genotypeToString = new StringBuilder();

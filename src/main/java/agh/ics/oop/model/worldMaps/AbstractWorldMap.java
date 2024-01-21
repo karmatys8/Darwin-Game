@@ -1,14 +1,13 @@
 package agh.ics.oop.model.worldMaps;
 
 
+import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.movement.MapDirection;
-import agh.ics.oop.model.worldElements.WorldElement;
-import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import agh.ics.oop.model.worldElements.artificialElements.Plant;
+import javafx.scene.Node;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -24,8 +23,7 @@ abstract public class AbstractWorldMap {
     protected final PlantConfig plantConfig;
     protected final AnimalConfig animalConfig;
 
-    MapVisualizer mapVisualizer = new MapVisualizer(this);
-    protected static final Plant dumbPlant = new Plant();
+    protected NodeCreator nodeCreator;
     protected Map<Vector2d, List<Animal>> animalsMap;
     protected Plants plants;
 
@@ -43,6 +41,8 @@ abstract public class AbstractWorldMap {
         this.plantConfig = plantConfig;
         this.animalsMap = animalsMap;
         this.plants = plants;
+
+        nodeCreator = new NodeCreator(width, height, animalConfig.startingEnergy());
     }
 
     abstract public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction);
@@ -58,18 +58,15 @@ abstract public class AbstractWorldMap {
             throw new IllegalArgumentException("Animal is placed out of bounds!");
         }
     }
+
     public void remove(Animal animal) {
         Vector2d position = animal.getPosition();
-        List<Animal> animalsAtThisPosition = animalsMap.get(position);
+        List<Animal> animalsAtThisPosition = animalsMap.remove(position);
         animalsAtThisPosition.remove(animal);
         if(!animalsAtThisPosition.isEmpty()){
             animalsMap.put(position, animalsAtThisPosition);
         }
     }
 
-    public String toString(){
-        return mapVisualizer.draw(lowerLeftBoundary, upperRightBoundary);
-    }
-
-    abstract public WorldElement objectAt(Vector2d position);
+    abstract public Pair<Node, Optional<Animal>> nodeAt(Vector2d position);
 }

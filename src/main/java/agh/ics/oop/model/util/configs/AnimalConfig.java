@@ -4,7 +4,7 @@ import static agh.ics.oop.model.util.CommonMethods.checkIfNotNegative;
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
 public record AnimalConfig(int startingCount, int startingEnergy, int minEnergyToReproduce, int energyUsedToReproduce,
-                           int minNumberOfMutations, int maxNumberOfMutations, int genomeLength) {
+                           int minNumberOfMutations, int maxNumberOfMutations, int genomeLength, String mutationOption) {
     public AnimalConfig {
         checkIfNotNegative(startingCount);
         checkIfNotNegative(startingEnergy);
@@ -17,5 +17,9 @@ public record AnimalConfig(int startingCount, int startingEnergy, int minEnergyT
         }
 
         checkIfPositive(genomeLength);
+
+        if (mutationOption != "Swap" && mutationOption != "Full randomness") {
+            throw new IllegalArgumentException("There in no such mutation option.");
+        }
     }
 }

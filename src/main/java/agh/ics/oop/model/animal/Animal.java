@@ -1,24 +1,22 @@
-package agh.ics.oop.model.worldElements.animal;
+package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldElements.WorldElement;
-import agh.ics.oop.model.worldMaps.Globe;
+import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 
 import javafx.util.Pair;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal implements WorldElement {
+public class Animal {
     private Vector2d position;
     private MapDirection direction;
     private Genotype genotype;
-    private int energy;
-    private int daysLived=0;
-    private int plantsEaten=0;
-    private int dayOfDeath;
+    private int energy, daysLived = 0, plantsEaten = 0;
+    private Integer dayOfDeath;
     private int currentGeneIndex;
     private final Animal mother;
     private final Animal father;
@@ -31,7 +29,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
 
-        this.genotype = new RandomGenotype(animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
+        this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.startingEnergy();
@@ -45,7 +43,7 @@ public class Animal implements WorldElement {
         this.position = mother.getPosition();
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
 
-        this.genotype = new RandomGenotype(mother,father);
+        this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), mother, father);
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.energyUsedToReproduce()*2;
@@ -93,11 +91,9 @@ public class Animal implements WorldElement {
         return energy;
     }
 
-    public Genotype getGenotype() {
-        return new RandomGenotype(genotype);
-    }
+    public Genotype getGenotype() { return GenotypeFactory.getGenotype(genotype);}
 
-    public int getCurrentGeneIndex(){ return currentGeneIndex;}
+    public int getCurrentGene(){ return genotype.getCurrentGene(currentGeneIndex);}
 
     private void useEnergy(int energyUsedToReproduce) {
         this.energy-=energyUsedToReproduce;
@@ -118,12 +114,11 @@ public class Animal implements WorldElement {
     public int getNumberOfChildren() {
         return children;
     }
+    public int getPlantsEaten(){ return plantsEaten;}
+    public int getDaysLived(){ return daysLived;}
+    public Integer getDayOfDeath(){ return dayOfDeath;}
 
-    public String toShortString() {
-        return (direction.toString());
-    }
-
-    public void move(Globe globe) { // I feel like animal should not receive globe
+    public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe
         energy--;
         daysLived++;
 
@@ -139,16 +134,10 @@ public class Animal implements WorldElement {
         this.dayOfDeath = dayOfDeath;
         this.position = null;
         this.direction = null;
-        this.genotype = null;
     }
 
     public void eat(int energy) {
         plantsEaten++;
         this.energy += energy;
-    }
-
-    @Override
-    public String getElementString() {
-        return genotype.toString();
     }
 }

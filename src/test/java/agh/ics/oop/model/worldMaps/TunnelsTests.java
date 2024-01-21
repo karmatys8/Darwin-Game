@@ -4,7 +4,7 @@ import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import agh.ics.oop.model.worldElements.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.Objects;
 public class TunnelsTests {
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private static final Plants plants = new Plants(8, 6);
-    private static final AnimalConfig animalConfig = new AnimalConfig(0, 70, 40, 5, 2, 6, 9);
+    private static final AnimalConfig animalConfig = new AnimalConfig(0, 70, 40, 5, 2, 6, 9, "Full randomness");
     private static final PlantConfig plantConfig = new PlantConfig(0, 2, 0);
 
     private void countTunnels(int width, int height) {

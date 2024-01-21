@@ -1,7 +1,7 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.worldElements.animal.Genotype;
-import agh.ics.oop.model.worldElements.animal.RandomGenotype;
+import agh.ics.oop.model.animal.Genotype;
+import agh.ics.oop.model.animal.RandomGenotype;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class MostCommonGenotypeTests {
         heap.insert(genotype2);
         heap.insert(genotype1);
 
-        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype1);
+        Assertions.assertEquals(heap.getMostCommonGenotype(), genotype1);
 
         heap.insert(genotype3);
         heap.insert(genotype4);
@@ -30,13 +30,13 @@ public class MostCommonGenotypeTests {
         heap.insert(genotype4);
         heap.insert(genotype4);
 
-        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype1);
+        Assertions.assertEquals(heap.getMostCommonGenotype(), genotype1);
 
         heap.remove(genotype1);
         heap.remove(genotype1);
 
-        Assertions.assertNotEquals(heap.getMostPopularGenotype(), genotype1);
-        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype4);
+        Assertions.assertNotEquals(heap.getMostCommonGenotype(), genotype1);
+        Assertions.assertEquals(heap.getMostCommonGenotype(), genotype4);
 
         heap.insert(genotype5);
         heap.remove(genotype4);
@@ -44,8 +44,8 @@ public class MostCommonGenotypeTests {
         heap.insert(genotype5);
         heap.remove(genotype2);
 
-        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype5);
-        Assertions.assertEquals(heap.getMostPopularGenotype(), genotype4);
+        Assertions.assertEquals(heap.getMostCommonGenotype(), genotype5);
+        Assertions.assertEquals(heap.getMostCommonGenotype(), genotype4);
     }
 }
 

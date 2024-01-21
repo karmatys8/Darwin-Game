@@ -1,5 +1,7 @@
 package agh.ics.oop.controllers;
 
+import agh.ics.oop.model.util.configs.AnimalConfig;
+import agh.ics.oop.model.util.configs.PlantConfig;
 import agh.ics.oop.model.util.exceceptions.DuplicateConfigNameException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -34,6 +36,7 @@ public class SimulationSetupController {
     @FXML private TextField minNumberOfMutations;
     @FXML private Button startTheSimulation;
     @FXML private Button saveConfigs;
+    @FXML private TextField updateInterval;
 
     List<TextField> nonNegativeFields, positiveFields, allTextFields;
     List<ComboBox<String>> comboBoxes;
@@ -91,7 +94,7 @@ public class SimulationSetupController {
         nonNegativeFields = Arrays.asList(
                 initialNumberOfPlants, energyFromOnePlant, plantsEachDay, initialNumberOfAnimals, initialEnergyOfAnimals,
                 energyToBeWellFed, energyToReproduce, maxNumberOfMutations, minNumberOfMutations);
-        positiveFields = Arrays.asList(mapHeight, mapWidth,lengthOfGenotypes);
+        positiveFields = Arrays.asList(mapHeight, mapWidth, lengthOfGenotypes, updateInterval);
 
         positiveFields.forEach(field -> field.setTextFormatter(positiveInteger()));
         nonNegativeFields.forEach(field -> field.setTextFormatter(nonNegativeInteger()));
@@ -102,11 +105,11 @@ public class SimulationSetupController {
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areNotGreater(errorMessage)) {
+        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
             try {
                 loadSimulationScene();
             } catch (IOException e) {
-                System.err.println("Failed to start the simulation. Reason: " + e.getMessage()); // maybe use showError() instead?
+                showError("Error", "Failed to start the simulation.", e.getMessage());
                 Platform.exit();
             }
         } else {
@@ -120,6 +123,8 @@ public class SimulationSetupController {
         Stage stage = new Stage();
         stage.setScene(scene);
         Stage currentStage = (Stage) startTheSimulation.getScene().getWindow();
+        SimulationController controller = loader.getController();
+        setSimulationController(controller);
         currentStage.hide();
         stage.show();
     }
@@ -189,20 +194,22 @@ public class SimulationSetupController {
         return dialog.showAndWait();
     }
 
-    private boolean areNotGreater(StringBuilder errorMessage) {
+    private boolean areInBoundaries(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
-        return checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants", errorMessage)
-                && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day", errorMessage)
+        return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
+                && checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
+                && checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
+                && checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
+                && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
                 && checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
-                "Minimal energy to reproduce", errorMessage)
-                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations,
-                "Minimal number of mutations", errorMessage);
+                "Minimal energy to reproduce cannot be greater than the energy to be well fed.", errorMessage)
+                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
     }
 
-    private boolean checkMaxValues(int maxValue, TextField field, String violated, StringBuilder errorMessage) {
+    private boolean checkMaxValues(int maxValue, TextField field, String message, StringBuilder errorMessage) {
         if (getValueFromTextField(field) > maxValue) {
             field.clear();
-            errorMessage.append(violated + " cannot be greater than the map area.\n");
+            errorMessage.append(message+"\n");
             return false;
         }
         return true;
@@ -210,7 +217,7 @@ public class SimulationSetupController {
 
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areNotGreater(errorMessage)) {
+        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {
@@ -232,5 +239,11 @@ public class SimulationSetupController {
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    private void setSimulationController(SimulationController simulationController) {
+        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes), mutationOption.getValue());
+        PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
+        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue());
     }
 }
