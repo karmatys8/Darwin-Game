@@ -42,6 +42,7 @@
     -fx-pref-width: 180.0;
     -fx-text-fill: #fffcec;
 }
+
 .stats-label {
     -fx-text-fill: #27292b;
     -fx-font-family: "Verdana";
@@ -55,11 +56,10 @@
     -fx-border-color: #27292b;
     -fx-border-width: 0.5;
 }
+
 .map-legend-text {
     -fx-text-fill: #f5fce9;
     -fx-font-family: "Verdana";
     -fx-font-size: 17.0;
     -fx-padding: 0 0 0 5;
 }
-
-

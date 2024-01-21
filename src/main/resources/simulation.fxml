@@ -35,7 +35,7 @@
                         <CategoryAxis label="Days" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Number of plants/ animals" side="LEFT" />
+                        <NumberAxis label="Number of plants/animals" side="LEFT" />
                     </yAxis>
                <VBox.margin>
                   <Insets left="20.0" right="10.0" />
@@ -95,7 +95,7 @@
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </Circle>
-                        <Label styleClass="map-legend-text" text=" Animals" GridPane.columnIndex="3" />
+                        <Label styleClass="map-legend-text" text="Animals" GridPane.columnIndex="3" />
                         <Circle fill="TRANSPARENT" radius="17.0" stroke="#1e3f20" strokeType="INSIDE" GridPane.columnIndex="4">
                            <GridPane.margin>
                               <Insets left="10.0" />

@@ -1,4 +1,4 @@
-package agh.ics.oop.model.animal.animal;
+package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
@@ -15,10 +15,8 @@ public class Animal {
     private Vector2d position;
     private MapDirection direction;
     private Genotype genotype;
-    private int energy;
-    private int daysLived=0;
-    private int plantsEaten=0;
-    private int dayOfDeath = -1;
+    private int energy, daysLived = 0, plantsEaten = 0;
+    private Integer dayOfDeath;
     private int currentGeneIndex;
     private final Animal mother;
     private final Animal father;
@@ -118,7 +116,7 @@ public class Animal {
     }
     public int getPlantsEaten(){ return plantsEaten;}
     public int getDaysLived(){ return daysLived;}
-    public int getDayOfDeath(){ return dayOfDeath;}
+    public Integer getDayOfDeath(){ return dayOfDeath;}
 
 
     public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe

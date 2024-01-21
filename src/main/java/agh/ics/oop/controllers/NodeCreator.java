@@ -1,6 +1,6 @@
 package agh.ics.oop.controllers;
 
-import agh.ics.oop.model.animal.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;

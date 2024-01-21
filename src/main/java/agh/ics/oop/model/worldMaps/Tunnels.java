@@ -1,7 +1,7 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.movement.MapDirection;
-import agh.ics.oop.model.animal.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
@@ -12,6 +12,7 @@ import javafx.util.Pair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Tunnels extends AbstractWorldMap {
     private final Map<Vector2d, Vector2d> tunnels = new HashMap<>();
@@ -49,15 +50,14 @@ public class Tunnels extends AbstractWorldMap {
     }
 
     @Override
-    public Node nodeAt(Vector2d position) {
+    public Pair<Node, Optional<Animal>> nodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
-        if (animalsAtThisPosition != null) return nodeCreator.animalsNode(animalsAtThisPosition.get(0));
-        if (tunnels.containsKey(position)) return nodeCreator.tunnelsNode();
-        if (! plants.isFieldEmpty(position)) return nodeCreator.plantsNode();
-        else return null;
-    }
-
-    public boolean isTunnel(Vector2d position){
-        return  tunnels.containsKey(position);
+        if (animalsAtThisPosition != null) {
+            Animal animal = animalsAtThisPosition.get(0);
+            return new Pair<>(nodeCreator.animalsNode(animal), Optional.of(animal));
+        }
+        if (tunnels.containsKey(position)) return new Pair<>(nodeCreator.tunnelsNode(), Optional.empty());
+        if (! plants.isFieldEmpty(position)) return new Pair<>(nodeCreator.plantsNode(), Optional.empty());
+        return new Pair<>(null, Optional.empty());
     }
 }

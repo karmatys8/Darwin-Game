@@ -3,8 +3,8 @@ package agh.ics.oop.controllers;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.util.Average;
-import agh.ics.oop.model.animal.animal.Animal;
-import agh.ics.oop.model.animal.animal.Genotype;
+import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.animal.Genotype;
 import agh.ics.oop.model.util.exceceptions.UnexpectedNodeException;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
@@ -19,26 +19,27 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
+import java.util.Optional;
 
 import static java.lang.StrictMath.max;
 
 public class MapDrawer {
-    protected AbstractWorldMap worldMap;
-    protected Simulation simulation;
+    private final AbstractWorldMap worldMap;
+    private final Simulation simulation;
     private final double cellWidth, cellHeight;
-    protected final int width, height;
-    protected int startingEnergy;
+    private final int width, height;
     @FXML private final GridPane mapGrid;
     @FXML private final LineChart<String, Number> lineChart;
-    private int dataPointCounter = 0;
-    protected int emptyCells;
+    private int emptyCells, dataPointCounter = 0;
     private final int equatorEnd, equatorStart;
-    private boolean alertShowing = false;
+    private boolean isAlertShown = false;
     private Animal observedAnimal;
     Label[] animalStats = new Label[7];
     Label[] simulationStats;
 
-    public MapDrawer(int width, int height, int startingEnergy, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation) {
+    public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation) {
         this.width = width;
         this.height = height;
         this.cellWidth = 500.0/max(width, height);
@@ -47,32 +48,22 @@ public class MapDrawer {
         this.equatorStart = (int)(height * 0.4) + 1;
         this.mapGrid = mapGrid;
         this.lineChart = lineChart;
-        this.startingEnergy = startingEnergy;
         this.simulation = simulation;
         this.worldMap = simulation.getMap();
         this.simulationStats = simulationStats;
     }
 
-    protected void drawMap() {
+    void drawMap() {
         emptyCells = 0;
         mapGrid.getChildren().clear();
         updateLineChart();
         if(dataPointCounter > 10){
             removeOldData();
         }
-        for (int row = height; row > equatorEnd; row--) {
+        for (int row = height; row >= 1; row--) {
+            String color = (row >= equatorStart && row <= equatorEnd) ? "#90BE6D" : "#C9E3AC";
             for (int column = 1; column <= width; column++) {
-                printCell(column, row, "#C9E3AC");
-            }
-        }
-        for (int row = equatorEnd; row >= equatorStart; row--) {
-            for (int column = 1; column <= width; column++) {
-                printCell(column, row, "#90BE6D");
-            }
-        }
-        for (int row = equatorStart - 1; row >= 1; row--) {
-            for (int column = 1; column <= width; column++) {
-                printCell(column, row, "#C9E3AC");
+                printCell(column, row, color);
             }
         }
         synchronized (this) {
@@ -81,7 +72,7 @@ public class MapDrawer {
         updateStats();
     }
 
-    protected void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
+    private void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
         if (cellNode instanceof Button button) {
             button.setMinSize(cellWidth, cellHeight);
             button.setMaxSize(cellWidth, cellHeight);
@@ -94,7 +85,7 @@ public class MapDrawer {
         mapGrid.add(cellNode, col, row);
     }
 
-    protected void initializeLineChart() {
+    void initializeLineChart() {
         lineChart.setAnimated(false);
         lineChart.getXAxis().setAutoRanging(true);
 
@@ -125,8 +116,8 @@ public class MapDrawer {
         plantSeries.getData().remove(0);
     }
 
-    protected void handleAnimalButtonClick(Animal animal) {
-        if (!alertShowing) {
+    private void handleAnimalButtonClick(Animal animal) {
+        if (!isAlertShown) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.initModality(Modality.NONE);
             alert.setTitle("Animal Information");
@@ -148,30 +139,28 @@ public class MapDrawer {
 
             alert.getDialogPane().setContent(gridPane);
             alert.setOnCloseRequest(event -> {
-                alertShowing = false;
+                isAlertShown = false;
                 observedAnimal = null;
             });
-            alertShowing = true;
+            isAlertShown = true;
             alert.showAndWait();
         }
     }
 
-    protected void updateAnimalInformation() {
+    void updateAnimalInformation() {
         animalStats[0].setText("Genotype: " + observedAnimal.getGenotype());
         animalStats[1].setText("Current gene: " + observedAnimal.getCurrentGene());
         animalStats[2].setText("Energy: " + observedAnimal.getEnergy());
         animalStats[3].setText("Eaten plants: " + observedAnimal.getPlantsEaten());
         animalStats[4].setText("Number of children: " + observedAnimal.getNumberOfChildren());
         animalStats[5].setText("Number of descendants: " + observedAnimal.getNumberOfDescendants());
-        if (observedAnimal.getDayOfDeath() == -1) {
-            animalStats[6].setText("Days lived: " + observedAnimal.getDaysLived());
-        } else {
-            animalStats[6].setText("Day of death: " + observedAnimal.getDayOfDeath());
-        }
+        animalStats[6].setText(observedAnimal.getDayOfDeath() == null
+                ? "Days lived: " + observedAnimal.getDaysLived()
+                : "Day of death: " + observedAnimal.getDayOfDeath());
     }
 
-    public boolean alertShowing() {
-        return alertShowing;
+    public boolean getIsAlertShown() {
+        return isAlertShown;
     }
 
     private void updateStats() {
@@ -186,13 +175,14 @@ public class MapDrawer {
 
     private void printCell(int column, int row, String backgroundColor) {
         Vector2d position = new Vector2d(column, row);
-        Node node = worldMap.nodeAt(position);
+        Pair<Node, Optional<Animal>> pair = worldMap.nodeAt(position);
+        Node node = pair.getKey();
 
         if (node instanceof Button button) {
-            button.setOnAction(event -> handleAnimalButtonClick(worldMap.animalAt(position)));
+            pair.getValue().ifPresent(animal -> button.setOnAction(event -> handleAnimalButtonClick(animal)));
             button.setContentDisplay(ContentDisplay.CENTER);
-        } else if (node instanceof Label) {
-            ((Label)node).setContentDisplay(ContentDisplay.CENTER);
+        } else if (node instanceof Label label) {
+            label.setContentDisplay(ContentDisplay.CENTER);
         } else if (node == null) {
             emptyCells++;
             node = new Label(" ");

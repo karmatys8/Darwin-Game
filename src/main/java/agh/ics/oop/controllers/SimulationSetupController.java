@@ -105,7 +105,7 @@ public class SimulationSetupController {
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
             try {
                 loadSimulationScene();
             } catch (IOException e) {
@@ -196,8 +196,8 @@ public class SimulationSetupController {
 
     private boolean areInBoundaries(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
-        return  checkMaxValues(99, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
-                && checkMaxValues(99, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
+        return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
+                && checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
                 && checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
                 && checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
                 && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
@@ -217,7 +217,7 @@ public class SimulationSetupController {
 
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {

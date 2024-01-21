@@ -1,6 +1,6 @@
 package agh.ics.oop.model.worldMaps;
 
-import agh.ics.oop.model.animal.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;

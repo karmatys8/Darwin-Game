@@ -1,4 +1,4 @@
-package agh.ics.oop.model.animal.animal;
+package agh.ics.oop.model.animal;
 
 import agh.ics.oop.model.util.RandomInteger;
 

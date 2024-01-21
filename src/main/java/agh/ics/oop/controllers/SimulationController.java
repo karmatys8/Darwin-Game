@@ -35,7 +35,7 @@ public class SimulationController {
     Label[] simulationStats = new Label[5];
 
 
-    protected void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption) {
+    void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption) {
         this.animalConfig = animalConfig;
         this.plantConfig = plantConfig;
         this.width = width;
@@ -49,25 +49,11 @@ public class SimulationController {
         if(simulation == null) {
             simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
             initializeMapLegend();
-            mapDrawer = new MapDrawer(width, height, animalConfig.startingEnergy(), mapGrid, lineChart, simulationStats, simulation);
+            mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
 
-            animationTimer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    if(mapDrawer.alertShowing()){ mapDrawer.updateAnimalInformation();}
-                    if (!simulation.isRunning()) {
-                        animationTimer.stop();
-                        animationTimer = null;
-                        startTheSimulation.setDisable(true);
-                    } else {
-                        simulation.run();
-                        mapDrawer.drawMap();
-                    }
-                }
-            };
-            animationTimer.start();
+            initializeAnimationTimer();
 
             startTheSimulation.setText("Stop the simulation");
         } else {
@@ -81,6 +67,24 @@ public class SimulationController {
                 startTheSimulation.setText("Resume the simulation");
             }
         }
+    }
+
+    private void initializeAnimationTimer() {
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if(mapDrawer.getIsAlertShown()){ mapDrawer.updateAnimalInformation();}
+                if (!simulation.isRunning()) {
+                    animationTimer.stop();
+                    animationTimer = null;
+                    startTheSimulation.setDisable(true);
+                } else {
+                    simulation.run();
+                    mapDrawer.drawMap();
+                }
+            }
+        };
+        animationTimer.start();
     }
 
     @FXML

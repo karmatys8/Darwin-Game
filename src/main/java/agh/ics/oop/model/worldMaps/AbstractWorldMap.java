@@ -3,7 +3,7 @@ package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.movement.MapDirection;
-import agh.ics.oop.model.animal.animal.Animal;
+import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
@@ -68,7 +68,7 @@ abstract public class AbstractWorldMap {
         }
     }
 
-    abstract public Node nodeAt(Vector2d position);
+    abstract public Pair<Node, Optional<Animal>> nodeAt(Vector2d position);
 
     public Animal animalAt(Vector2d position) {
         return animalsMap.get(position).get(0);
