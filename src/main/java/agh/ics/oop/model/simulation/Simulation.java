@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
     private final String mapOption;
     private int currentDay = 0;
     private final SimulationController controller;
-    private boolean running = true;
+    private boolean isRunning = true;
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
     private Average deadAnimalsAge = new Average();
@@ -40,9 +40,18 @@ public class Simulation implements Runnable {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
-        worldMap = WorldMapFactory.getWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
+        worldMap = WorldMapFactory.createWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
         this.controller = controller;
         this.animalConfig = animalConfig;
+
+        initializeAnimals(width, height, animalConfig);
+
+        this.plantConfig = plantConfig;
+        this.updateInterval = updateInterval;
+        this.mapOption = mapOption;
+    }
+
+    private void initializeAnimals(int width, int height, AnimalConfig animalConfig) {
         for (int i = 0; i < animalConfig.startingCount(); i++) {
             Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
                     RandomInteger.getRandomInt(1, height)), animalConfig);
@@ -50,9 +59,6 @@ public class Simulation implements Runnable {
             aliveAnimals.add(animal);
             mostCommonGenotype.insert(animal.getGenotype());
         }
-        this.plantConfig = plantConfig;
-        this.updateInterval = updateInterval;
-        this.mapOption = mapOption;
     }
 
     private void killAnimal(Animal animal) {
@@ -64,15 +70,13 @@ public class Simulation implements Runnable {
     }
 
     private void killAnimals() {
-        List<Animal> animalsToKill = new ArrayList<>();
-        for (Animal animal : aliveAnimals) {
+        Iterator<Animal> iterator = aliveAnimals.iterator();
+        while (iterator.hasNext()) {
+            Animal animal = iterator.next();
             if (animal.getEnergy() <= 0) {
-                animalsToKill.add(animal);
+                iterator.remove();
+                killAnimal(animal);
             }
-        }
-
-        for (Animal animal : animalsToKill) {
-            killAnimal(animal);
         }
     }
 
@@ -96,16 +100,9 @@ public class Simulation implements Runnable {
         aliveAnimalsAge.add(animal.getDaysLived());
     }
 
-    private void moveAnimals() {
-        for (Animal animal : aliveAnimals) {
-            moveAnimal(animal);
-        }
-    }
-
     private void feedAndReproduceAnimals() {
         for (Vector2d position : animalsMap.keySet()) {
             List<Animal> currAnimals = animalsMap.get(position);
-
             currAnimals.sort(animalComparator);
 
             if (plants.wasEaten(position)) {
@@ -126,15 +123,15 @@ public class Simulation implements Runnable {
     }
 
     public boolean isNotRunning() {
-        return !running;
+        return !isRunning;
     }
 
     public void pauseSimulation() {
-        running = false;
+        isRunning = false;
     }
 
     public void resumeSimulation() {
-        running = true;
+        isRunning = true;
     }
 
     public int getCurrentDay(){
@@ -157,17 +154,17 @@ public class Simulation implements Runnable {
 
     public void run() {
         try {
-            if (!aliveAnimals.isEmpty() && running) {
+            if (!aliveAnimals.isEmpty() && isRunning) {
                 setUpAverages();
                 killAnimals();
-                moveAnimals();
+                aliveAnimals.forEach(this::moveAnimal);
                 feedAndReproduceAnimals();
                 plants.addPlants(plantConfig.plantsPerDay());
 
                 currentDay++;
                 Thread.sleep(updateInterval);
             } else {
-                running = false;
+                isRunning = false;
             }
         } catch (InterruptedException ignored) {}
     }
@@ -175,6 +172,7 @@ public class Simulation implements Runnable {
     public AbstractWorldMap getMap() {
         return worldMap;
     }
+
     private void setUpAverages(){
         animalsEnergy = new Average();
         aliveAnimalsAge = new Average();

@@ -3,7 +3,7 @@ package agh.ics.oop.model.movement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class Vector2dTests { // sometimes I declare the same vector few times; imo it is not a big deal
+public class Vector2dTests {
     @Test
     public void testToString() {
         Assertions.assertEquals("(8,0)", (new Vector2d(8, 0).toString()));

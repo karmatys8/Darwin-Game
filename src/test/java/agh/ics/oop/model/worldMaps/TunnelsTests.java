@@ -27,14 +27,14 @@ public class TunnelsTests {
         for (int x = 1; x <= width; x++) {
             for (int y = 1; y <= height - 1; y++) {
                 if (! Objects.equals(new Pair<>(new Vector2d(x, y + 1), 0),
-                        tunnels.howToMove(new Vector2d(x, y), MapDirection.N))
+                        tunnels.calculateNextPosition(new Vector2d(x, y), MapDirection.N))
                 ) tunnelTravels++;
             }
         }
 
         for (int x = 1; x <= width; x++) {
             if (! Objects.equals(new Pair<>(new Vector2d(x, 1), 0),
-                    tunnels.howToMove(new Vector2d(x, 2), MapDirection.S))
+                    tunnels.calculateNextPosition(new Vector2d(x, 2), MapDirection.S))
             ) tunnelTravels++;
         }
 
@@ -59,35 +59,35 @@ public class TunnelsTests {
         Vector2d upperRight = new Vector2d(4, 12);
 
         Assertions.assertEquals(new Pair<>(new Vector2d(2, 2), 0),
-                tunnels.howToMove(new Vector2d(3, 1), MapDirection.NW));
+                tunnels.calculateNextPosition(new Vector2d(3, 1), MapDirection.NW));
         Assertions.assertEquals(new Pair<>(new Vector2d(3, 10), 0),
-                tunnels.howToMove(new Vector2d(2, 10), MapDirection.E));
+                tunnels.calculateNextPosition(new Vector2d(2, 10), MapDirection.E));
 
         Assertions.assertEquals(new Pair<>(lowerLeft, 0),
-                tunnels.howToMove(new Vector2d(1, 2), MapDirection.S));
+                tunnels.calculateNextPosition(new Vector2d(1, 2), MapDirection.S));
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 12), 0),
-                tunnels.howToMove(new Vector2d(2, 11), MapDirection.NW));
+                tunnels.calculateNextPosition(new Vector2d(2, 11), MapDirection.NW));
         Assertions.assertEquals(new Pair<>(upperRight, 0),
-                tunnels.howToMove(new Vector2d(3, 11), MapDirection.NE));
+                tunnels.calculateNextPosition(new Vector2d(3, 11), MapDirection.NE));
         Assertions.assertEquals(new Pair<>(new Vector2d(4, 1), 0),
-                tunnels.howToMove(new Vector2d(3, 1), MapDirection.E));
+                tunnels.calculateNextPosition(new Vector2d(3, 1), MapDirection.E));
 
         Assertions.assertEquals(new Pair<>(new Vector2d(2, 1), 0),
-                tunnels.howToMove(new Vector2d(2, 1), MapDirection.S));
+                tunnels.calculateNextPosition(new Vector2d(2, 1), MapDirection.S));
         Assertions.assertEquals(new Pair<>(lowerLeft, 0),
-                tunnels.howToMove(lowerLeft, MapDirection.SW));
+                tunnels.calculateNextPosition(lowerLeft, MapDirection.SW));
         Assertions.assertEquals(new Pair<>(new Vector2d(4, 6), 0),
-                tunnels.howToMove(new Vector2d(4, 6), MapDirection.NE));
+                tunnels.calculateNextPosition(new Vector2d(4, 6), MapDirection.NE));
         Assertions.assertEquals(new Pair<>(upperRight, 0),
-                tunnels.howToMove(upperRight, MapDirection.NE));
+                tunnels.calculateNextPosition(upperRight, MapDirection.NE));
 
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 8), 0),
-                tunnels.howToMove(new Vector2d(1, 8), MapDirection.SW));
+                tunnels.calculateNextPosition(new Vector2d(1, 8), MapDirection.SW));
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 5), 0),
-                tunnels.howToMove(new Vector2d(1, 5), MapDirection.W));
+                tunnels.calculateNextPosition(new Vector2d(1, 5), MapDirection.W));
         Assertions.assertEquals(new Pair<>(new Vector2d(4, 7), 0),
-                tunnels.howToMove(new Vector2d(4, 7), MapDirection.NE));
+                tunnels.calculateNextPosition(new Vector2d(4, 7), MapDirection.NE));
         Assertions.assertEquals(new Pair<>(new Vector2d(4, 4), 0),
-                tunnels.howToMove(new Vector2d(4, 4), MapDirection.SE));
+                tunnels.calculateNextPosition(new Vector2d(4, 4), MapDirection.SE));
     }
 }

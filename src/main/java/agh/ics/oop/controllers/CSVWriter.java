@@ -26,7 +26,6 @@ public class CSVWriter {
                                         .map(node -> (Label) node)
                                         .toArray(Label[]::new);
         this.mapId = mapId;
-
         initializeFile();
     }
 
@@ -55,10 +54,7 @@ public class CSVWriter {
     }
 
     private String[] streamFormat(Stream<String> stream, String firstValue, String secondValue, String thirdValue) {
-        return Stream.concat(
-                Stream.concat(Stream.of(firstValue), stream),
-                Stream.of(secondValue, thirdValue)
-        ).toArray(String[]::new);
+        return Stream.concat(Stream.of(firstValue, secondValue, thirdValue), stream).toArray(String[]::new);
     }
 
     private String convertToCSV(String[] data) {

@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RandomGenotype extends Genotype {
-    private final static List<Integer> randomGenes = IntStream.range(0, 8)
-                                                        .boxed()
-                                                        .collect(Collectors.toList());
+    private final static List<Integer> randomGenes = IntStream.range(0, 8).boxed().collect(Collectors.toList());
 
     public RandomGenotype(int genotypeLength, int minNumberOfMutations, int maxNumberOfMutations) {
         super(genotypeLength, minNumberOfMutations, maxNumberOfMutations);
@@ -28,7 +26,7 @@ public class RandomGenotype extends Genotype {
         int numberOfMutations = RandomInteger.getRandomInt(minNumberOfMutations, maxNumberOfMutations);
 
         for (int i = 0; i < numberOfMutations; i++) {
-            randomGene(RandomInteger.getRandomInt(genes.size()-1));
+            randomGene(RandomInteger.getRandomInt(genes.size() - 1));
         }
     }
 

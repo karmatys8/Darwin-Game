@@ -41,15 +41,14 @@ public class SimulationSetupController {
 
     List<TextField> nonNegativeFields, positiveFields, allTextFields;
     List<ComboBox<String>> comboBoxes;
-    GsonConfigs gsonConfigs;
+    GsonConfigs configsManager;
 
 
     public void initialize() {
         setUpFields();
         setUpComboBoxes();
-
         comboBoxes = List.of(mapOption, mutationOption);
-        gsonConfigs = new GsonConfigs(allTextFields, comboBoxes);
+        configsManager = new GsonConfigs(allTextFields, comboBoxes);
 
         setUpListOfSavedConfigs();
         setActions();
@@ -60,7 +59,7 @@ public class SimulationSetupController {
         saveConfigs.setOnAction(event -> saveConfigs());
         listOfSavedConfigs.setOnAction(event -> {
             try {
-                gsonConfigs.readConfigs(listOfSavedConfigs.getValue());
+                configsManager.readConfigs(listOfSavedConfigs.getValue());
             } catch (FileNotFoundException e) {
                 showError("Missing file Error", "", "");
             }
@@ -70,7 +69,7 @@ public class SimulationSetupController {
     private void setUpListOfSavedConfigs() {
         try {
             ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
-            gsonConfigs.filesAsList(listOfConfigs);
+            configsManager.filesAsList(listOfConfigs);
 
             listOfSavedConfigs.setItems(listOfConfigs);
             listOfSavedConfigs.setPromptText("Saved configs");
@@ -199,20 +198,19 @@ public class SimulationSetupController {
         dialog.setTitle("Configs file name");
         dialog.setHeaderText("Please enter a file name below.");
         dialog.setContentText("Name:");
-
         return dialog.showAndWait();
     }
 
     private boolean areInBoundaries(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
-                && checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
-                && checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
-                && checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
-                && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
-                && checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
+                & checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
+                & checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
+                & checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
+                & checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
+                & checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
                 "Minimal energy to reproduce cannot be greater than the energy to be well fed.", errorMessage)
-                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
+                & checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
     }
 
     private boolean checkMaxValues(int maxValue, TextField field, String message, StringBuilder errorMessage) {
@@ -226,11 +224,11 @@ public class SimulationSetupController {
 
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {
-                    gsonConfigs.saveConfigs(fileName.get());
+                    configsManager.saveConfigs(fileName.get());
                 }
             } catch (DuplicateConfigNameException e) {
                 showError("Duplicate file name Error", "", e.getMessage());

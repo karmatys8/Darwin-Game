@@ -22,53 +22,49 @@ public class NodeCreator {
         this.startingEnergy = startingEnergy;
     }
 
-    public Node animalsNode(Animal animal) {
+    public Node createAnimalsNode(Animal animal) {
         Circle dot = createDot("#31081F", 3.5);
         Button animalButton = new Button();
-        dot.setOpacity(min((((double)animal.getEnergy())/ startingEnergy), 1));
+        dot.setOpacity(min((((double) animal.getEnergy())/ startingEnergy), 1));
         animalButton.setGraphic(dot);
 
         return animalButton;
     }
 
-    public Node plantsNode() {
-        Label cellLabel = new Label(" ");
-        cellLabel.setContentDisplay(ContentDisplay.CENTER);
-        Shape triangle = createTriangle("#F5FCE9");
-        cellLabel.setGraphic(triangle);
-
+    public Node createPlantsNode() {
+        Label cellLabel = createLabeledNode(createTriangle("#F5FCE9"));
         return cellLabel;
     }
 
-    public Node tunnelsNode() {
+    public Node createTunnelsNode() {
+        Label cellLabel = createLabeledNode(createDot("#00000000", 4.0));
+        Circle dot = (Circle) cellLabel.getGraphic();
+        dot.setStroke(Color.web("#1E3F20"));
+        return cellLabel;
+    }
+
+    private Label createLabeledNode(Shape graphic) {
         Label cellLabel = new Label(" ");
         cellLabel.setContentDisplay(ContentDisplay.CENTER);
-        Circle dot = createDot("#00000000", 4.0);
-        dot.setStroke(Color.web("#1E3F20"));
-        cellLabel.setGraphic(dot);
-
+        cellLabel.setGraphic(graphic);
         return cellLabel;
     }
 
     protected Circle createDot(String color, Double radiusFraction) {
         double radius = Math.min(cellWidth, cellHeight) / radiusFraction;
-        Circle dot = new Circle(radius);
-        dot.setFill(Color.web(color));
-        return dot;
+        return new Circle(radius, Color.web(color));
     }
 
     protected Shape createTriangle(String color) {
         double sideLength = Math.min(cellWidth, cellHeight) / 2.0;
         double height = sideLength * Math.sqrt(3) / 2;
 
-        Polygon triangle = new Polygon();
-        triangle.getPoints().addAll(
+        Polygon triangle = new Polygon(
                 0.0, 0.0,
                 -sideLength / 2, height,
                 sideLength / 2, height
         );
         triangle.setFill(Color.web(color));
-
         return triangle;
     }
 }

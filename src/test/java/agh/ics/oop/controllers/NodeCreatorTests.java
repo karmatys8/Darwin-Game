@@ -7,12 +7,9 @@ import agh.ics.oop.model.util.configs.AnimalConfig;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Shape;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -39,7 +36,7 @@ public class NodeCreatorTests {
         for (int i = 0; i < 100; i++) {
             Animal animal = new Animal(position, animalConfig);
             animal.eat(-RandomInteger.getRandomInt(100));
-            Node result = nodeCreator.animalsNode(animal);
+            Node result = nodeCreator.createAnimalsNode(animal);
 
             Assertions.assertTrue(result instanceof Button);
             Button button = (Button) result;
@@ -49,19 +46,19 @@ public class NodeCreatorTests {
 
         Animal animal1 = new Animal(position, animalConfig);
         animal1.eat(RandomInteger.getRandomInt(20));
-        Node result1 = nodeCreator.animalsNode(animal1);
+        Node result1 = nodeCreator.createAnimalsNode(animal1);
         Assertions.assertEquals(1, ((Button) result1).getGraphic().getOpacity());
 
         Animal animal2 = new Animal(position, animalConfig);
         animal2.eat(RandomInteger.getRandomInt(1));
-        Node result2 = nodeCreator.animalsNode(animal2);
+        Node result2 = nodeCreator.createAnimalsNode(animal2);
         Assertions.assertEquals(1, ((Button) result2).getGraphic().getOpacity());
     }
 
     @Test
     public void testPlantsNode() {
         for (int i = 0; i < 100; i++) {
-            Node result = nodeCreator.plantsNode();
+            Node result = nodeCreator.createPlantsNode();
 
             Assertions.assertTrue(result instanceof Label);
             Label label = (Label) result;
@@ -72,7 +69,7 @@ public class NodeCreatorTests {
     @Test
     public void testTunnelsNode() {
         for (int i = 0; i < 100; i++) {
-            Node result = nodeCreator.tunnelsNode();
+            Node result = nodeCreator.createTunnelsNode();
 
             Assertions.assertTrue(result instanceof Label);
             Label label = (Label) result;

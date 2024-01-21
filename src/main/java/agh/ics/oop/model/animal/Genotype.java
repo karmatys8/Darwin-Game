@@ -3,7 +3,6 @@ package agh.ics.oop.model.animal;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -18,12 +17,12 @@ abstract public class Genotype {
         this.minNumberOfMutations = minNumberOfMutations;
         this.maxNumberOfMutations = maxNumberOfMutations;
 
-        genes = new ArrayList<>(genotypeLength);
-        for (int i = 0; i < genotypeLength; i++) {
-            genes.add(RandomInteger.getRandomInt(7));
-        }
+        genes = IntStream.range(0, genotypeLength)
+                .mapToObj(i -> RandomInteger.getRandomInt(7))
+                .collect(Collectors.toList());
     }
-    public Genotype(Genotype other) { //copying method
+
+    public Genotype(Genotype other) {
         this.genes = new ArrayList<>(other.genes);
         this.minNumberOfMutations = other.minNumberOfMutations;
         this.maxNumberOfMutations = other.maxNumberOfMutations;
@@ -39,15 +38,11 @@ abstract public class Genotype {
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        int genotypeLength = mothersGenotype.genes.size();
-        genes = new ArrayList<>(genotypeLength);
-        for (int i = 0; i < genotypeLength; i++) {
-            if ((chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)) {
-                genes.add(mothersGenotype.genes.get(i));
-            } else {
-                genes.add(father.getGenotype().genes.get(i));
-            }
-        }
+        genes = IntStream.range(0, mothersGenotype.genes.size())
+                .mapToObj(i -> (chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)
+                        ? mothersGenotype.genes.get(i) : father.getGenotype().genes.get(i))
+                .collect(Collectors.toList());
+
         mutate();
     }
 
@@ -60,11 +55,9 @@ abstract public class Genotype {
     protected abstract void mutate();
 
     public String toString() {
-        StringBuilder genotypeToString = new StringBuilder();
-        for (Integer gene : genes) {
-            genotypeToString.append(gene.toString());
-        }
-        return genotypeToString.toString();
+        return genes.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining());
     }
 
     @Override

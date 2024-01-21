@@ -1,13 +1,10 @@
 package agh.ics.oop.model.worldMaps;
 
-import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
-import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 public class GlobeTests {
@@ -31,34 +27,34 @@ public class GlobeTests {
         Vector2d upperRight = new Vector2d(36, 200);
 
         Assertions.assertEquals(new Pair<>(new Vector2d(10, 19), 0),
-                globe.howToMove(new Vector2d(10, 18), MapDirection.N));
+                globe.calculateNextPosition(new Vector2d(10, 18), MapDirection.N));
         Assertions.assertEquals(new Pair<>(new Vector2d(15, 15), 0),
-                globe.howToMove(new Vector2d(14, 16), MapDirection.SE));
+                globe.calculateNextPosition(new Vector2d(14, 16), MapDirection.SE));
 
         Assertions.assertEquals(new Pair<>(lowerLeft, 0),
-                globe.howToMove(new Vector2d(1, 2), MapDirection.S));
+                globe.calculateNextPosition(new Vector2d(1, 2), MapDirection.S));
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 200), 0),
-                globe.howToMove(new Vector2d(2, 199), MapDirection.NW));
+                globe.calculateNextPosition(new Vector2d(2, 199), MapDirection.NW));
         Assertions.assertEquals(new Pair<>(upperRight, 0),
-                globe.howToMove(new Vector2d(35, 199), MapDirection.NE));
+                globe.calculateNextPosition(new Vector2d(35, 199), MapDirection.NE));
         Assertions.assertEquals(new Pair<>(new Vector2d(36, 1), 0),
-                globe.howToMove(new Vector2d(35, 1), MapDirection.E));
+                globe.calculateNextPosition(new Vector2d(35, 1), MapDirection.E));
 
         Assertions.assertEquals(new Pair<>(new Vector2d(10, 1), 4),
-                globe.howToMove(new Vector2d(10, 1), MapDirection.S));
+                globe.calculateNextPosition(new Vector2d(10, 1), MapDirection.S));
         Assertions.assertEquals(new Pair<>(lowerLeft, 4),
-                globe.howToMove(lowerLeft, MapDirection.SW));
+                globe.calculateNextPosition(lowerLeft, MapDirection.SW));
         Assertions.assertEquals(new Pair<>(upperRight, 4),
-                globe.howToMove(upperRight, MapDirection.NE));
+                globe.calculateNextPosition(upperRight, MapDirection.NE));
 
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 10), 0),
-                globe.howToMove(new Vector2d(36, 9), MapDirection.NE));
+                globe.calculateNextPosition(new Vector2d(36, 9), MapDirection.NE));
         Assertions.assertEquals(new Pair<>(new Vector2d(1, 52), 0),
-                globe.howToMove(new Vector2d(36, 52), MapDirection.E));
+                globe.calculateNextPosition(new Vector2d(36, 52), MapDirection.E));
 
         Assertions.assertEquals(new Pair<>(new Vector2d(36, 9), 0),
-                globe.howToMove(new Vector2d(1, 8), MapDirection.NW));
+                globe.calculateNextPosition(new Vector2d(1, 8), MapDirection.NW));
         Assertions.assertEquals(new Pair<>(new Vector2d(36, 2), 0),
-                globe.howToMove(lowerLeft, MapDirection.NW));
+                globe.calculateNextPosition(lowerLeft, MapDirection.NW));
     }
 }

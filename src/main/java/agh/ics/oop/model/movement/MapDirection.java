@@ -12,14 +12,14 @@ public enum MapDirection {
     W("W", new Vector2d(-1, 0)),
     NW("NW", new Vector2d(-1, 1));
 
-    private final String value; // we can change it later if necessary
+    private final String value;
     private final Vector2d unitVector;
 
     public Vector2d getUnitVector() {
         return unitVector;
     }
 
-    private static final List<MapDirection> valuesList = List.of(values());
+    private static final List<MapDirection> VALUES_LIST = List.of(values());
 
     MapDirection(String value, Vector2d unitVector) {
         this.value = value;
@@ -31,6 +31,6 @@ public enum MapDirection {
     }
 
     public MapDirection turnRight(int step) {
-        return valuesList.get((this.ordinal() + step) % valuesList.size());
+        return VALUES_LIST.get((ordinal() + step) % VALUES_LIST.size());
     }
 }

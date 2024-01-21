@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.Objects;
+
 public class SimulationController {
     private MapDrawer mapDrawer;
     private AnimalConfig animalConfig;
@@ -23,7 +25,7 @@ public class SimulationController {
     private int updateInterval;
     private String mapOption;
 
-    @FXML private Button startTheSimulation;
+    @FXML private Button startStopSimulationButton;
     @FXML private GridPane mapGrid;
     @FXML private LineChart<String, Number> lineChart;
     @FXML private GridPane mapLegend;
@@ -31,14 +33,14 @@ public class SimulationController {
     private AnimationTimer animationTimer;
     private Simulation simulation = null;
 
-    @FXML private Label emptyCellsLabel;
+    @FXML private Label emptyCellsCounterLabel;
     @FXML private Label mostCommonGenotypeLabel;
     @FXML private Label animalEnergyLabel;
     @FXML private Label ageOfAliveAnimalsLabel;
     @FXML private Label ageOfDeadAnimalsLabel;
-    @FXML private Button highlightMostCommonGenotype;
-    Node[] simulationStats = new Node[6];
-    boolean shouldWriteToCSV;
+    @FXML private Button highlightMostCommonGenotypeButton;
+    private Node[] simulationStats = new Node[6];
+    private boolean shouldWriteToCSV;
 
 
     void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption, boolean shouldWriteToCSV) {
@@ -55,28 +57,36 @@ public class SimulationController {
     }
 
     @FXML
-    private void onSimulationStartClicked() {
+    private void handleSimulationStartStop() {
         if(simulation == null) {
-            simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
-
-            initializeMapLegend();
-            mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation, shouldWriteToCSV);
-            mapDrawer.initializeLineChart();
-            mapDrawer.drawMap();
-
-            initializeAnimationTimer();
-
-            startTheSimulation.setText("Stop the simulation");
+            initializeSimulation();
         } else {
-            if (simulation.isNotRunning()) {
-                simulation.resumeSimulation();
-                animationTimer.start();
-                startTheSimulation.setText("Stop the simulation");
-            } else {
-                simulation.pauseSimulation();
-                animationTimer.stop();
-                startTheSimulation.setText("Resume the simulation");
-            }
+            toggleSimulationState();
+        }
+    }
+
+    private void initializeSimulation() {
+        simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
+
+        initializeMapLegend();
+        mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation, shouldWriteToCSV);
+        mapDrawer.initializeLineChart();
+        mapDrawer.drawMap();
+
+        initializeAnimationTimer();
+
+        startStopSimulationButton.setText("Stop the simulation");
+    }
+
+    private void toggleSimulationState() {
+        if (simulation.isNotRunning()) {
+            simulation.resumeSimulation();
+            animationTimer.start();
+            startStopSimulationButton.setText("Stop the simulation");
+        } else {
+            simulation.pauseSimulation();
+            animationTimer.stop();
+            startStopSimulationButton.setText("Resume the simulation");
         }
     }
 
@@ -84,11 +94,11 @@ public class SimulationController {
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if(mapDrawer.getIsAlertShown()){ mapDrawer.updateAnimalInformation();}
+                if (mapDrawer.getIsAlertShown()) mapDrawer.updateAnimalInformation();
                 if (simulation.isNotRunning()) {
                     animationTimer.stop();
                     animationTimer = null;
-                    startTheSimulation.setDisable(true);
+                    startStopSimulationButton.setDisable(true);
                 } else {
                     simulation.run();
                     mapDrawer.drawMap();
@@ -100,18 +110,18 @@ public class SimulationController {
 
     @FXML
     public void initialize() {
-        startTheSimulation.setOnAction(event -> onSimulationStartClicked());
+        startStopSimulationButton.setOnAction(event -> handleSimulationStartStop());
     }
     private void initializeStatistic() {
-        simulationStats[0] = emptyCellsLabel;
+        simulationStats[0] = emptyCellsCounterLabel;
         simulationStats[1] = mostCommonGenotypeLabel;
         simulationStats[2] = animalEnergyLabel;
         simulationStats[3] = ageOfAliveAnimalsLabel;
         simulationStats[4] = ageOfDeadAnimalsLabel;
-        simulationStats[5] = highlightMostCommonGenotype;
+        simulationStats[5] = highlightMostCommonGenotypeButton;
     }
     private void initializeMapLegend() {
-        if(mapOption == "Underground tunnels"){
+        if(Objects.equals(mapOption, "Underground tunnels")){
             Label label = new Label("Tunnels");
             label.getStyleClass().add("map-legend-text");
 
@@ -119,7 +129,7 @@ public class SimulationController {
             circle.setRadius(17.0);
             circle.setFill(Color.TRANSPARENT);
             circle.setStroke(Color.web("#1e3f20"));
-            mapLegend.setMargin(circle, new Insets(0, 0, 0, 10));
+            GridPane.setMargin(circle, new Insets(0, 0, 0, 10));
 
             mapLegend.add(circle, 4, 0);
             mapLegend.add(label, 5, 0);
