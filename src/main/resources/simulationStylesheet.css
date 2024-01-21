@@ -43,6 +43,12 @@
     -fx-text-fill: #fffcec;
 }
 
+.config-button-text {
+    -fx-font-family: "Berlin Sans FB";
+    -fx-font-size: 15.0;
+    -fx-text-fill: #fffcec;
+}
+
 .stats-label {
     -fx-text-fill: #27292b;
     -fx-font-family: "Verdana";
@@ -62,4 +68,11 @@
     -fx-font-family: "Verdana";
     -fx-font-size: 17.0;
     -fx-padding: 0 0 0 5;
+}
+
+.footer {
+    -fx-background-color: #90BE6D;
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-color: #27292b;
+    -fx-border-width: 0.5;
 }

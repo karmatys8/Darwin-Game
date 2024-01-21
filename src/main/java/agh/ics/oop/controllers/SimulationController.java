@@ -33,15 +33,17 @@ public class SimulationController {
     @FXML private Label ageOfAliveAnimalsLabel;
     @FXML private Label ageOfDeadAnimalsLabel;
     Label[] simulationStats = new Label[5];
+    boolean shouldWriteToCSV;
 
 
-    void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption) {
+    void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption, boolean shouldWriteToCSV) {
         this.animalConfig = animalConfig;
         this.plantConfig = plantConfig;
         this.width = width;
         this.height = height;
         this.updateInterval = updateInterval;
         this.mapOption = mapOption;
+        this.shouldWriteToCSV = shouldWriteToCSV;
     }
 
     @FXML
@@ -49,7 +51,7 @@ public class SimulationController {
         if(simulation == null) {
             simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
             initializeMapLegend();
-            mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation);
+            mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation, shouldWriteToCSV);
             mapDrawer.initializeLineChart();
             mapDrawer.drawMap();
 
