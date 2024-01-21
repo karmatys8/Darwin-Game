@@ -1,10 +1,13 @@
 package agh.ics.oop.model.worldMaps;
 
+import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
+import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 
 public class GlobeTests {
     private static final Map<Vector2d, List<Animal>> animals = new HashMap<>();

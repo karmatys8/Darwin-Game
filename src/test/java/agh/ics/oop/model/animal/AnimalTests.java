@@ -31,7 +31,6 @@ public class AnimalTests {
         }
     }
 
-
     @Test
     void testCanReproduce() {
         int startingEnergy = 20;

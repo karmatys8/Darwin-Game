@@ -69,8 +69,4 @@ abstract public class AbstractWorldMap {
     }
 
     abstract public Pair<Node, Optional<Animal>> nodeAt(Vector2d position);
-
-    public Animal animalAt(Vector2d position) {
-        return animalsMap.get(position).get(0);
-    }
 }

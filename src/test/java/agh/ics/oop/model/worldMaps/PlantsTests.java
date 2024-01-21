@@ -1,6 +1,7 @@
 package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.model.movement.Vector2d;
+import agh.ics.oop.model.util.RandomInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -69,4 +70,32 @@ public class PlantsTests {
         wereEaten(1, 101);
     }
 
+    @Test
+    public void testGetNumberOfPlants() {
+        for (int i = 0; i < 20; i++) {
+            int width = RandomInteger.getRandomInt(1, 25);
+            int height = RandomInteger.getRandomInt(1, 25);
+            int tilesCount = width * height;
+            Plants plants = new Plants(width, height);
+
+            int plantCount = RandomInteger.getRandomInt(tilesCount);
+            plants.addPlants(plantCount);
+            Assertions.assertEquals(plantCount, plants.getNumberOfPlants());
+
+            for (int j = 0; j < RandomInteger.getRandomInt(30, 300); j++) {
+                if (plants.wasEaten(new Vector2d(RandomInteger.getRandomInt(1, width),
+                        RandomInteger.getRandomInt(1, height)))) plantCount--;
+
+                Assertions.assertEquals(plantCount, plants.getNumberOfPlants());
+            }
+
+            int toAdd = RandomInteger.getRandomInt(tilesCount - plantCount);
+            plants.addPlants(toAdd);
+            plantCount+=toAdd;
+            Assertions.assertEquals(plantCount, plants.getNumberOfPlants());
+
+            plants.addPlants(tilesCount);
+            Assertions.assertEquals(tilesCount, plants.getNumberOfPlants());
+        }
+    }
 }

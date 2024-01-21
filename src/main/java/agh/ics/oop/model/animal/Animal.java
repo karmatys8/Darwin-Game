@@ -118,7 +118,6 @@ public class Animal {
     public int getDaysLived(){ return daysLived;}
     public Integer getDayOfDeath(){ return dayOfDeath;}
 
-
     public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe
         energy--;
         daysLived++;
