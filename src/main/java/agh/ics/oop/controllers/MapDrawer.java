@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.StrictMath.max;
 
@@ -37,9 +38,9 @@ public class MapDrawer {
     private boolean isAlertShown = false;
     private Animal observedAnimal;
     Label[] animalStats = new Label[7];
-    Label[] simulationStats;
+    Node[] simulationStats;
 
-    public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Label[] simulationStats, Simulation simulation) {
+    public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Node[] simulationStats, Simulation simulation) {
         this.width = width;
         this.height = height;
         this.cellWidth = 500.0/max(width, height);
@@ -51,6 +52,7 @@ public class MapDrawer {
         this.simulation = simulation;
         this.worldMap = simulation.getMap();
         this.simulationStats = simulationStats;
+        ((Button)simulationStats[5]).setOnAction(event -> highlightMostCommonGenotype());
     }
 
     void drawMap() {
@@ -70,6 +72,7 @@ public class MapDrawer {
             this.notify();
         }
         updateStats();
+        highlightObservedAnimal();
     }
 
     private void addCellNode(Node cellNode, int col, int row, String backgroundColor) {
@@ -165,12 +168,30 @@ public class MapDrawer {
 
     private void updateStats() {
         Average[] simulationAverageStats = simulation.getSimulationStats();
-        simulationStats[0].setText(String.valueOf(emptyCells));
+        ((Label) simulationStats[0]).setText(String.valueOf(emptyCells));
         Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
-        simulationStats[1].setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");
-        simulationStats[2].setText(String.valueOf(simulationAverageStats[0].getAverage()));
-        simulationStats[3].setText(String.valueOf(simulationAverageStats[1].getAverage()));
-        simulationStats[4].setText(String.valueOf(simulationAverageStats[2].getAverage()));
+        ((Label) simulationStats[1]).setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");
+        ((Label) simulationStats[2]).setText(String.valueOf(simulationAverageStats[0].getAverage()));
+        ((Label) simulationStats[3]).setText(String.valueOf(simulationAverageStats[1].getAverage()));
+        ((Label) simulationStats[4]).setText(String.valueOf(simulationAverageStats[2].getAverage()));
+    }
+    private void highlightObservedAnimal(){
+        if(observedAnimal != null && observedAnimal.getDayOfDeath() == null){
+            Vector2d position =  observedAnimal.getPosition();
+            printCell(position.x(), position.y(), "#F3B153");
+        }
+    }
+    private void highlightMostCommonGenotype(){
+        Set<Animal> aliveAnimals = simulation.getAliveAnimals();
+        Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
+
+        for (Animal animal : aliveAnimals) {
+            if(animal.getGenotype().getGenes().equals(mostCommonGenotype.getGenes())){
+                Vector2d position =  animal.getPosition();
+                printCell(position.x(), position.y(), "#F57D51");
+            }
+        }
+
     }
 
     private void printCell(int column, int row, String backgroundColor) {

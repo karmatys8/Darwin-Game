@@ -173,4 +173,7 @@ public class Simulation implements Runnable {
         animalsEnergy = new Average();
         aliveAnimalsAge = new Average();
     }
+    public Set<Animal> getAliveAnimals(){
+        return new HashSet<>(aliveAnimals);
+    }
 }
