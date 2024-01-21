@@ -178,7 +178,7 @@ public class MapDrawer {
     private void highlightObservedAnimal(){
         if(observedAnimal != null && observedAnimal.getDayOfDeath() == null){
             Vector2d position =  observedAnimal.getPosition();
-            printCell(position.x(), position.y(), "#F3B153");
+            printCell(position.x(), position.y(), "#F57D51");
         }
     }
     private void highlightMostCommonGenotype(){
@@ -188,7 +188,7 @@ public class MapDrawer {
         for (Animal animal : aliveAnimals) {
             if(animal.getGenotype().getGenes().equals(mostCommonGenotype.getGenes())){
                 Vector2d position =  animal.getPosition();
-                printCell(position.x(), position.y(), "#F57D51");
+                printCell(position.x(), position.y(), "#F3B153");
             }
         }
 

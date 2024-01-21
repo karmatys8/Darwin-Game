@@ -3,6 +3,8 @@ package agh.ics.oop.model.simulation;
 
 import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.util.Average;
+import agh.ics.oop.model.util.AnimalComparator;
+
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
@@ -100,11 +102,14 @@ public class Simulation implements Runnable {
 
     private void feedAndReproduceAnimals() {
         for (Vector2d position : animalsMap.keySet()) {
+            List<Animal> currAnimals = animalsMap.get(position);
+
+            Collections.sort(currAnimals, new AnimalComparator());
+
             if (plants.wasEaten(position)) {
-                animalsMap.get(position).get(0).eat(plantConfig.energyPerPlant());
+               currAnimals.get(0).eat(plantConfig.energyPerPlant());
             }
 
-            List<Animal> currAnimals = animalsMap.get(position);
             if (currAnimals.size() >= 2) {
                 Animal animal1 = currAnimals.get(0);
                 Animal animal2 = currAnimals.get(1);
