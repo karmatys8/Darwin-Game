@@ -51,14 +51,16 @@ abstract public class AbstractWorldMap {
 
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (position.follows(lowerLeftBoundary) && position.precedes(upperRightBoundary)) {
-            List<Animal> animalsAtThisPosition = animalsMap.getOrDefault(position, new ArrayList<>());
+        if (isWithinBounds(position)) {
+            List<Animal> animalsAtThisPosition = animalsMap.computeIfAbsent(position, k -> new ArrayList<>());
             animalsAtThisPosition.add(animal);
-
-            animalsMap.put(position, animalsAtThisPosition);
         } else {
             throw new IllegalArgumentException("Animal is placed out of bounds!");
         }
+    }
+
+    private boolean isWithinBounds(Vector2d position) {
+        return position.follows(lowerLeftBoundary) && position.precedes(upperRightBoundary);
     }
 
     public void remove(Animal animal) {
