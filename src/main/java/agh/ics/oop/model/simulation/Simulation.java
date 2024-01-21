@@ -32,6 +32,7 @@ public class Simulation implements Runnable {
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
     private Average deadAnimalsAge = new Average();
+    private final UUID id = UUID.randomUUID();
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, int updateInterval, String mapOption, SimulationController controller) {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
@@ -172,5 +173,9 @@ public class Simulation implements Runnable {
     private void setUpAverages(){
         animalsEnergy = new Average();
         aliveAnimalsAge = new Average();
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

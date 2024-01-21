@@ -37,6 +37,7 @@ public class SimulationSetupController {
     @FXML private Button startTheSimulation;
     @FXML private Button saveConfigs;
     @FXML private TextField updateInterval;
+    @FXML private CheckBox csvCheckBox;
 
     List<TextField> nonNegativeFields, positiveFields, allTextFields;
     List<ComboBox<String>> comboBoxes;
@@ -244,6 +245,6 @@ public class SimulationSetupController {
     private void setSimulationController(SimulationController simulationController) {
         AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes), mutationOption.getValue());
         PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
-        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue());
+        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue(), csvCheckBox.isSelected());
     }
 }
