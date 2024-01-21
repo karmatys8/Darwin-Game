@@ -5,6 +5,7 @@ import agh.ics.oop.model.simulation.Simulation;
 import agh.ics.oop.model.util.Average;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Genotype;
+import agh.ics.oop.model.util.exceceptions.CSVFileWritingException;
 import agh.ics.oop.model.util.exceceptions.UnexpectedNodeException;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,8 +41,10 @@ public class MapDrawer {
     private Animal observedAnimal;
     Label[] animalStats = new Label[7];
     Node[] simulationStats;
+    private boolean shouldWriteToCSV;
+    private CSVWriter csvWriter;
 
-    public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Node[] simulationStats, Simulation simulation) {
+    public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Node[] simulationStats, Simulation simulation, boolean shouldWriteToCSV) {
         this.width = width;
         this.height = height;
         this.cellWidth = 500.0/max(width, height);
@@ -53,6 +57,23 @@ public class MapDrawer {
         this.worldMap = simulation.getMap();
         this.simulationStats = simulationStats;
         ((Button)simulationStats[5]).setOnAction(event -> highlightMostCommonGenotype());
+        this.shouldWriteToCSV = shouldWriteToCSV;
+        initializeCSVWriter();
+    }
+
+    private void initializeCSVWriter() {
+        if (shouldWriteToCSV) {
+            try {
+                csvWriter = new CSVWriter(simulationStats, simulation.getId());
+            } catch (IOException e) {
+                handleCSVError(e);
+            }
+        }
+    }
+
+    private void handleCSVError(IOException e) {
+        shouldWriteToCSV = false;
+        throw new CSVFileWritingException(simulation.getId(), e.getCause());
     }
 
     void drawMap() {
@@ -71,6 +92,7 @@ public class MapDrawer {
         synchronized (this) {
             this.notify();
         }
+
         updateStats();
         highlightObservedAnimal();
     }
@@ -174,13 +196,23 @@ public class MapDrawer {
         ((Label) simulationStats[2]).setText(String.valueOf(simulationAverageStats[0].getAverage()));
         ((Label) simulationStats[3]).setText(String.valueOf(simulationAverageStats[1].getAverage()));
         ((Label) simulationStats[4]).setText(String.valueOf(simulationAverageStats[2].getAverage()));
+
+        if (shouldWriteToCSV) {
+            try {
+                csvWriter.addStatsToCSV(simulation.getCurrentDay(), simulation.getNumberOfAnimals(), simulation.getNumberOfPlants());
+            } catch (IOException e) {
+                handleCSVError(e);
+            }
+        }
     }
+
     private void highlightObservedAnimal(){
         if(observedAnimal != null && observedAnimal.getDayOfDeath() == null){
             Vector2d position =  observedAnimal.getPosition();
             printCell(position.x(), position.y(), "#F57D51");
         }
     }
+
     private void highlightMostCommonGenotype(){
         Set<Animal> aliveAnimals = simulation.getAliveAnimals();
         Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
@@ -191,7 +223,6 @@ public class MapDrawer {
                 printCell(position.x(), position.y(), "#F3B153");
             }
         }
-
     }
 
     private void printCell(int column, int row, String backgroundColor) {
