@@ -1,5 +1,6 @@
 package agh.ics.oop.controllers;
 
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,8 +21,10 @@ public class CSVWriter {
     private final UUID mapId;
     private Path createdFile;
 
-    public CSVWriter(Label[] simulationStats, UUID mapId) throws IOException {
-        this.simulationStats = simulationStats;
+    public CSVWriter(Node[] simulationStats, UUID mapId) throws IOException {
+        this.simulationStats = Arrays.stream(simulationStats, 0, 5)
+                                        .map(node -> (Label) node)
+                                        .toArray(Label[]::new);
         this.mapId = mapId;
 
         initializeFile();

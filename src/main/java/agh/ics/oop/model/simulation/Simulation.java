@@ -3,6 +3,8 @@ package agh.ics.oop.model.simulation;
 
 import agh.ics.oop.controllers.SimulationController;
 import agh.ics.oop.model.util.Average;
+import agh.ics.oop.model.animal.AnimalComparator;
+
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.MostCommonGenotype;
@@ -32,6 +34,7 @@ public class Simulation implements Runnable {
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
     private Average deadAnimalsAge = new Average();
+    private static final AnimalComparator animalComparator = new AnimalComparator();
     private final UUID id = UUID.randomUUID();
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, int updateInterval, String mapOption, SimulationController controller) {
         plants = new Plants(width, height);
@@ -101,11 +104,14 @@ public class Simulation implements Runnable {
 
     private void feedAndReproduceAnimals() {
         for (Vector2d position : animalsMap.keySet()) {
+            List<Animal> currAnimals = animalsMap.get(position);
+
+            currAnimals.sort(animalComparator);
+
             if (plants.wasEaten(position)) {
-                animalsMap.get(position).get(0).eat(plantConfig.energyPerPlant());
+               currAnimals.get(0).eat(plantConfig.energyPerPlant());
             }
 
-            List<Animal> currAnimals = animalsMap.get(position);
             if (currAnimals.size() >= 2) {
                 Animal animal1 = currAnimals.get(0);
                 Animal animal2 = currAnimals.get(1);
@@ -119,8 +125,8 @@ public class Simulation implements Runnable {
         }
     }
 
-    public boolean isRunning() {
-        return running;
+    public boolean isNotRunning() {
+        return !running;
     }
 
     public void pauseSimulation() {
@@ -146,8 +152,7 @@ public class Simulation implements Runnable {
     public Genotype getMostCommonGenotype(){ return mostCommonGenotype.getMostCommonGenotype(); }
 
     public Average[] getSimulationStats(){
-        Average[] simulationStats = {animalsEnergy, aliveAnimalsAge, deadAnimalsAge};
-        return simulationStats;
+        return new Average[]{animalsEnergy, aliveAnimalsAge, deadAnimalsAge};
     }
 
     public void run() {
@@ -173,6 +178,10 @@ public class Simulation implements Runnable {
     private void setUpAverages(){
         animalsEnergy = new Average();
         aliveAnimalsAge = new Average();
+    }
+
+    public Set<Animal> getAliveAnimals() {
+        return new HashSet<>(aliveAnimals);
     }
 
     public UUID getId() {

@@ -49,8 +49,18 @@
                   <VBox alignment="TOP_RIGHT" maxHeight="150.0" prefHeight="150.0" prefWidth="270.0" BorderPane.alignment="TOP_CENTER">
                      <children>
                         <Label styleClass="stats-label" text="Number of empty cells:" />
-                        <Label styleClass="stats-label" text="Most common genotype:" />
-                        <Label styleClass="stats-label" text="Average animal energy:" />
+                        <Button fx:id="highlightMostCommonGenotype" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #BADB94; -fx-cursor: HAND;" text="Most common genotype:" textFill="#27292b">
+                           <font>
+                              <Font name="Verdana" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Label styleClass="stats-label" text="Average animal energy:">
+                           <VBox.margin>
+                              <Insets top="-10.0" />
+                           </VBox.margin></Label>
                         <Label styleClass="stats-label" text="Average age of alive animals:" />
                         <Label styleClass="stats-label" text="Average age of dead animals:" />
                      </children>
@@ -78,17 +88,6 @@
                      <BorderPane.margin>
                         <Insets bottom="10.0" left="15.0" />
                      </BorderPane.margin>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                     </rowConstraints>
-                     <columnConstraints>
-                        <ColumnConstraints maxWidth="57.39998817443848" prefWidth="38.999993896484376" />
-                        <ColumnConstraints maxWidth="96.4000015258789" prefWidth="84.60000610351562" />
-                        <ColumnConstraints maxWidth="80.39999389648438" prefWidth="47.79999389648438" />
-                        <ColumnConstraints maxWidth="103.00000610351563" prefWidth="103.00000610351563" />
-                        <ColumnConstraints maxWidth="93.199951171875" prefWidth="47.99997558593748" />
-                        <ColumnConstraints maxWidth="94.199951171875" prefWidth="93.60002441406249" />
-                     </columnConstraints>
                         <Label styleClass="map-legend-text" text="Plants" GridPane.columnIndex="1" />
                         <Circle fill="#31081f" radius="17.0" stroke="#31081f" strokeType="INSIDE" GridPane.columnIndex="2">
                            <GridPane.margin>
@@ -96,12 +95,6 @@
                            </GridPane.margin>
                         </Circle>
                         <Label styleClass="map-legend-text" text="Animals" GridPane.columnIndex="3" />
-                        <Circle fill="TRANSPARENT" radius="17.0" stroke="#1e3f20" strokeType="INSIDE" GridPane.columnIndex="4">
-                           <GridPane.margin>
-                              <Insets left="10.0" />
-                           </GridPane.margin>
-                        </Circle>
-                        <Label styleClass="map-legend-text" text="Tunnels" GridPane.columnIndex="5" />
                      <Polygon fill="#f5fce9" points="20.799806594848633, -4.8005475997924805, 56.79974365234375, -4.800585746765137, 38.399749755859375, -37.602821350097656" stroke="#f5fce9" strokeType="INSIDE" />
                   </GridPane>
                </bottom>
@@ -119,7 +112,7 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin></GridPane>
-                <Button fx:id="startTheSimulation" prefHeight="48.0" prefWidth="223.0" style="-fx-background-color: #1E3F20; -fx-text-fill: #fffefe;" text="Start the simulation" textAlignment="CENTER" wrapText="true">
+                <Button fx:id="startTheSimulation" prefHeight="48.0" prefWidth="223.0" style="-fx-background-color: #1E3F20; -fx-text-fill: #fffefe; -fx-cursor: HAND;" text="Start the simulation" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Berlin Sans FB" size="18.0" />
                </font></Button>

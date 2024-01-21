@@ -30,6 +30,7 @@ public class Globe extends AbstractWorldMap {
     public Pair<Node, Optional<Animal>> nodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) {
+            Collections.sort(animalsAtThisPosition, animalComparator);
             Animal animal = animalsAtThisPosition.get(0);
             return new Pair<>(nodeCreator.animalsNode(animal), Optional.of(animal));
         }

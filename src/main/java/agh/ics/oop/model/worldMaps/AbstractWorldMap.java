@@ -2,6 +2,7 @@ package agh.ics.oop.model.worldMaps;
 
 
 import agh.ics.oop.controllers.NodeCreator;
+import agh.ics.oop.model.animal.AnimalComparator;
 import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
@@ -24,6 +25,7 @@ abstract public class AbstractWorldMap {
     protected final AnimalConfig animalConfig;
 
     protected NodeCreator nodeCreator;
+    protected static final AnimalComparator animalComparator = new AnimalComparator();
     protected Map<Vector2d, List<Animal>> animalsMap;
     protected Plants plants;
 

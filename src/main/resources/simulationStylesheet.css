@@ -23,6 +23,7 @@
     -fx-pref-height: 27.0;
     -fx-pref-width: 200.0;
     -fx-background-color: #F3B153;
+    -fx-cursor: HAND
 }
 
 .config-button {
@@ -32,6 +33,7 @@
     -fx-pref-height: 30.0;
     -fx-pref-width: 238.0;
     -fx-text-fill: #fffcec;
+    -fx-cursor: HAND
 }
 
 .config-button-sm {
@@ -41,6 +43,7 @@
     -fx-pref-height: 24.0;
     -fx-pref-width: 180.0;
     -fx-text-fill: #fffcec;
+    -fx-cursor: HAND
 }
 
 .config-button-text {

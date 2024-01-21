@@ -9,10 +9,7 @@ import agh.ics.oop.model.util.configs.PlantConfig;
 import javafx.scene.Node;
 import javafx.util.Pair;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Tunnels extends AbstractWorldMap {
     private final Map<Vector2d, Vector2d> tunnels = new HashMap<>();
@@ -53,6 +50,7 @@ public class Tunnels extends AbstractWorldMap {
     public Pair<Node, Optional<Animal>> nodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) {
+            Collections.sort(animalsAtThisPosition, animalComparator);
             Animal animal = animalsAtThisPosition.get(0);
             return new Pair<>(nodeCreator.animalsNode(animal), Optional.of(animal));
         }

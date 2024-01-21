@@ -26,43 +26,52 @@
             </VBox.margin>
          </Label>
          <VBox prefHeight="156.0" prefWidth="598.0" style="-fx-background-color: #A1C680;">
-               <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="598.0">
-                     <Button fx:id="saveConfigs" alignment="CENTER" styleClass="config-button-sm" text="Save configurations">
-                        <HBox.margin>
-                           <Insets bottom="16.0" left="65.0" right="30.0" top="16.0" />
-                        </HBox.margin>
-                     </Button>
-                     <ComboBox fx:id="listOfSavedConfigs" styleClass="config-combo-box">
-                        <HBox.margin>
-                           <Insets bottom="20.0" left="65.0" top="20.0" />
-                        </HBox.margin>
-                     </ComboBox>
-               </HBox>
-               <HBox prefHeight="42.0" prefWidth="598.0">
-                  <VBox.margin>
-                     <Insets bottom="20.0" />
-                  </VBox.margin>
-                  <HBox alignment="CENTER" maxHeight="28.0" minWidth="180.0" prefHeight="28.0" prefWidth="180.0" styleClass="config-button-sm">
-                     <Label prefHeight="100.0" prefWidth="85.0" styleClass="config-button-text" text="Save to CSV">
-                        <HBox.margin>
-                           <Insets left="10.0" />
-                        </HBox.margin>
-                     </Label>
-                     <CheckBox fx:id="csvCheckBox" prefHeight="21.0" prefWidth="14.0"/>
+         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+            <Button fx:id="saveConfigs" alignment="CENTER" styleClass="config-button-sm" text="Save configurations">
+               <HBox.margin>
+                  <Insets bottom="16.0" left="65.0" right="30.0" top="16.0" />
+               </HBox.margin>
+            </Button>
+            <ComboBox fx:id="listOfSavedConfigs" styleClass="config-combo-box">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="65.0" top="20.0" />
+               </HBox.margin>
+            </ComboBox>
+         </HBox>
+         <HBox prefWidth="600.0" prefHeight="200.0">
+            <VBox.margin>
+               <Insets top="10.0" bottom="20.0" />
+            </VBox.margin>
+            <HBox prefWidth="300.0" prefHeight="200.0">
+               <Label styleClass="config-label" prefHeight="100.0" text="Save to CSV">
+                  <HBox.margin>
+                     <Insets top="9.0" left="103.0" />
+                  </HBox.margin>
+               </Label>
+               <CheckBox fx:id="csvCheckBox" prefHeight="100.0">
+                  <HBox.margin>
+                     <Insets top="2.0" left="10.0" />
+                  </HBox.margin>
+               </CheckBox>
+            </HBox>
+            <VBox prefWidth="300.0" prefHeight="200.0">
+
+               <HBox prefWidth="300.0" prefHeight="100.0" alignment="CENTER">
+                  <Label styleClass="config-label" prefWidth="300.0" text="Simulation Update Interval [ms]">
                      <HBox.margin>
-                        <Insets left="65.0" right="30.0" top="5.0" />
+                        <Insets right="20.0"  bottom="8.0"/>
                      </HBox.margin>
-                  </HBox>
-   
-                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0">
-                        <TextField fx:id="updateInterval" alignment="CENTER" minHeight="28.0" minWidth="200.0" prefHeight="27.0" prefWidth="200.0" promptText="Update interval [ms]" style="-fx-background-color: #F3B153; -fx-prompt-text-fill: #27292b " styleClass="config-text-field">
-                           <HBox.margin>
-                              <Insets left="30.0" />
-                           </HBox.margin>
-                        </TextField>
-                  </HBox>
+                  </Label>
                </HBox>
-         </VBox>
+               <HBox prefWidth="300.0" prefHeight="100.0" alignment="CENTER">
+                  <TextField fx:id="updateInterval" prefWidth="300.0" styleClass="config-text-field">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </TextField>
+               </HBox>
+            </VBox>
+         </HBox></VBox>
       </VBox>
    </top>
    <bottom>
