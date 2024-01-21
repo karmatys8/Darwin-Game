@@ -49,7 +49,7 @@
                   <VBox alignment="TOP_RIGHT" maxHeight="150.0" prefHeight="150.0" prefWidth="270.0" BorderPane.alignment="TOP_CENTER">
                      <children>
                         <Label styleClass="stats-label" text="Number of empty cells:" />
-                        <Button fx:id="highlightMostCommonGenotype" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #BADB94; -fx-cursor: HAND;" text="Most common genotype:" textFill="#27292b">
+                        <Button fx:id="highlightMostCommonGenotypeButton" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #BADB94; -fx-cursor: HAND;" text="Most common genotype:" textFill="#27292b">
                            <font>
                               <Font name="Verdana" size="17.0" />
                            </font>
@@ -75,7 +75,7 @@
                         <Insets bottom="10.0" right="10.0" top="10.0" />
                      </BorderPane.margin>
                      <children>
-                        <Label fx:id="emptyCellsLabel" styleClass="stats-label" text="-" />
+                        <Label fx:id="emptyCellsCounterLabel" styleClass="stats-label" text="-" />
                         <Label fx:id="mostCommonGenotypeLabel" styleClass="stats-label" text="-" />
                         <Label fx:id="animalEnergyLabel" styleClass="stats-label" text="-" />
                         <Label fx:id="ageOfAliveAnimalsLabel" styleClass="stats-label" text="-" />
@@ -112,7 +112,7 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin></GridPane>
-                <Button fx:id="startTheSimulation" prefHeight="48.0" prefWidth="223.0" style="-fx-background-color: #1E3F20; -fx-text-fill: #fffefe; -fx-cursor: HAND;" text="Start the simulation" textAlignment="CENTER" wrapText="true">
+                <Button fx:id="startStopSimulationButton" prefHeight="48.0" prefWidth="223.0" style="-fx-background-color: #1E3F20; -fx-text-fill: #fffefe; -fx-cursor: HAND;" text="Start the simulation" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Berlin Sans FB" size="18.0" />
                </font></Button>

@@ -35,12 +35,12 @@ public class MapDrawer {
     private final int width, height;
     @FXML private final GridPane mapGrid;
     @FXML private final LineChart<String, Number> lineChart;
-    private int emptyCells, dataPointCounter = 0;
-    private final int equatorEnd, equatorStart;
+    private int emptyCellsCounter, dataPointCounter = 0;
+    private final int equatorStart, equatorEnd;
     private boolean isAlertShown = false;
     private Animal observedAnimal;
-    Label[] animalStats = new Label[7];
-    Node[] simulationStats;
+    private Label[] animalStats = new Label[7];
+    private Node[] simulationStats;
     private boolean shouldWriteToCSV;
     private CSVWriter csvWriter;
 
@@ -77,7 +77,7 @@ public class MapDrawer {
     }
 
     void drawMap() {
-        emptyCells = 0;
+        emptyCellsCounter = 0;
         mapGrid.getChildren().clear();
         updateLineChart();
         if(dataPointCounter > 10){
@@ -86,7 +86,7 @@ public class MapDrawer {
         for (int row = height; row >= 1; row--) {
             String color = (row >= equatorStart && row <= equatorEnd) ? "#90BE6D" : "#C9E3AC";
             for (int column = 1; column <= width; column++) {
-                printCell(column, row, color);
+                drawCell(column, row, color);
             }
         }
         synchronized (this) {
@@ -190,7 +190,7 @@ public class MapDrawer {
 
     private void updateStats() {
         Average[] simulationAverageStats = simulation.getSimulationStats();
-        ((Label) simulationStats[0]).setText(String.valueOf(emptyCells));
+        ((Label) simulationStats[0]).setText(String.valueOf(emptyCellsCounter));
         Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
         ((Label) simulationStats[1]).setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");
         ((Label) simulationStats[2]).setText(String.valueOf(simulationAverageStats[0].getAverage()));
@@ -207,9 +207,9 @@ public class MapDrawer {
     }
 
     private void highlightObservedAnimal(){
-        if(observedAnimal != null  &&  observedAnimal.getDayOfDeath() == null){
-            Vector2d position = observedAnimal.getPosition();
-            printCell(position.x(), position.y(), "#F57D51");
+        if(observedAnimal != null && observedAnimal.getDayOfDeath() == null){
+            Vector2d position =  observedAnimal.getPosition();
+            drawCell(position.x(), position.y(), "#F57D51");
         }
     }
 
@@ -220,14 +220,14 @@ public class MapDrawer {
         for (Animal animal : aliveAnimals) {
             if(animal.getGenotype().getGenes().equals(mostCommonGenotype.getGenes())){
                 Vector2d position =  animal.getPosition();
-                printCell(position.x(), position.y(), "#F3B153");
+                drawCell(position.x(), position.y(), "#F3B153");
             }
         }
     }
 
-    private void printCell(int column, int row, String backgroundColor) {
+    private void drawCell(int column, int row, String backgroundColor) {
         Vector2d position = new Vector2d(column, row);
-        Pair<Node, Optional<Animal>> pair = worldMap.nodeAt(position);
+        Pair<Node, Optional<Animal>> pair = worldMap.getNodeAt(position);
         Node node = pair.getKey();
 
         if (node instanceof Button button) {
@@ -236,7 +236,7 @@ public class MapDrawer {
         } else if (node instanceof Label label) {
             label.setContentDisplay(ContentDisplay.CENTER);
         } else if (node == null) {
-            emptyCells++;
+            emptyCellsCounter++;
             node = new Label(" ");
         } else throw new UnexpectedNodeException(node);
 

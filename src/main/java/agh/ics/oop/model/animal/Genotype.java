@@ -21,7 +21,8 @@ abstract public class Genotype {
                 .mapToObj(i -> RandomInteger.getRandomInt(7))
                 .collect(Collectors.toList());
     }
-    public Genotype(Genotype other) { // copying method
+
+    public Genotype(Genotype other) {
         this.genes = new ArrayList<>(other.genes);
         this.minNumberOfMutations = other.minNumberOfMutations;
         this.maxNumberOfMutations = other.maxNumberOfMutations;

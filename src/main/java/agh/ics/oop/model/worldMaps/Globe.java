@@ -18,7 +18,7 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction) {
+    public Pair<Vector2d, Integer> calculateNextPosition(Vector2d oldPosition, MapDirection direction) {
         Vector2d newPosition = oldPosition.add(direction.getUnitVector());
         if (newPosition.y() < 1  ||  newPosition.y() > height) return new Pair<>(oldPosition, 4);
         if (newPosition.x() < 1) return new Pair<>(new Vector2d(newPosition.x() + width, newPosition.y()), 0);
@@ -27,14 +27,14 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public Pair<Node, Optional<Animal>> nodeAt(Vector2d position) {
+    public Pair<Node, Optional<Animal>> getNodeAt(Vector2d position) {
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) {
             Collections.sort(animalsAtThisPosition, animalComparator);
-            Animal animal = animalsAtThisPosition.get(0);
-            return new Pair<>(nodeCreator.animalsNode(animal), Optional.of(animal));
+            Animal dominantAnimal = animalsAtThisPosition.get(0);
+            return new Pair<>(nodeCreator.createAnimalsNode(dominantAnimal), Optional.of(dominantAnimal));
         }
-        if (! plants.isFieldEmpty(position)) return new Pair<>(nodeCreator.plantsNode(), Optional.empty());
+        if (! plants.isFieldEmpty(position)) return new Pair<>(nodeCreator.createPlantsNode(), Optional.empty());
         return new Pair<>(null, Optional.empty());
     }
 }

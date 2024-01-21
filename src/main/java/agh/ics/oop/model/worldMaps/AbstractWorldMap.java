@@ -47,7 +47,7 @@ abstract public class AbstractWorldMap {
         nodeCreator = new NodeCreator(width, height, animalConfig.startingEnergy());
     }
 
-    abstract public Pair<Vector2d, Integer> howToMove(Vector2d oldPosition, MapDirection direction);
+    abstract public Pair<Vector2d, Integer> calculateNextPosition(Vector2d oldPosition, MapDirection direction);
 
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
@@ -70,5 +70,5 @@ abstract public class AbstractWorldMap {
         }
     }
 
-    abstract public Pair<Node, Optional<Animal>> nodeAt(Vector2d position);
+    abstract public Pair<Node, Optional<Animal>> getNodeAt(Vector2d position);
 }

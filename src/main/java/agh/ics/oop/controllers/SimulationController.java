@@ -25,7 +25,7 @@ public class SimulationController {
     private int updateInterval;
     private String mapOption;
 
-    @FXML private Button startTheSimulation;
+    @FXML private Button startStopSimulationButton;
     @FXML private GridPane mapGrid;
     @FXML private LineChart<String, Number> lineChart;
     @FXML private GridPane mapLegend;
@@ -33,14 +33,14 @@ public class SimulationController {
     private AnimationTimer animationTimer;
     private Simulation simulation = null;
 
-    @FXML private Label emptyCellsLabel;
+    @FXML private Label emptyCellsCounterLabel;
     @FXML private Label mostCommonGenotypeLabel;
     @FXML private Label animalEnergyLabel;
     @FXML private Label ageOfAliveAnimalsLabel;
     @FXML private Label ageOfDeadAnimalsLabel;
-    @FXML private Button highlightMostCommonGenotype;
-    Node[] simulationStats = new Node[6];
-    boolean shouldWriteToCSV;
+    @FXML private Button highlightMostCommonGenotypeButton;
+    private Node[] simulationStats = new Node[6];
+    private boolean shouldWriteToCSV;
 
 
     void setConfigs(AnimalConfig animalConfig, PlantConfig plantConfig, int width, int height, int updateInterval, String mapOption, boolean shouldWriteToCSV) {
@@ -57,7 +57,7 @@ public class SimulationController {
     }
 
     @FXML
-    private void onSimulationStartClicked() {
+    private void handleSimulationStartStop() {
         if(simulation == null) {
             initializeSimulation();
         } else {
@@ -75,18 +75,18 @@ public class SimulationController {
 
         initializeAnimationTimer();
 
-        startTheSimulation.setText("Stop the simulation");
+        startStopSimulationButton.setText("Stop the simulation");
     }
 
     private void toggleSimulationState() {
         if (simulation.isNotRunning()) {
             simulation.resumeSimulation();
             animationTimer.start();
-            startTheSimulation.setText("Stop the simulation");
+            startStopSimulationButton.setText("Stop the simulation");
         } else {
             simulation.pauseSimulation();
             animationTimer.stop();
-            startTheSimulation.setText("Resume the simulation");
+            startStopSimulationButton.setText("Resume the simulation");
         }
     }
 
@@ -98,7 +98,7 @@ public class SimulationController {
                 if (simulation.isNotRunning()) {
                     animationTimer.stop();
                     animationTimer = null;
-                    startTheSimulation.setDisable(true);
+                    startStopSimulationButton.setDisable(true);
                 } else {
                     simulation.run();
                     mapDrawer.drawMap();
@@ -110,15 +110,15 @@ public class SimulationController {
 
     @FXML
     public void initialize() {
-        startTheSimulation.setOnAction(event -> onSimulationStartClicked());
+        startStopSimulationButton.setOnAction(event -> handleSimulationStartStop());
     }
     private void initializeStatistic() {
-        simulationStats[0] = emptyCellsLabel;
+        simulationStats[0] = emptyCellsCounterLabel;
         simulationStats[1] = mostCommonGenotypeLabel;
         simulationStats[2] = animalEnergyLabel;
         simulationStats[3] = ageOfAliveAnimalsLabel;
         simulationStats[4] = ageOfDeadAnimalsLabel;
-        simulationStats[5] = highlightMostCommonGenotype;
+        simulationStats[5] = highlightMostCommonGenotypeButton;
     }
     private void initializeMapLegend() {
         if(Objects.equals(mapOption, "Underground tunnels")){

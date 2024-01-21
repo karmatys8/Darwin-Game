@@ -41,14 +41,15 @@ public class SimulationSetupController {
 
     List<TextField> nonNegativeFields, positiveFields, allTextFields;
     List<ComboBox<String>> comboBoxes;
-    GsonConfigs gsonConfigs;
+    GsonConfigs configsManager;
 
 
     public void initialize() {
         setUpFields();
         setUpComboBoxes();
         comboBoxes = List.of(mapOption, mutationOption);
-        gsonConfigs = new GsonConfigs(allTextFields, comboBoxes);
+        configsManager = new GsonConfigs(allTextFields, comboBoxes);
+
         setUpListOfSavedConfigs();
         setActions();
     }
@@ -58,7 +59,7 @@ public class SimulationSetupController {
         saveConfigs.setOnAction(event -> saveConfigs());
         listOfSavedConfigs.setOnAction(event -> {
             try {
-                gsonConfigs.readConfigs(listOfSavedConfigs.getValue());
+                configsManager.readConfigs(listOfSavedConfigs.getValue());
             } catch (FileNotFoundException e) {
                 showError("Missing file Error", "", "");
             }
@@ -68,7 +69,7 @@ public class SimulationSetupController {
     private void setUpListOfSavedConfigs() {
         try {
             ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
-            gsonConfigs.filesAsList(listOfConfigs);
+            configsManager.filesAsList(listOfConfigs);
 
             listOfSavedConfigs.setItems(listOfConfigs);
             listOfSavedConfigs.setPromptText("Saved configs");
@@ -227,7 +228,7 @@ public class SimulationSetupController {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {
-                    gsonConfigs.saveConfigs(fileName.get());
+                    configsManager.saveConfigs(fileName.get());
                 }
             } catch (DuplicateConfigNameException e) {
                 showError("Duplicate file name Error", "", e.getMessage());

@@ -106,7 +106,7 @@ public class Animal {
         direction = direction.turnRight(genotype.getCurrentGene(currentGeneIndex));
         this.nextGene();
 
-        Pair<Vector2d, Integer> instructions = globe.howToMove(position, direction);
+        Pair<Vector2d, Integer> instructions = globe.calculateNextPosition(position, direction);
         position = instructions.getKey();
         direction.turnRight(instructions.getValue());
     }
