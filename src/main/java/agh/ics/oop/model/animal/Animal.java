@@ -118,14 +118,14 @@ public class Animal {
     public int getDaysLived(){ return daysLived;}
     public Integer getDayOfDeath(){ return dayOfDeath;}
 
-    public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe
+    public void move(AbstractWorldMap globe) {
         energy--;
         daysLived++;
 
         direction = direction.turnRight(genotype.getCurrentGene(this.currentGeneIndex));
         this.nextGene();
 
-        Pair<Vector2d, Integer> instructions = globe.howToMove(position, direction);
+        Pair<Vector2d, Integer> instructions = globe.calculateNextPosition(position, direction);
         position = instructions.getKey();
         direction.turnRight(instructions.getValue());
     }

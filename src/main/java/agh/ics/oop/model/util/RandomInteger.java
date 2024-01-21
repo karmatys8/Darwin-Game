@@ -5,15 +5,15 @@ import java.util.Random;
 public class RandomInteger {
     private static final Random random = new Random();
 
-    public static int getRandomInt(int max) {
-        return random.nextInt(max + 1);
+    public static int getRandomInt(int upperBound) {
+        return random.nextInt(upperBound + 1);
     }
 
-    public static int getRandomInt(int min, int max) {
-        if (min > max) {
-            throw new IllegalArgumentException("Min value must not be greater than max value");
+    public static int getRandomInt(int lowerBound, int upperBound) {
+        if (lowerBound > upperBound) {
+            throw new IllegalArgumentException("Min value must not be greater than upperBound value");
         }
-        return random.nextInt(max - min + 1) + min;
+        return random.nextInt(upperBound - lowerBound + 1) + lowerBound;
     }
 
     public static boolean getRandomBoolean() {

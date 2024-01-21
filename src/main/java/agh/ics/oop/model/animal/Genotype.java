@@ -23,7 +23,7 @@ abstract public class Genotype {
             genes.add(RandomInteger.getRandomInt(7));
         }
     }
-    public Genotype(Genotype other) { //copying method
+    public Genotype(Genotype other) {
         this.genes = new ArrayList<>(other.genes);
         this.minNumberOfMutations = other.minNumberOfMutations;
         this.maxNumberOfMutations = other.maxNumberOfMutations;

@@ -12,7 +12,7 @@ public enum MapDirection {
     W("W", new Vector2d(-1, 0)),
     NW("NW", new Vector2d(-1, 1));
 
-    private final String value; // we can change it later if necessary
+    private final String value;
     private final Vector2d unitVector;
 
     public Vector2d getUnitVector() {

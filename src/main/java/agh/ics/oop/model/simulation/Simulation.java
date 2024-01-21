@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
     private final String mapOption;
     private int currentDay = 0;
     private final SimulationController controller;
-    private boolean running = true;
+    private boolean isRunning = true;
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
     private Average deadAnimalsAge = new Average();
@@ -40,7 +40,7 @@ public class Simulation implements Runnable {
         plants = new Plants(width, height);
         plants.addPlants(plantConfig.startingCount());
 
-        worldMap = WorldMapFactory.getWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
+        worldMap = WorldMapFactory.createWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
         this.controller = controller;
         this.animalConfig = animalConfig;
         for (int i = 0; i < animalConfig.startingCount(); i++) {
@@ -126,15 +126,15 @@ public class Simulation implements Runnable {
     }
 
     public boolean isNotRunning() {
-        return !running;
+        return !isRunning;
     }
 
     public void pauseSimulation() {
-        running = false;
+        isRunning = false;
     }
 
     public void resumeSimulation() {
-        running = true;
+        isRunning = true;
     }
 
     public int getCurrentDay(){
@@ -157,7 +157,7 @@ public class Simulation implements Runnable {
 
     public void run() {
         try {
-            if (!aliveAnimals.isEmpty() && running) {
+            if (!aliveAnimals.isEmpty() && isRunning) {
                 setUpAverages();
                 killAnimals();
                 moveAnimals();
@@ -167,7 +167,7 @@ public class Simulation implements Runnable {
                 currentDay++;
                 Thread.sleep(updateInterval);
             } else {
-                running = false;
+                isRunning = false;
             }
         } catch (InterruptedException ignored) {}
     }

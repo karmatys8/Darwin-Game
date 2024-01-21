@@ -22,7 +22,7 @@ public class NodeCreator {
         this.startingEnergy = startingEnergy;
     }
 
-    public Node animalsNode(Animal animal) {
+    public Node createAnimalsNode(Animal animal) {
         Circle dot = createDot("#31081F", 3.5);
         Button animalButton = new Button();
         dot.setOpacity(min((((double)animal.getEnergy())/ startingEnergy), 1));
@@ -31,7 +31,7 @@ public class NodeCreator {
         return animalButton;
     }
 
-    public Node plantsNode() {
+    public Node createPlantsNode() {
         Label cellLabel = new Label(" ");
         cellLabel.setContentDisplay(ContentDisplay.CENTER);
         Shape triangle = createTriangle("#F5FCE9");
@@ -40,7 +40,7 @@ public class NodeCreator {
         return cellLabel;
     }
 
-    public Node tunnelsNode() {
+    public Node createTunnelsNode() {
         Label cellLabel = new Label(" ");
         cellLabel.setContentDisplay(ContentDisplay.CENTER);
         Circle dot = createDot("#00000000", 4.0);
