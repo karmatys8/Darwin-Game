@@ -1,6 +1,5 @@
 package agh.ics.oop.model.animal;
 
-import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.util.RandomInteger;
 
 import java.util.Comparator;

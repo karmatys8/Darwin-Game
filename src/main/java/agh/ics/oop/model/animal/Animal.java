@@ -26,11 +26,8 @@ public class Animal {
 
 
     public Animal(Vector2d position, AnimalConfig animalConfig) {
-        this.position = position;
-        this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
-
+        initializeCommonProperties(position, animalConfig);
         this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
-        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.startingEnergy();
         this.minEnergyToReproduce = animalConfig.minEnergyToReproduce();
@@ -40,13 +37,11 @@ public class Animal {
     }
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
-        this.position = mother.getPosition();
-        this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
-
+        initializeCommonProperties(mother.getPosition(), animalConfig);
         this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), mother, father);
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
-        this.energy = animalConfig.energyUsedToReproduce()*2;
+        this.energy = animalConfig.energyUsedToReproduce() * 2;
         this.minEnergyToReproduce = animalConfig.minEnergyToReproduce();
 
         this.mother = mother;
@@ -63,24 +58,10 @@ public class Animal {
         father.updateDescendants(ancestors);
     }
 
-    private void updateDescendants(Set<Animal> ancestors) {
-        descendants++;
-        if (father != null) {
-            if (!ancestors.contains(father)) {
-                ancestors.add(father);
-                father.updateDescendants(ancestors);
-            }
-        }
-        if (mother != null) {
-            if(!ancestors.contains(mother)) {
-                ancestors.add(mother);
-                mother.updateDescendants(ancestors);
-            }
-        }
-    }
-
-    private void updateChildren() {
-        this.children++;
+    private void initializeCommonProperties(Vector2d mother, AnimalConfig animalConfig) {
+        this.position = mother;
+        this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
+        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
     }
 
     public Vector2d getPosition() {
@@ -96,15 +77,15 @@ public class Animal {
     public int getCurrentGene(){ return genotype.getCurrentGene(currentGeneIndex);}
 
     private void useEnergy(int energyUsedToReproduce) {
-        this.energy-=energyUsedToReproduce;
+        energy-=energyUsedToReproduce;
     }
 
     public void nextGene(){
-        this.currentGeneIndex=(this.currentGeneIndex+1)%genotype.getGenes().size();
+        currentGeneIndex=(currentGeneIndex+1)%genotype.getGenes().size();
     }
 
     public boolean canReproduce(){
-        return this.energy>=this.minEnergyToReproduce;
+        return energy >= minEnergyToReproduce;
     }
 
     public int getNumberOfDescendants() {
@@ -118,11 +99,11 @@ public class Animal {
     public int getDaysLived(){ return daysLived;}
     public Integer getDayOfDeath(){ return dayOfDeath;}
 
-    public void move(AbstractWorldMap globe) { // I feel like animal should not receive globe
+    public void move(AbstractWorldMap globe) {
         energy--;
         daysLived++;
 
-        direction = direction.turnRight(genotype.getCurrentGene(this.currentGeneIndex));
+        direction = direction.turnRight(genotype.getCurrentGene(currentGeneIndex));
         this.nextGene();
 
         Pair<Vector2d, Integer> instructions = globe.howToMove(position, direction);
@@ -139,5 +120,21 @@ public class Animal {
     public void eat(int energy) {
         plantsEaten++;
         this.energy += energy;
+    }
+
+    private void updateDescendants(Set<Animal> ancestors) {
+        descendants++;
+        if (father != null  &&  !ancestors.contains(father)) {
+            ancestors.add(father);
+            father.updateDescendants(ancestors);
+        }
+        if (mother != null  &&  !ancestors.contains(mother)) {
+            ancestors.add(mother);
+            mother.updateDescendants(ancestors);
+        }
+    }
+
+    private void updateChildren() {
+        this.children++;
     }
 }

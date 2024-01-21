@@ -114,7 +114,7 @@ public class MapDrawer {
         lineChart.setAnimated(false);
         lineChart.getXAxis().setAutoRanging(true);
 
-        XYChart.Series<String, Number> animalSeries = new XYChart.Series<>(); //<String, Number> is a temporary solution- i coulndt get <number, number> to work
+        XYChart.Series<String, Number> animalSeries = new XYChart.Series<>();
         animalSeries.setName("Number of Animals");
 
         XYChart.Series<String, Number> plantSeries = new XYChart.Series<>();
@@ -207,8 +207,8 @@ public class MapDrawer {
     }
 
     private void highlightObservedAnimal(){
-        if(observedAnimal != null && observedAnimal.getDayOfDeath() == null){
-            Vector2d position =  observedAnimal.getPosition();
+        if(observedAnimal != null  &&  observedAnimal.getDayOfDeath() == null){
+            Vector2d position = observedAnimal.getPosition();
             printCell(position.x(), position.y(), "#F57D51");
         }
     }

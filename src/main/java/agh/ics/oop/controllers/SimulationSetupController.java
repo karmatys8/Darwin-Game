@@ -47,10 +47,8 @@ public class SimulationSetupController {
     public void initialize() {
         setUpFields();
         setUpComboBoxes();
-
         comboBoxes = List.of(mapOption, mutationOption);
         gsonConfigs = new GsonConfigs(allTextFields, comboBoxes);
-
         setUpListOfSavedConfigs();
         setActions();
     }
@@ -199,20 +197,19 @@ public class SimulationSetupController {
         dialog.setTitle("Configs file name");
         dialog.setHeaderText("Please enter a file name below.");
         dialog.setContentText("Name:");
-
         return dialog.showAndWait();
     }
 
     private boolean areInBoundaries(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
-                && checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
-                && checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
-                && checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
-                && checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
-                && checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
+                & checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
+                & checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
+                & checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
+                & checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
+                & checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
                 "Minimal energy to reproduce cannot be greater than the energy to be well fed.", errorMessage)
-                && checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
+                & checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
     }
 
     private boolean checkMaxValues(int maxValue, TextField field, String message, StringBuilder errorMessage) {
@@ -226,7 +223,7 @@ public class SimulationSetupController {
 
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) && areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {

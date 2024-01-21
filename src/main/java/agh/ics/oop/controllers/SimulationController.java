@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.Objects;
+
 public class SimulationController {
     private MapDrawer mapDrawer;
     private AnimalConfig animalConfig;
@@ -57,26 +59,34 @@ public class SimulationController {
     @FXML
     private void onSimulationStartClicked() {
         if(simulation == null) {
-            simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
+            initializeSimulation();
+        } else {
+            toggleSimulationState();
+        }
+    }
 
-            initializeMapLegend();
-            mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation, shouldWriteToCSV);
-            mapDrawer.initializeLineChart();
-            mapDrawer.drawMap();
+    private void initializeSimulation() {
+        simulation = new Simulation(width, height, plantConfig, animalConfig, updateInterval, mapOption,this);
 
-            initializeAnimationTimer();
+        initializeMapLegend();
+        mapDrawer = new MapDrawer(width, height, mapGrid, lineChart, simulationStats, simulation, shouldWriteToCSV);
+        mapDrawer.initializeLineChart();
+        mapDrawer.drawMap();
 
+        initializeAnimationTimer();
+
+        startTheSimulation.setText("Stop the simulation");
+    }
+
+    private void toggleSimulationState() {
+        if (simulation.isNotRunning()) {
+            simulation.resumeSimulation();
+            animationTimer.start();
             startTheSimulation.setText("Stop the simulation");
         } else {
-            if (simulation.isNotRunning()) {
-                simulation.resumeSimulation();
-                animationTimer.start();
-                startTheSimulation.setText("Stop the simulation");
-            } else {
-                simulation.pauseSimulation();
-                animationTimer.stop();
-                startTheSimulation.setText("Resume the simulation");
-            }
+            simulation.pauseSimulation();
+            animationTimer.stop();
+            startTheSimulation.setText("Resume the simulation");
         }
     }
 
@@ -84,7 +94,7 @@ public class SimulationController {
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if(mapDrawer.getIsAlertShown()){ mapDrawer.updateAnimalInformation();}
+                if (mapDrawer.getIsAlertShown()) mapDrawer.updateAnimalInformation();
                 if (simulation.isNotRunning()) {
                     animationTimer.stop();
                     animationTimer = null;
@@ -111,7 +121,7 @@ public class SimulationController {
         simulationStats[5] = highlightMostCommonGenotype;
     }
     private void initializeMapLegend() {
-        if(mapOption == "Underground tunnels"){
+        if(Objects.equals(mapOption, "Underground tunnels")){
             Label label = new Label("Tunnels");
             label.getStyleClass().add("map-legend-text");
 
@@ -119,7 +129,7 @@ public class SimulationController {
             circle.setRadius(17.0);
             circle.setFill(Color.TRANSPARENT);
             circle.setStroke(Color.web("#1e3f20"));
-            mapLegend.setMargin(circle, new Insets(0, 0, 0, 10));
+            GridPane.setMargin(circle, new Insets(0, 0, 0, 10));
 
             mapLegend.add(circle, 4, 0);
             mapLegend.add(label, 5, 0);

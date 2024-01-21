@@ -28,7 +28,7 @@ public class RandomGenotype extends Genotype {
         int numberOfMutations = RandomInteger.getRandomInt(minNumberOfMutations, maxNumberOfMutations);
 
         for (int i = 0; i < numberOfMutations; i++) {
-            randomGene(RandomInteger.getRandomInt(genes.size()-1));
+            randomGene(RandomInteger.getRandomInt(genes.size() - 1));
         }
     }
 

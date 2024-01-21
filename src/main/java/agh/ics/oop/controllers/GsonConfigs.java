@@ -3,7 +3,6 @@ package agh.ics.oop.controllers;
 import agh.ics.oop.model.util.exceceptions.DuplicateConfigNameException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -18,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
 
@@ -46,18 +46,17 @@ public class GsonConfigs {
     }
 
     public void saveConfigs(String name) throws IOException, DuplicateConfigNameException {
-        File file = new File(SAVED_CONFIGS_URL, name + ".json");
-        if (file.exists()) {
+        Path filePath = Paths.get(SAVED_CONFIGS_URL, name + ".json");
+        if (Files.exists(filePath)) {
             throw new DuplicateConfigNameException(name);
         }
 
-        Path createdFile = Files.createFile(Path.of(SAVED_CONFIGS_URL, name + ".json"));
         Map<String, Object> keyValueMap = new HashMap<>();
         textFields.forEach(field -> keyValueMap.put(field.getId(), field.getText()));
         comboBoxes.forEach(box -> keyValueMap.put(box.getId(), box.getValue()));
 
         String json = gson.toJson(keyValueMap);
-        Files.write(createdFile, Collections.singleton(json), StandardCharsets.UTF_8);
+        Files.writeString(filePath, json, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
     }
 
     public void readConfigs(String fileName) throws FileNotFoundException {

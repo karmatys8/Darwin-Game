@@ -43,6 +43,15 @@ public class Simulation implements Runnable {
         worldMap = WorldMapFactory.getWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
         this.controller = controller;
         this.animalConfig = animalConfig;
+
+        initializeAnimals(width, height, animalConfig);
+
+        this.plantConfig = plantConfig;
+        this.updateInterval = updateInterval;
+        this.mapOption = mapOption;
+    }
+
+    private void initializeAnimals(int width, int height, AnimalConfig animalConfig) {
         for (int i = 0; i < animalConfig.startingCount(); i++) {
             Animal animal = new Animal(new Vector2d(RandomInteger.getRandomInt(1, width),
                     RandomInteger.getRandomInt(1, height)), animalConfig);
@@ -50,9 +59,6 @@ public class Simulation implements Runnable {
             aliveAnimals.add(animal);
             mostCommonGenotype.insert(animal.getGenotype());
         }
-        this.plantConfig = plantConfig;
-        this.updateInterval = updateInterval;
-        this.mapOption = mapOption;
     }
 
     private void killAnimal(Animal animal) {
@@ -64,15 +70,13 @@ public class Simulation implements Runnable {
     }
 
     private void killAnimals() {
-        List<Animal> animalsToKill = new ArrayList<>();
-        for (Animal animal : aliveAnimals) {
+        Iterator<Animal> iterator = aliveAnimals.iterator();
+        while (iterator.hasNext()) {
+            Animal animal = iterator.next();
             if (animal.getEnergy() <= 0) {
-                animalsToKill.add(animal);
+                iterator.remove();
+                killAnimal(animal);
             }
-        }
-
-        for (Animal animal : animalsToKill) {
-            killAnimal(animal);
         }
     }
 
@@ -96,16 +100,9 @@ public class Simulation implements Runnable {
         aliveAnimalsAge.add(animal.getDaysLived());
     }
 
-    private void moveAnimals() {
-        for (Animal animal : aliveAnimals) {
-            moveAnimal(animal);
-        }
-    }
-
     private void feedAndReproduceAnimals() {
         for (Vector2d position : animalsMap.keySet()) {
             List<Animal> currAnimals = animalsMap.get(position);
-
             currAnimals.sort(animalComparator);
 
             if (plants.wasEaten(position)) {
@@ -160,7 +157,7 @@ public class Simulation implements Runnable {
             if (!aliveAnimals.isEmpty() && running) {
                 setUpAverages();
                 killAnimals();
-                moveAnimals();
+                aliveAnimals.forEach(this::moveAnimal);
                 feedAndReproduceAnimals();
                 plants.addPlants(plantConfig.plantsPerDay());
 
@@ -175,6 +172,7 @@ public class Simulation implements Runnable {
     public AbstractWorldMap getMap() {
         return worldMap;
     }
+
     private void setUpAverages(){
         animalsEnergy = new Average();
         aliveAnimalsAge = new Average();

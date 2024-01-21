@@ -7,8 +7,8 @@ import java.util.*;
 
 
 public class Plants {
-    private final Set<Vector2d> emptyFieldsOnEquator = new LinkedHashSet<>();
-    private final Set<Vector2d> emptyFieldsOutsideOfEquator = new LinkedHashSet<>();
+    private final Set<Vector2d> emptyFieldsOnEquator = new HashSet<>();
+    private final Set<Vector2d> emptyFieldsOutsideOfEquator = new HashSet<>();
     private final int equatorStart;
     private final int equatorEnd;
     private int numberOfPlants = 0;
