@@ -96,15 +96,6 @@
                         </Circle>
                         <Label styleClass="map-legend-text" text="Animals" GridPane.columnIndex="3" />
                      <Polygon fill="#f5fce9" points="20.799806594848633, -4.8005475997924805, 56.79974365234375, -4.800585746765137, 38.399749755859375, -37.602821350097656" stroke="#f5fce9" strokeType="INSIDE" />
-                     <columnConstraints>
-                        <ColumnConstraints />
-                        <ColumnConstraints />
-                        <ColumnConstraints />
-                        <ColumnConstraints />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints />
-                     </rowConstraints>
                   </GridPane>
                </bottom>
             </BorderPane>
