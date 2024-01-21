@@ -1,0 +1,17 @@
+{
+  "initialNumberOfAnimals": "5",
+  "energyToReproduce": "50",
+  "initialEnergyOfAnimals": "50",
+  "lengthOfGenotypes": "7",
+  "plantsEachDay": "56",
+  "energyFromOnePlant": "14",
+  "maxNumberOfMutations": "3",
+  "mapHeight": "20",
+  "mapOption": "Underground tunnels",
+  "minNumberOfMutations": "1",
+  "mutationOption": "Full randomness",
+  "updateInterval": "200",
+  "initialNumberOfPlants": "30",
+  "mapWidth": "20",
+  "energyToBeWellFed": "50"
+}
