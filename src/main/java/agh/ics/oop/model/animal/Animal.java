@@ -17,7 +17,7 @@ public class Animal {
     private Genotype genotype;
     private int energy, daysLived = 0, plantsEaten = 0;
     private Integer dayOfDeath;
-    private int currentGeneIndex;
+    private int currentGeneIndex; // czemu to jest w zwierzęciu, a nie w genotypie?
     private final Animal mother;
     private final Animal father;
     private int descendants=0;
@@ -58,7 +58,7 @@ public class Animal {
         father.updateDescendants(ancestors);
     }
 
-    private void initializeCommonProperties(Vector2d mother, AnimalConfig animalConfig) {
+    private void initializeCommonProperties(Vector2d mother, AnimalConfig animalConfig) { // wektor jest matką?
         this.position = mother;
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
         this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);

@@ -1,4 +1,4 @@
-package agh.ics.oop.controllers;
+package agh.ics.oop.controllers; // czy to na pewno controller?
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -19,14 +19,14 @@ public class CSVWriter {
     private static final String CSV_FILES_URL = "src/main/resources/csvFiles";
     private final Label[] simulationStats;
     private final UUID mapId;
-    private Path createdFile;
+    private Path createdFile; // final
 
     public CSVWriter(Node[] simulationStats, UUID mapId) throws IOException {
         this.simulationStats = Arrays.stream(simulationStats, 0, 5)
                                         .map(node -> (Label) node)
                                         .toArray(Label[]::new);
         this.mapId = mapId;
-        initializeFile();
+        initializeFile(); // zakłócenie poziomu abstrakcji
     }
 
     private void initializeFile() throws IOException {

@@ -30,7 +30,7 @@ public class RandomGenotype extends Genotype {
         }
     }
 
-    private void randomGene(int geneIndex) {
+    private void randomGene(int geneIndex) { // ?
         Collections.shuffle(randomGenes);
         int randomGene = randomGenes.get(0);
 

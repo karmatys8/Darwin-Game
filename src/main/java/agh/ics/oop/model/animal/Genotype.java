@@ -46,7 +46,7 @@ abstract public class Genotype {
         mutate();
     }
 
-    private void validateParents(Animal mother, Animal father) {
+    private void validateParents(Animal mother, Animal father) { // ta metoda jest używana tylko w jednym miejscu, a jest dość krótka
         if (mother == null || father == null) {
             throw new IllegalArgumentException("Both mother and father must not be null");
         }

@@ -1,4 +1,4 @@
-package agh.ics.oop.model.simulation;
+package agh.ics.oop.model.simulation; // opłaca się pakiet na jedną klasę?
 
 
 import agh.ics.oop.controllers.SimulationController;
@@ -86,7 +86,7 @@ public class Simulation implements Runnable {
 
         Vector2d newPosition = animal.getPosition();
         if (oldPosition != newPosition) {
-            List<Animal> prevAnimals = animalsMap.get(oldPosition);
+            List<Animal> prevAnimals = animalsMap.get(oldPosition); // czy to jest zadanie symulacji?
             prevAnimals.remove(animal);
 
             if (prevAnimals.isEmpty()) animalsMap.remove(oldPosition);
@@ -154,7 +154,7 @@ public class Simulation implements Runnable {
 
     public void run() {
         try {
-            if (!aliveAnimals.isEmpty() && isRunning) {
+            if (!aliveAnimals.isEmpty() && isRunning) { // czy tu nie powinno być jakiejś pętli?
                 setUpAverages();
                 killAnimals();
                 aliveAnimals.forEach(this::moveAnimal);

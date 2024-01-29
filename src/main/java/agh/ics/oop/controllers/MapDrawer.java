@@ -192,7 +192,7 @@ public class MapDrawer {
         Average[] simulationAverageStats = simulation.getSimulationStats();
         ((Label) simulationStats[0]).setText(String.valueOf(emptyCellsCounter));
         Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
-        ((Label) simulationStats[1]).setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");
+        ((Label) simulationStats[1]).setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");  // skąd te rzutowania?
         ((Label) simulationStats[2]).setText(String.valueOf(simulationAverageStats[0].getAverage()));
         ((Label) simulationStats[3]).setText(String.valueOf(simulationAverageStats[1].getAverage()));
         ((Label) simulationStats[4]).setText(String.valueOf(simulationAverageStats[2].getAverage()));

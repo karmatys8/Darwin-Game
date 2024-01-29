@@ -27,7 +27,7 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public Pair<Node, Optional<Animal>> getNodeAt(Vector2d position) {
+    public Pair<Node, Optional<Animal>> getNodeAt(Vector2d position) { // czy to jest zadanie mapy, żeby zwrócić Node?
         List<Animal> animalsAtThisPosition = animalsMap.get(position);
         if (animalsAtThisPosition != null) {
             Collections.sort(animalsAtThisPosition, animalComparator);

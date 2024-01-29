@@ -201,7 +201,7 @@ public class SimulationSetupController {
         return dialog.showAndWait();
     }
 
-    private boolean areInBoundaries(StringBuilder errorMessage) {
+    private boolean areInBoundaries(StringBuilder errorMessage) { // nieczytelna nazwa
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
                 & checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
@@ -253,4 +253,4 @@ public class SimulationSetupController {
         PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
         simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue(), csvCheckBox.isSelected());
     }
-}
+} // duża ta klasa
