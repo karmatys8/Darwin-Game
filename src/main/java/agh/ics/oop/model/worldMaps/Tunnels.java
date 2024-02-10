@@ -31,7 +31,6 @@ public class Tunnels extends AbstractWorldMap {
             Vector2d start = generateTunnelEntry();
             tunnels.put(start, placeholder);
             Vector2d end = generateTunnelEntry();
-
             tunnels.put(start, end);
             tunnels.put(end, start);
         }

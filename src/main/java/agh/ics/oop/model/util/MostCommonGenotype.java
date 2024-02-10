@@ -19,13 +19,13 @@ public class MostCommonGenotype {
         int count = genotypeCounterMap.getOrDefault(genotype, 0) + 1;
         genotypeCounterMap.put(genotype, count);
 
-        maxHeap.remove(Map.entry(genotype, count-1));
+        maxHeap.remove(Map.entry(genotype, count - 1));
         maxHeap.add(Map.entry(genotype, count));
     }
 
     public void remove(Genotype genotype) {
         int count = genotypeCounterMap.get(genotype) - 1;
-        maxHeap.remove(Map.entry(genotype, count+1));
+        maxHeap.remove(Map.entry(genotype, count + 1));
         if (count > 0) {
             maxHeap.add(Map.entry(genotype, count));
             genotypeCounterMap.put(genotype, count);

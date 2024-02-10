@@ -1,7 +1,5 @@
 package agh.ics.oop.model.util;
 
-import java.text.DecimalFormat;
-
 import static java.lang.StrictMath.round;
 
 public class Average {
@@ -20,8 +18,6 @@ public class Average {
     public int getAverage() {
         if (numberOfElements == 0) { return 0; }
 
-        int average = (int) round((double) sum / (double) numberOfElements);
-
-        return average;
+        return (int) round((double) sum / (double) numberOfElements);
     }
 }
