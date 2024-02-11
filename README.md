@@ -2,6 +2,8 @@
 
 This project has been developed for an object-oriented programming course at AGH.
 
+[Polska wersja](README-translations/pl/README.md)
+
 ## Grade
 
 Final grade was **27/32** points:
