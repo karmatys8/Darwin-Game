@@ -1,11 +1,9 @@
 package agh.ics.oop.controllers;
 
 import agh.ics.oop.model.movement.Vector2d;
-import agh.ics.oop.model.simulation.Simulation;
-import agh.ics.oop.model.util.Average;
+import agh.ics.oop.model.Simulation;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Genotype;
-import agh.ics.oop.model.util.exceceptions.CSVFileWritingException;
 import agh.ics.oop.model.util.exceceptions.UnexpectedNodeException;
 import agh.ics.oop.model.worldMaps.AbstractWorldMap;
 import javafx.fxml.FXML;
@@ -35,14 +33,12 @@ public class MapDrawer {
     private final int width, height;
     @FXML private final GridPane mapGrid;
     @FXML private final LineChart<String, Number> lineChart;
-    private int emptyCellsCounter, dataPointCounter = 0;
+    private int dataPointCounter = 0;
     private final int equatorStart, equatorEnd;
     private boolean isAlertShown = false;
     private Animal observedAnimal;
-    private Label[] animalStats = new Label[7];
-    private Node[] simulationStats;
-    private boolean shouldWriteToCSV;
-    private CSVWriter csvWriter;
+    private final Label[] animalStats = new Label[7];
+    final Statistics statistics;
 
     public MapDrawer(int width, int height, GridPane mapGrid, LineChart<String, Number> lineChart, Node[] simulationStats, Simulation simulation, boolean shouldWriteToCSV) {
         this.width = width;
@@ -55,29 +51,13 @@ public class MapDrawer {
         this.lineChart = lineChart;
         this.simulation = simulation;
         this.worldMap = simulation.getMap();
-        this.simulationStats = simulationStats;
         ((Button)simulationStats[5]).setOnAction(event -> highlightMostCommonGenotype());
-        this.shouldWriteToCSV = shouldWriteToCSV;
-        initializeCSVWriter();
-    }
 
-    private void initializeCSVWriter() {
-        if (shouldWriteToCSV) {
-            try {
-                csvWriter = new CSVWriter(simulationStats, simulation.getId());
-            } catch (IOException e) {
-                handleCSVError(e);
-            }
-        }
-    }
-
-    private void handleCSVError(IOException e) {
-        shouldWriteToCSV = false;
-        throw new CSVFileWritingException(simulation.getId(), e.getCause());
+        statistics = new Statistics(simulation, animalStats, simulationStats, shouldWriteToCSV);
     }
 
     void drawMap() {
-        emptyCellsCounter = 0;
+        statistics.resetEmptyCellsCounter();
         mapGrid.getChildren().clear();
         updateLineChart();
         if(dataPointCounter > 10){
@@ -93,7 +73,7 @@ public class MapDrawer {
             this.notify();
         }
 
-        updateStats();
+        statistics.updateStats();
         highlightObservedAnimal();
     }
 
@@ -152,6 +132,7 @@ public class MapDrawer {
 
             GridPane gridPane = new GridPane();
             observedAnimal = animal;
+            statistics.setObservedAnimal(animal);
 
             for (int i = 0; i < animalStats.length; i++) {
                 Label label = new Label("");
@@ -159,51 +140,22 @@ public class MapDrawer {
                 animalStats[i] = label;
             }
 
-            updateAnimalInformation();
+            statistics.updateAnimalInformation();
             gridPane.setPrefWidth(250);
 
             alert.getDialogPane().setContent(gridPane);
             alert.setOnCloseRequest(event -> {
                 isAlertShown = false;
                 observedAnimal = null;
+                statistics.setObservedAnimal(null);
             });
             isAlertShown = true;
             alert.showAndWait();
         }
     }
 
-    void updateAnimalInformation() {
-        animalStats[0].setText("Genotype: " + observedAnimal.getGenotype());
-        animalStats[1].setText("Current gene: " + observedAnimal.getCurrentGene());
-        animalStats[2].setText("Energy: " + observedAnimal.getEnergy());
-        animalStats[3].setText("Eaten plants: " + observedAnimal.getPlantsEaten());
-        animalStats[4].setText("Number of children: " + observedAnimal.getNumberOfChildren());
-        animalStats[5].setText("Number of descendants: " + observedAnimal.getNumberOfDescendants());
-        animalStats[6].setText(observedAnimal.getDayOfDeath() == null
-                ? "Days lived: " + observedAnimal.getDaysLived()
-                : "Day of death: " + observedAnimal.getDayOfDeath());
-    }
-
     public boolean getIsAlertShown() {
         return isAlertShown;
-    }
-
-    private void updateStats() {
-        Average[] simulationAverageStats = simulation.getSimulationStats();
-        ((Label) simulationStats[0]).setText(String.valueOf(emptyCellsCounter));
-        Genotype mostCommonGenotype = simulation.getMostCommonGenotype();
-        ((Label) simulationStats[1]).setText(mostCommonGenotype != null ? mostCommonGenotype.toString() : "-");  // skąd te rzutowania?
-        ((Label) simulationStats[2]).setText(String.valueOf(simulationAverageStats[0].getAverage()));
-        ((Label) simulationStats[3]).setText(String.valueOf(simulationAverageStats[1].getAverage()));
-        ((Label) simulationStats[4]).setText(String.valueOf(simulationAverageStats[2].getAverage()));
-
-        if (shouldWriteToCSV) {
-            try {
-                csvWriter.addStatsToCSV(simulation.getCurrentDay(), simulation.getNumberOfAnimals(), simulation.getNumberOfPlants());
-            } catch (IOException e) {
-                handleCSVError(e);
-            }
-        }
     }
 
     private void highlightObservedAnimal(){
@@ -236,7 +188,7 @@ public class MapDrawer {
         } else if (node instanceof Label label) {
             label.setContentDisplay(ContentDisplay.CENTER);
         } else if (node == null) {
-            emptyCellsCounter++;
+            statistics.countAnEmptyCell();
             node = new Label(" ");
         } else throw new UnexpectedNodeException(node);
 

@@ -105,7 +105,7 @@ public class SimulationSetupController {
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areParametersInRange(errorMessage)) {
             new Thread(() -> {
                 try {
                     loadSimulationScene();
@@ -201,7 +201,7 @@ public class SimulationSetupController {
         return dialog.showAndWait();
     }
 
-    private boolean areInBoundaries(StringBuilder errorMessage) { // nieczytelna nazwa
+    private boolean areParametersInRange(StringBuilder errorMessage) {
         int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
         return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
                 & checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
@@ -224,7 +224,7 @@ public class SimulationSetupController {
 
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areParametersInRange(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {

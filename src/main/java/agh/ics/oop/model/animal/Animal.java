@@ -14,10 +14,9 @@ import java.util.Set;
 public class Animal {
     private Vector2d position;
     private MapDirection direction;
-    private Genotype genotype;
+    private final Genotype genotype;
     private int energy, daysLived = 0, plantsEaten = 0;
     private Integer dayOfDeath;
-    private int currentGeneIndex; // czemu to jest w zwierzęciu, a nie w genotypie?
     private final Animal mother;
     private final Animal father;
     private int descendants=0;
@@ -39,7 +38,6 @@ public class Animal {
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
         initializeCommonProperties(mother.getPosition(), animalConfig);
         this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), mother, father);
-        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
 
         this.energy = animalConfig.energyUsedToReproduce() * 2;
         this.minEnergyToReproduce = animalConfig.minEnergyToReproduce();
@@ -61,7 +59,6 @@ public class Animal {
     private void initializeCommonProperties(Vector2d mother, AnimalConfig animalConfig) { // wektor jest matką?
         this.position = mother;
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
-        this.currentGeneIndex = RandomInteger.getRandomInt(animalConfig.genomeLength() - 1);
     }
 
     public Vector2d getPosition() {
@@ -74,14 +71,10 @@ public class Animal {
 
     public Genotype getGenotype() { return GenotypeFactory.getGenotype(genotype);}
 
-    public int getCurrentGene(){ return genotype.getCurrentGene(currentGeneIndex);}
+    public int getCurrentGene(){ return genotype.getCurrentGene();}
 
     private void useEnergy(int energyUsedToReproduce) {
         energy-=energyUsedToReproduce;
-    }
-
-    public void nextGene(){
-        currentGeneIndex=(currentGeneIndex+1)%genotype.getGenes().size();
     }
 
     public boolean canReproduce(){
@@ -103,8 +96,8 @@ public class Animal {
         energy--;
         daysLived++;
 
-        direction = direction.turnRight(genotype.getCurrentGene(currentGeneIndex));
-        this.nextGene();
+        direction = direction.turnRight(genotype.getCurrentGene());
+        genotype.nextGene();
 
         Pair<Vector2d, Integer> instructions = globe.calculateNextPosition(position, direction);
         position = instructions.getKey();

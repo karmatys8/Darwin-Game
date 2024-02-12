@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 
 abstract public class Genotype {
     protected final List<Integer> genes;
+    private int currentGeneIndex;
+
     protected final int minNumberOfMutations;
     protected final int maxNumberOfMutations;
 
@@ -20,16 +22,20 @@ abstract public class Genotype {
         genes = IntStream.range(0, genotypeLength)
                 .mapToObj(i -> RandomInteger.getRandomInt(7))
                 .collect(Collectors.toList());
+        this.currentGeneIndex = RandomInteger.getRandomInt(genotypeLength - 1);
     }
 
     public Genotype(Genotype other) {
         this.genes = new ArrayList<>(other.genes);
         this.minNumberOfMutations = other.minNumberOfMutations;
         this.maxNumberOfMutations = other.maxNumberOfMutations;
+        this.currentGeneIndex = other.currentGeneIndex;
     }
 
     public Genotype(Animal mother, Animal father) {
-        validateParents(mother, father);
+        if (mother == null || father == null) {
+            throw new IllegalArgumentException("Neither parent can be null");
+        }
 
         Genotype mothersGenotype = mother.getGenotype();
         this.minNumberOfMutations = mothersGenotype.minNumberOfMutations;
@@ -38,18 +44,14 @@ abstract public class Genotype {
         int divisionPoint = (int) (((double) mother.getEnergy() / (father.getEnergy() + mother.getEnergy())) * mothersGenotype.genes.size());
         boolean chooseLeftSide = RandomInteger.getRandomBoolean();
 
-        genes = IntStream.range(0, mothersGenotype.genes.size())
+        int genotypeLength = mothersGenotype.genes.size();
+        genes = IntStream.range(0, genotypeLength)
                 .mapToObj(i -> (chooseLeftSide && i < divisionPoint) || (!chooseLeftSide && i >= divisionPoint)
                         ? mothersGenotype.genes.get(i) : father.getGenotype().genes.get(i))
                 .collect(Collectors.toList());
+        this.currentGeneIndex = RandomInteger.getRandomInt(genotypeLength - 1);
 
         mutate();
-    }
-
-    private void validateParents(Animal mother, Animal father) { // ta metoda jest używana tylko w jednym miejscu, a jest dość krótka
-        if (mother == null || father == null) {
-            throw new IllegalArgumentException("Both mother and father must not be null");
-        }
     }
 
     protected abstract void mutate();
@@ -73,11 +75,15 @@ abstract public class Genotype {
         return Objects.hash(genes);
     }
 
-    public int getCurrentGene(int currentGeneIndex) {
+    public int getCurrentGene() {
         return genes.get(currentGeneIndex);
     }
 
     public List<Integer> getGenes() {
         return new ArrayList<>(genes);
+    }
+
+    public void nextGene() {
+        currentGeneIndex=(currentGeneIndex+1)% genes.size();
     }
 }

@@ -73,4 +73,22 @@ abstract public class AbstractWorldMap {
     }
 
     abstract public Pair<Node, Optional<Animal>> getNodeAt(Vector2d position);
+
+    public void moveAnimal(Animal animal) {
+        Vector2d oldPosition = animal.getPosition();
+        animal.move(this);
+
+        Vector2d newPosition = animal.getPosition();
+        if (oldPosition != newPosition) {
+            List<Animal> prevAnimals = animalsMap.get(oldPosition);
+            prevAnimals.remove(animal);
+
+            if (prevAnimals.isEmpty()) animalsMap.remove(oldPosition);
+
+            List<Animal> currAnimals = animalsMap.getOrDefault(newPosition, new ArrayList<>(1));
+            currAnimals.add(animal);
+
+            animalsMap.put(newPosition, currAnimals);
+        }
+    }
 }

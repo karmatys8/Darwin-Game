@@ -30,12 +30,14 @@ public class RandomGenotype extends Genotype {
         }
     }
 
-    private void randomGene(int geneIndex) { // ?
+    private void randomGene(int geneIndex) {
         Collections.shuffle(randomGenes);
         int randomGene = randomGenes.get(0);
 
-        if (randomGene != genes.get(geneIndex)) {
-            genes.set(geneIndex, randomGene);
-        } else genes.set(geneIndex, randomGenes.get(1));
+        if (randomGene == genes.get(geneIndex)) {
+            randomGene = randomGenes.get(1);
+        }
+
+        genes.set(geneIndex, randomGene);
     }
 }
