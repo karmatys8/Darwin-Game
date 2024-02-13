@@ -4,7 +4,7 @@ import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.RandomInteger;
 import agh.ics.oop.model.util.configs.AnimalConfig;
-import agh.ics.oop.model.worldMaps.AbstractWorldMap;
+import agh.ics.oop.model.worldMaps.PositionCalculator;
 
 import javafx.util.Pair;
 
@@ -25,7 +25,7 @@ public class Animal {
 
 
     public Animal(Vector2d position, AnimalConfig animalConfig) {
-        initializeCommonProperties(position, animalConfig);
+        initializeCommonProperties(position);
         this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), animalConfig.genomeLength(), animalConfig.minNumberOfMutations(), animalConfig.maxNumberOfMutations());
 
         this.energy = animalConfig.startingEnergy();
@@ -36,7 +36,7 @@ public class Animal {
     }
 
     public Animal(Animal mother, Animal father, AnimalConfig animalConfig) {
-        initializeCommonProperties(mother.getPosition(), animalConfig);
+        initializeCommonProperties(mother.getPosition());
         this.genotype = GenotypeFactory.getGenotype(animalConfig.mutationOption(), mother, father);
 
         this.energy = animalConfig.energyUsedToReproduce() * 2;
@@ -56,8 +56,8 @@ public class Animal {
         father.updateDescendants(ancestors);
     }
 
-    private void initializeCommonProperties(Vector2d mother, AnimalConfig animalConfig) { // wektor jest matką?
-        this.position = mother;
+    private void initializeCommonProperties(Vector2d position) {
+        this.position = position;
         this.direction = MapDirection.values()[RandomInteger.getRandomInt(7)];
     }
 
@@ -92,14 +92,14 @@ public class Animal {
     public int getDaysLived(){ return daysLived;}
     public Integer getDayOfDeath(){ return dayOfDeath;}
 
-    public void move(AbstractWorldMap globe) {
+    public void move(PositionCalculator positionCalculator) {
         energy--;
         daysLived++;
 
         direction = direction.turnRight(genotype.getCurrentGene());
         genotype.nextGene();
 
-        Pair<Vector2d, Integer> instructions = globe.calculateNextPosition(position, direction);
+        Pair<Vector2d, Integer> instructions = positionCalculator.calculateNextPosition(position, direction);
         position = instructions.getKey();
         direction.turnRight(instructions.getValue());
     }

@@ -3,7 +3,6 @@ package agh.ics.oop.model.worldMaps;
 
 import agh.ics.oop.controllers.NodeCreator;
 import agh.ics.oop.model.animal.AnimalComparator;
-import agh.ics.oop.model.movement.MapDirection;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.movement.Vector2d;
 import agh.ics.oop.model.util.configs.AnimalConfig;
@@ -15,7 +14,7 @@ import java.util.*;
 
 import static agh.ics.oop.model.util.CommonMethods.checkIfPositive;
 
-abstract public class AbstractWorldMap {
+abstract public class AbstractWorldMap implements PositionCalculator {
     protected final int width;
     protected final int height;
     protected static final Vector2d lowerLeftBoundary = new Vector2d(1, 1);
@@ -46,8 +45,6 @@ abstract public class AbstractWorldMap {
 
         nodeCreator = new NodeCreator(width, height, animalConfig.startingEnergy());
     }
-
-    abstract public Pair<Vector2d, Integer> calculateNextPosition(Vector2d oldPosition, MapDirection direction);
 
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
