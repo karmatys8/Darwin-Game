@@ -1,4 +1,4 @@
-package agh.ics.oop.model.simulation;
+package agh.ics.oop.model;
 
 
 import agh.ics.oop.controllers.SimulationController;
@@ -27,13 +27,11 @@ public class Simulation implements Runnable {
     private final AnimalConfig animalConfig;
     private final PlantConfig plantConfig;
     private final int updateInterval;
-    private final String mapOption;
     private int currentDay = 0;
-    private final SimulationController controller;
     private boolean isRunning = true;
     private Average animalsEnergy = new Average();
     private Average aliveAnimalsAge = new Average();
-    private Average deadAnimalsAge = new Average();
+    private final Average deadAnimalsAge = new Average();
     private static final AnimalComparator animalComparator = new AnimalComparator();
     private final UUID id = UUID.randomUUID();
     public Simulation(int width, int height, PlantConfig plantConfig, AnimalConfig animalConfig, int updateInterval, String mapOption, SimulationController controller) {
@@ -41,14 +39,12 @@ public class Simulation implements Runnable {
         plants.addPlants(plantConfig.startingCount());
 
         worldMap = WorldMapFactory.createWorldMap(mapOption,width, height, animalConfig, plantConfig, animalsMap, plants);
-        this.controller = controller;
         this.animalConfig = animalConfig;
 
         initializeAnimals(width, height, animalConfig);
 
         this.plantConfig = plantConfig;
         this.updateInterval = updateInterval;
-        this.mapOption = mapOption;
     }
 
     private void initializeAnimals(int width, int height, AnimalConfig animalConfig) {
@@ -81,21 +77,8 @@ public class Simulation implements Runnable {
     }
 
     private void moveAnimal(Animal animal) {
-        Vector2d oldPosition = animal.getPosition();
-        animal.move(worldMap);
+        worldMap.moveAnimal(animal);
 
-        Vector2d newPosition = animal.getPosition();
-        if (oldPosition != newPosition) {
-            List<Animal> prevAnimals = animalsMap.get(oldPosition);
-            prevAnimals.remove(animal);
-
-            if (prevAnimals.isEmpty()) animalsMap.remove(oldPosition);
-
-            List<Animal> currAnimals = animalsMap.getOrDefault(newPosition, new ArrayList<>(1));
-            currAnimals.add(animal);
-
-            animalsMap.put(newPosition, currAnimals);
-        }
         animalsEnergy.add(animal.getEnergy());
         aliveAnimalsAge.add(animal.getDaysLived());
     }

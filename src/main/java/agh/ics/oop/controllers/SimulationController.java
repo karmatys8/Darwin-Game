@@ -1,6 +1,6 @@
 package agh.ics.oop.controllers;
 
-import agh.ics.oop.model.simulation.Simulation;
+import agh.ics.oop.model.Simulation;
 import agh.ics.oop.model.util.configs.AnimalConfig;
 import agh.ics.oop.model.util.configs.PlantConfig;
 import javafx.animation.AnimationTimer;
@@ -94,7 +94,7 @@ public class SimulationController {
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (mapDrawer.getIsAlertShown()) mapDrawer.updateAnimalInformation();
+                if (mapDrawer.getIsAlertShown()) mapDrawer.statistics.updateAnimalInformation();
                 if (simulation.isNotRunning()) {
                     animationTimer.stop();
                     animationTimer = null;

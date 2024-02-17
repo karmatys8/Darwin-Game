@@ -1,6 +1,5 @@
-package agh.ics.oop.controllers;
+package agh.ics.oop;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
@@ -18,43 +17,29 @@ import java.util.stream.Stream;
 public class CSVWriter {
     private static final String CSV_FILES_URL = "src/main/resources/csvFiles";
     private final Label[] simulationStats;
-    private final UUID mapId;
-    private Path createdFile;
+    private final Path createdFile;
 
-    public CSVWriter(Node[] simulationStats, UUID mapId) throws IOException {
-        this.simulationStats = Arrays.stream(simulationStats, 0, 5)
-                                        .map(node -> (Label) node)
-                                        .toArray(Label[]::new);
-        this.mapId = mapId;
-        initializeFile();
-    }
+    public CSVWriter(Label[] statsToTrack, UUID mapId, String[] columnNames) throws IOException {
+        this.simulationStats = statsToTrack;
 
-    private void initializeFile() throws IOException {
         Path filePath = Paths.get(CSV_FILES_URL, mapId + ".csv");
         if (Files.exists(filePath)) {
             throw new RuntimeException("File already exists");
         }
-        createdFile = Files.createFile(filePath);
-        String[] names = streamFormat(Stream.of(simulationStats)
-                .map(Label::getId)
-                .map(name -> name.replace("Label", "")),
-                "Day number", "Animal count", "Plant count");
 
-        Files.write(createdFile, Collections.singleton(convertToCSV(names)), StandardCharsets.UTF_8);
+        createdFile = Files.createFile(filePath);
+        Files.write(createdFile, Collections.singleton(convertToCSV(columnNames)), StandardCharsets.UTF_8);
     }
 
     public void addStatsToCSV(int day, int animalCount, int plantCount) throws IOException {
-        String[] data = streamFormat(Stream.of(simulationStats)
-                        .map(Label::getText),
-                day + "", animalCount + "", plantCount + "");
+        String[] data = Stream.concat(Stream.of(day + "", animalCount + "", plantCount + ""),
+                        Arrays.stream(simulationStats)
+                                .map(Label::getText))
+                .toArray(String[]::new);
 
         Files.writeString(createdFile,
                 convertToCSV(data) + System.lineSeparator(),
                 StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-    }
-
-    private String[] streamFormat(Stream<String> stream, String firstValue, String secondValue, String thirdValue) {
-        return Stream.concat(Stream.of(firstValue, secondValue, thirdValue), stream).toArray(String[]::new);
     }
 
     private String convertToCSV(String[] data) {

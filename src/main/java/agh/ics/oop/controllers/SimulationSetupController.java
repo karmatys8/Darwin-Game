@@ -10,27 +10,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Predicate;
 
-public class SimulationSetupController {
-    @FXML private ComboBox<String> mapOption;
-    @FXML private ComboBox<String> mutationOption;
+public class SimulationSetupController extends SimulationValidator {
     @FXML private ComboBox<String> listOfSavedConfigs;
-    @FXML private TextField mapWidth;
-    @FXML private TextField mapHeight;
-    @FXML private TextField initialNumberOfPlants;
     @FXML private TextField energyFromOnePlant;
-    @FXML private TextField initialNumberOfAnimals;
-    @FXML private TextField plantsEachDay;
     @FXML private TextField initialEnergyOfAnimals;
-    @FXML private TextField energyToBeWellFed;
-    @FXML private TextField energyToReproduce;
     @FXML private TextField lengthOfGenotypes;
     @FXML private TextField maxNumberOfMutations;
     @FXML private TextField minNumberOfMutations;
@@ -39,7 +28,7 @@ public class SimulationSetupController {
     @FXML private TextField updateInterval;
     @FXML private CheckBox csvCheckBox;
 
-    List<TextField> nonNegativeFields, positiveFields, allTextFields;
+    List<TextField> allTextFields;
     List<ComboBox<String>> comboBoxes;
     GsonConfigs configsManager;
 
@@ -59,19 +48,25 @@ public class SimulationSetupController {
         saveConfigs.setOnAction(event -> saveConfigs());
         listOfSavedConfigs.setOnAction(event -> {
             try {
-                configsManager.readConfigs(listOfSavedConfigs.getValue());
+                String value = listOfSavedConfigs.getValue();
+                if (value != null) { // once list of possible values is updated this event fires but combobox value is null
+                    configsManager.readConfigs(value);
+                }
             } catch (FileNotFoundException e) {
                 showError("Missing file Error", "", "");
             }
         });
     }
 
+    void updateListOfSavedConfigs() throws IOException {
+        ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
+        configsManager.filesAsList(listOfConfigs);
+        listOfSavedConfigs.setItems(listOfConfigs);
+    }
+
     private void setUpListOfSavedConfigs() {
         try {
-            ObservableList<String> listOfConfigs = FXCollections.observableArrayList();
-            configsManager.filesAsList(listOfConfigs);
-
-            listOfSavedConfigs.setItems(listOfConfigs);
+            updateListOfSavedConfigs();
             listOfSavedConfigs.setPromptText("Saved configs");
         } catch (IOException e) {
             listOfSavedConfigs.setPromptText("Failed to load");
@@ -80,7 +75,7 @@ public class SimulationSetupController {
         listOfSavedConfigs.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
     }
 
-    private void setUpComboBoxes() {
+    protected void setUpComboBoxes() {
         mapOption.setItems(FXCollections.observableArrayList("Underground tunnels", "Globe"));
         mapOption.setPromptText("Map option");
         mapOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
@@ -90,7 +85,7 @@ public class SimulationSetupController {
         mutationOption.setStyle("-fx-font-family: 'Verdana'; -fx-background-color: #F3B153;");
     }
 
-    private void setUpFields() {
+    protected void setUpFields() {
         nonNegativeFields = Arrays.asList(
                 initialNumberOfPlants, energyFromOnePlant, plantsEachDay, initialNumberOfAnimals, initialEnergyOfAnimals,
                 energyToBeWellFed, energyToReproduce, maxNumberOfMutations, minNumberOfMutations);
@@ -105,7 +100,7 @@ public class SimulationSetupController {
 
     private void startTheSimulation() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areParametersInRange(errorMessage)) {
             new Thread(() -> {
                 try {
                     loadSimulationScene();
@@ -137,62 +132,6 @@ public class SimulationSetupController {
         });
     }
 
-    private TextFormatter<Integer> createIntegerFormatter(Predicate<Integer> condition) {
-        return new TextFormatter<>(value -> {
-            if (value.isDeleted()) {
-                return value;
-            }
-            String newText = value.getControlNewText();
-
-            if (newText.matches("\\d+")) {
-                try {
-                    int n = Integer.parseInt(newText);
-                    return condition.test(n) ? value : null;
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-            return null;
-        });
-    }
-
-    private TextFormatter<Integer> nonNegativeInteger() {
-        return createIntegerFormatter(n -> n >= 0);
-    }
-
-    private TextFormatter<Integer> positiveInteger() {
-        return createIntegerFormatter(n -> n > 0);
-    }
-
-    private boolean inputIsValid(StringBuilder errorMessage) {
-        boolean isValid = positiveFields.stream().noneMatch(field -> field.getText().isEmpty())
-                && nonNegativeFields.stream().noneMatch(field -> field.getText().isEmpty())
-                && mutationOption.getValue() != null
-                && mapOption.getValue() != null;
-        if (!isValid) {
-            errorMessage.append("Field cannot be empty.\n");
-        }
-        return isValid;
-    }
-
-    private void showValidationAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Validation Error");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.setHeaderText("Correct the input!");
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showError(String title, String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private Optional<String> showFileNameForm() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Configs file name");
@@ -201,34 +140,16 @@ public class SimulationSetupController {
         return dialog.showAndWait();
     }
 
-    private boolean areInBoundaries(StringBuilder errorMessage) {
-        int mapArea = getValueFromTextField(mapWidth) * getValueFromTextField(mapHeight);
-        return  checkMaxValues(100, mapWidth, "Map width cannot be greater than 100. That would lag the simulation!", errorMessage)
-                & checkMaxValues(100, mapHeight, "Map height cannot be greater than 100. That would lag the simulation!", errorMessage)
-                & checkMaxValues(mapArea, initialNumberOfPlants, "Initial number of plants cannot be greater than the map area.", errorMessage)
-                & checkMaxValues(10 * mapArea, initialNumberOfAnimals, "That number of animals would lag the simulation!", errorMessage)
-                & checkMaxValues(mapArea, plantsEachDay, "Number of plants growing each day cannot be greater than the map area.", errorMessage)
-                & checkMaxValues(getValueFromTextField(energyToBeWellFed), energyToReproduce,
-                "Minimal energy to reproduce cannot be greater than the energy to be well fed.", errorMessage)
-                & checkMaxValues(getValueFromTextField(maxNumberOfMutations), minNumberOfMutations, "Minimal number of mutations cannot be greater than the maximal number", errorMessage);
-    }
-
-    private boolean checkMaxValues(int maxValue, TextField field, String message, StringBuilder errorMessage) {
-        if (getValueFromTextField(field) > maxValue) {
-            field.clear();
-            errorMessage.append(message+"\n");
-            return false;
-        }
-        return true;
-    }
-
     private void saveConfigs() {
         StringBuilder errorMessage = new StringBuilder();
-        if (inputIsValid(errorMessage) & areInBoundaries(errorMessage)) {
+        if (inputIsValid(errorMessage) & areParametersInRange(errorMessage)) {
             Optional<String> fileName = showFileNameForm();
             try {
                 if (fileName.isPresent()) {
-                    configsManager.saveConfigs(fileName.get());
+                    String name = fileName.get();
+                    configsManager.saveConfigs(name);
+                    updateListOfSavedConfigs();
+                    listOfSavedConfigs.setValue(name + ".json");
                 }
             } catch (DuplicateConfigNameException e) {
                 showError("Duplicate file name Error", "", e.getMessage());
@@ -240,17 +161,13 @@ public class SimulationSetupController {
         }
     }
 
-    private int getValueFromTextField(TextField textField) {
-        try {
-            return Integer.parseInt(textField.getText());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
     private void setSimulationController(SimulationController simulationController) {
-        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals), getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations), getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes), mutationOption.getValue());
-        PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants), getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
-        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight), getValueFromTextField(updateInterval), mapOption.getValue(), csvCheckBox.isSelected());
+        AnimalConfig animalConfig = new AnimalConfig(getValueFromTextField(initialNumberOfAnimals), getValueFromTextField(initialEnergyOfAnimals),
+                getValueFromTextField(energyToBeWellFed), getValueFromTextField(energyToReproduce), getValueFromTextField(minNumberOfMutations),
+                getValueFromTextField(maxNumberOfMutations), getValueFromTextField(lengthOfGenotypes), mutationOption.getValue());
+        PlantConfig plantConfig = new PlantConfig(getValueFromTextField(initialNumberOfPlants),
+                getValueFromTextField(energyFromOnePlant), getValueFromTextField(plantsEachDay));
+        simulationController.setConfigs(animalConfig, plantConfig, getValueFromTextField(mapWidth), getValueFromTextField(mapHeight),
+                getValueFromTextField(updateInterval), mapOption.getValue(), csvCheckBox.isSelected());
     }
 }
